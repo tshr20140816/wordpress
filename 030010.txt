@@ -6,4 +6,4 @@ Shift_JIS
 http://www.shop.carp.co.jp/
 __3__
 http://www.shop.carp.co.jp/shop__1__
-&lt;img src="http://www.shop.carp.co.jp__2__"/&gt;&lt;BR&gt;__3__&lt;BR&gt;__4__
+__3__&lt;BR&gt;__4__&lt;BR&gt;&lt;img src="http://www.shop.carp.co.jp__2__"/&gt;
