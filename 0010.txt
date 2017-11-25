@@ -1,0 +1,9 @@
+http://shop.rcc.jp/store/?kind=goods
+shift_jis
+<tr valign="top">(.+?)<\/table>
+<td><a href="(.+?)"><img src="(.+?)".+?<h3>(.+?)<\/h3>
+RCCショップ
+http://shop.rcc.jp/store/
+__3__
+http://shop.rcc.jp__1__
+&lt;img src="http://shop.rcc.jp__2__"/&gt;__3__
