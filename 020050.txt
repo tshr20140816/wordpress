@@ -1,0 +1,9 @@
+https://ccache.samba.org/
+UTF-8
+<ul class="news">(.+?)<\/ul>
+<li><i>(.+?):<.+?<b>(.+?)<
+ccache
+https://ccache.samba.org/
+__2__
+https://ccache.samba.org/
+__1__ __2__
