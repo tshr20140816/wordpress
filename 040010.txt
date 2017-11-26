@@ -1,6 +1,6 @@
 http://www.tabi-o-ji.com/go/topics/
 utf-8
-<section class="cRegularContentBox">(.+?)</ul>
+<section class="cRegularContentBox">(.+?)<\/ul>
 <a href="(.+?)">(.+?)<\/a>.+?>(.+?)<
 新幹線のトピックス
 http://www.tabi-o-ji.com/go/topics/
