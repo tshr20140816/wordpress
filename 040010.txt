@@ -1,0 +1,9 @@
+https://www2.wagamachi-guide.com/hpp-map/pc/index_json_searchtheme.asp
+UTF-8
+row:(.+)
+{LAYER_ID:".*?",HYOUJI_DATE:"(.+?)".*?,SEARCH_DATE_END:".*?",ADDR:"(.+?)".*?,CRIME_NAME:"(.+?)",POLICE_NAME:".*?",(.+?),NEW_MARK
+事件事故情報
+https://www.pref.hiroshima.lg.jp/site/police/kensu.html
+__3__ __1__
+https://www.pref.hiroshima.lg.jp/site/police/kensu.html
+__2__ __4__
