@@ -1,6 +1,6 @@
 http://shop.taiikusha.co.jp/shopbrand/ct68/
 EUC-JP
-<div class="category_itemlist">(.+?)<\/ul>
+<div class="category_itemlist">(.+?)<input type="hidden" value="" name="brandcode">
 <figure>.+?<img .*?src="(.+?)">.+<a href="(.+?)">(.+?)<\/a>.+<p class="price">(.+?)<\/p>
 体育社カープグッズ
 http://shop.taiikusha.co.jp/
