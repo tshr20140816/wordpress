@@ -1,9 +1,0 @@
-https://trafficnews.jp/category/car
-UTF-8
-<ul class="archive-list">(.+?)<\/ul>
-<figure>.+? src="(.+?)".+? href="(.+?)">(.+?)<.+?post-list-date">(.+?)<.+?<p>(.+?)<
-乗りものニュース | 自動車
-https://trafficnews.jp/
-__3__
-https://trafficnews.jp__2__
-&lt;img src="__1__"/&gt;__4__&lt;BR&gt;__5__
