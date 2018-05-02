@@ -1,9 +1,0 @@
-https://www.raspberrypi.org/downloads/raspbian/
-UTF-8
-<ul class="downloads">(.+?)<\/ul>
-<h3>(.+?)<.+?<span>Release date:<\/span> <strong>(.+?)<
-Raspbian
-https://www.raspberrypi.org/downloads/raspbian/
-__1__
-https://www.raspberrypi.org/downloads/raspbian/
-__2__ __1__
