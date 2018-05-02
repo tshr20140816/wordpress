@@ -1,9 +1,0 @@
-http://www.shop.carp.co.jp/shop/new.html
-Shift_JIS
-<div id="item_list">(.+?)<div id="footer">
-<a class="item_link" href=".(.+?)"><img src="(.+?)".+? href=".+?">(.+?)<.+?<p class="item_price">(.+?)<
-新着の商品 | CARP OFFICIAL GOODS SHOP
-http://www.shop.carp.co.jp/
-__3__
-http://www.shop.carp.co.jp/shop__1__
-__3__&lt;BR&gt;__4__&lt;BR&gt;&lt;img src="http://www.shop.carp.co.jp__2__"/&gt;
