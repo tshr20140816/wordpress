@@ -13,6 +13,7 @@ foreach($rss->channel->item as $item) {
   $url = $item->link;
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
   curl_exec($ch);
   $info = curl_getinfo($ch);
   echo $info['CURLINFO_EFFECTIVE_URL'];
