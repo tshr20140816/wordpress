@@ -20,6 +20,7 @@ foreach($rss->channel->item as $item) {
   $info = curl_getinfo($ch);
   // echo $info['CURLINFO_EFFECTIVE_URL'];
   error_log($info['CURLINFO_EFFECTIVE_URL']);
+  error_log($info['CURLINFO_REDIRECT_URL']);
   curl_close($ch);
   
   echo $item->title;
