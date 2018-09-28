@@ -15,7 +15,7 @@ for ($i = 1; $i < 11; $i++) {
   $tmp2 = str_replace('のち', '/', $tmp2);
   $tmp2 = str_replace('時々', '|', $tmp2);
   $tmp2 = str_replace('一時', '|', $tmp2);
-  error_log($tmp2 . ' ' . $list[1] . ' ' . $list[2]);
+  error_log('+++++ ' . $tmp2 . ' ' . $list[1] . ' ' . $list[2]. ' +++++');
 }
 
 ?>
