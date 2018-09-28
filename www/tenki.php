@@ -6,7 +6,7 @@ $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
 
 for ($i = 1; $i < 11; $i++) {
-  error_log($tmp[$i]);
+  error_log(strip_tags($tmp[$i]));
 }
 
 ?>
