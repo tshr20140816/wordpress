@@ -13,7 +13,7 @@ $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
 
 for ($i = 0; $i < 10; $i++) {
-  error_log(date('m/d', $dt.strtotime(' +' . $i . " day")));
+  error_log(date('m/d', strtotime($dt . ' +' . $i . " day")));
   $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i - 1]))));
   $tmp2 = $list[0];
   $tmp2 = str_replace('晴', '☼', $tmp2);
