@@ -1,9 +1,14 @@
 <?php
 
-$url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . getenv('TOODLEDO_SECRET') . '&scope=tasks';
+//$url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . getenv('TOODLEDO_SECRET') . '&scope=tasks';
+//$res = file_get_contents($url);
+//error_log($res);
 
-$res = file_get_contents($url);
-error_log($res);
+$code = $_GET('code');
+$state = $_GET('state');
+
+error_log($code);
+error_log($state);
 
 $res = file_get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
 
