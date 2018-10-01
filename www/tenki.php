@@ -1,5 +1,10 @@
 <?php
 
+$url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . getenv('TOODLEDO_SECRET') . '&scope=tasks';
+
+$res = file_get_contents($url);
+error_log($res);
+
 $res = file_get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
 
 $rc = preg_match('/announce_datetime:(\d+-\d+-\d+)/', $res, $matches);
