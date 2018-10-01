@@ -7,6 +7,10 @@ $rc = preg_match('/announce_datetime:(\d+-\d+-\d+)/', $res, $matches);
 error_log($matches[0]);
 error_log($matches[1]);
 
+$dt = date($matches[1]);
+
+error_log($dt);
+
 $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
 
