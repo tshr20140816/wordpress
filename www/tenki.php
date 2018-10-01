@@ -7,16 +7,14 @@ $rc = preg_match('/announce_datetime:(\d+-\d+-\d+)/', $res, $matches);
 error_log($matches[0]);
 error_log($matches[1]);
 
-$dt = date($matches[1]);
-
-error_log($dt);
+$dt = $matches[1];
 
 $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
 
-for ($i = 1; $i < 11; $i++) {
-  //error_log(str_replace(' ', '', trim(strip_tags($tmp[$i]))));
-  $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i]))));
+for ($i = 0; $i < 10; $i++) {
+  error_log(date('m/d', $dt.strtotime("+$i day")));
+  $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i - 1]))));
   $tmp2 = $list[0];
   $tmp2 = str_replace('晴', '☼', $tmp2);
   $tmp2 = str_replace('曇', '☁', $tmp2);
@@ -24,7 +22,7 @@ for ($i = 1; $i < 11; $i++) {
   $tmp2 = str_replace('のち', '/', $tmp2);
   $tmp2 = str_replace('時々', '|', $tmp2);
   $tmp2 = str_replace('一時', '|', $tmp2);
-  error_log('+++++ ' . $tmp2 . ' ' . $list[1] . ' ' . $list[2]. ' +++++');
+  error_log('+++++ ' . $dt . $tmp2 . ' ' . $list[1] . ' ' . $list[2]. ' +++++');
 }
 
 ?>
