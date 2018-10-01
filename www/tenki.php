@@ -10,6 +10,15 @@ $state = $_GET['state'];
 error_log($code);
 error_log($state);
 
+$post_data = ['grant_type=authorization_code', 'code=' . $code];
+
+$ch = curl_init();
+curl_setopt($ch_, CURLOPT_URL, 'https://' . getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET') . '@api.toodledo.com/3/account/token.php'); 
+curl_setopt($ch_, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch_, CURLOPT_POST, TRUE);
+curl_setopt($ch_, CURLOPT_POSTFIELDS, $post_data);
+curl_close($ch);
+
 $res = file_get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
 
 $rc = preg_match('/announce_datetime:(\d+-\d+-\d+)/', $res, $matches);
