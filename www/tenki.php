@@ -4,8 +4,8 @@
 //$res = file_get_contents($url);
 //error_log($res);
 
-$code = $_GET('code');
-$state = $_GET('state');
+$code = $_GET['code'];
+$state = $_GET['state'];
 
 error_log($code);
 error_log($state);
