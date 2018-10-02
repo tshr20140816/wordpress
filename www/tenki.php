@@ -67,6 +67,9 @@ for ($i = 0; $i < count($tasks); $i++) {
       $list_delete_task[] = $tasks[$i]['id'];
       error_log($tasks[$i]['tag']);
       error_log($tasks[$i]['id']);
+      if (count($list_delete_task) == 50) {
+        break;
+      }
     }
   }
 }
