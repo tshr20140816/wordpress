@@ -20,10 +20,14 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
 $res = curl_exec($ch);
 curl_close($ch);
 
-error_log($res);
+// error_log($res);
 
 $params = json_decode($res, TRUE);
 error_log($params['access_token']);
+
+$res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $params['access_token'] . '&comp=0&folder=WEATHER');
+
+error_log($res);
 
 exit();
 
