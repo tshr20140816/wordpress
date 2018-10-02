@@ -59,9 +59,8 @@ $res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=
 //error_log($res);
 
 $tasks = json_decode($res, TRUE);
-error_log(print_r($tasks, TRUE));
+//error_log(print_r($tasks, TRUE));
 $list_delete_task = [];
-//foreach ($task as $tasks) {
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'WEATHER') {
@@ -72,6 +71,17 @@ for ($i = 0; $i < count($tasks); $i++) {
   }
 }
 error_log(count($list_delete_task));
+
+if (count($list_delete_task) > 0) {
+  $post_data = ['access_token' => $params['access_token'], 'tasks' => '[' . implode(',', $list_delete_task) . ']'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/delete.php'); 
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt($ch, CURLOPT_POST, TRUE);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+  $res = curl_exec($ch);
+  curl_close($ch);
+}
 
 // $post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
 $post_data = ['access_token' => $params['access_token'], 'tasks' => '[' . implode(',', $list_weather) . ']'];
