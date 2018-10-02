@@ -17,7 +17,12 @@ curl_setopt($ch, CURLOPT_URL, 'https://' . getenv('TOODLEDO_CLIENTID') . ':' . g
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_POST, TRUE);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+$res = curl_exec($ch);
 curl_close($ch);
+
+error_log($res);
+
+exit();
 
 $res = file_get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
 
