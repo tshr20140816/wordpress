@@ -59,7 +59,11 @@ $res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=
 
 error_log($list_weather[0]);
 
-$post_data = 'access_token=' . $params['access_token'] . '&tasks=[{"title":"' . $list_weather[0] . '"}]';
+// $post_data = 'access_token=' . $params['access_token'] . '&tasks=[{"title":"' . $list_weather[0] . '"}]';
+//$post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
+$post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"TEST"}]'];
+
+error_log(http_build_query($post_data));
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/add.php'); 
