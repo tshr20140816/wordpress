@@ -61,12 +61,13 @@ $res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=
 $tasks = json_decode($res, TRUE);
 error_log(print_r($tasks, TRUE));
 $list_delete_task = [];
-foreach ($task as $tasks) {
-  if (array_key_exists('id', $task) && array_key_exists('tag', $task)) {
-    if ($task['tag'] == 'WEATHER') {
-      $list_delete_task[] = $task['id'];
-      error_log($task['tag']);
-      error_log($task['id']);
+//foreach ($task as $tasks) {
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
+    if ($tasks[$i]['tag'] == 'WEATHER') {
+      $list_delete_task[] = $tasks[$i]['id'];
+      error_log($tasks[$i]['tag']);
+      error_log($tasks[$i]['id']);
     }
   }
 }
