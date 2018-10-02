@@ -59,6 +59,7 @@ $res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=
 //error_log($res);
 
 $tasks = json_decode($res, TRUE);
+error_log($tasks);
 $list_delete_task = [];
 foreach ($task as $tasks) {
   if (array_key_exists('id', $task) && array_key_exists('tag', $task)) {
