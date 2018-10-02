@@ -55,9 +55,21 @@ error_log($params['access_token']);
 //$res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $params['access_token'] . '&comp=0&folder=WEATHER');
 $res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $params['access_token'] . '&comp=0&fields=duedate,tag');
 
-error_log($res);
+//error_log($res);
 
 error_log($list_weather[0]);
+
+$post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/add.php'); 
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_POST, TRUE);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+$res = curl_exec($ch);
+curl_close($ch);
+
+error_log($res);
 
 exit();
 
