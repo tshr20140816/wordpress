@@ -22,9 +22,12 @@ for ($i = 0; $i < 10; $i++) {
   $tmp2 = str_replace('のち', '/', $tmp2);
   $tmp2 = str_replace('時々', '|', $tmp2);
   $tmp2 = str_replace('一時', '|', $tmp2);
+  error_log(date('w', strtotime($dt . ' +' . $i . ' day')));
   error_log(date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' # ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1]. ' #');
   $list_weather[] = '{"title":"' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' # ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1]. ' #","duedate":"' . strtotime($dt . ' +' . $i . ' day') . '","tag":"WEATHER"}';
 }
+
+exit();
 
 //$url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . getenv('TOODLEDO_SECRET') . '&scope=tasks';
 //$res = file_get_contents($url);
@@ -61,7 +64,6 @@ for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'WEATHER') {
       $list_delete_task[] = $tasks[$i]['id'];
-      error_log($tasks[$i]['tag']);
       error_log($tasks[$i]['id']);
       if (count($list_delete_task) == 50) {
         break;
