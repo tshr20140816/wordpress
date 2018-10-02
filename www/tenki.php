@@ -22,7 +22,7 @@ curl_close($ch);
 
 error_log($res);
 
-$params = json_decode($res);
+$params = json_decode($res, TRUE);
 error_log($params['access_token']);
 
 exit();
