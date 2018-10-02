@@ -23,7 +23,7 @@ for ($i = 0; $i < 10; $i++) {
   $tmp2 = str_replace('のち', '/', $tmp2);
   $tmp2 = str_replace('時々', '|', $tmp2);
   $tmp2 = str_replace('一時', '|', $tmp2);
-  error_log(date('w', strtotime($dt . ' +' . $i . ' day')));
+  error_log($list_yobi[date('w', strtotime($dt . ' +' . $i . ' day'))]);
   error_log(date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' # ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1]. ' #');
   $list_weather[] = '{"title":"' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' # ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1]. ' #","duedate":"' . strtotime($dt . ' +' . $i . ' day') . '","tag":"WEATHER"}';
   
