@@ -87,6 +87,17 @@ if (count($list_delete_task) > 0) {
   error_log($res);
 }
 
+$res = file_get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $params['access_token']);
+$folders = json_decode($res, TRUE);
+
+$weather_folder_id = 0;
+for ($i = 0; $i < count($folders); $i++) {
+  if ($folders[$i]['name'] == 'WEATHER') {
+    $weather_folder_id = $folders[$i]['id'];
+    break;
+  }
+}
+
 // $post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
 $post_data = ['access_token' => $params['access_token'], 'tasks' => '[' . implode(',', $list_weather) . ']'];
 
