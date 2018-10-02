@@ -27,7 +27,7 @@ for ($i = 0; $i < 10; $i++) {
   $list_weather[] = '{"title":"' . '##### ' . $list_yobi[date('w', strtotime($dt . ' +' . $i . ' day'))] . '曜日 ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ##### ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1] . '","duedate":"' . strtotime($dt . ' +' . $i . ' day') . '","tag":"WEATHER"}';
 }
 
-exit();
+//exit();
 
 //$url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . getenv('TOODLEDO_SECRET') . '&scope=tasks';
 //$res = file_get_contents($url);
