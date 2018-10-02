@@ -24,6 +24,7 @@ for ($i = 0; $i < 10; $i++) {
   $tmp2 = str_replace('時々', '|', $tmp2);
   $tmp2 = str_replace('一時', '|', $tmp2);
   error_log('+++++ ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ' . $tmp2 . ' ' . $list[1] . ' ' . $list[2]. ' +++++');
+  error_log(strtotime($dt . ' +' . $i . ' day'));
   $list_weather[] = '+++++ ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ' . $tmp2 . ' ' . $list[1] . ' ' . $list[2]. ' +++++';
 }
 
@@ -52,15 +53,14 @@ error_log($res);
 $params = json_decode($res, TRUE);
 error_log($params['access_token']);
 
-$res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $params['access_token'] . '&comp=0&fields=duedate,tag');
-
-error_log($res);
+// $res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $params['access_token'] . '&comp=0&fields=duedate,tag');
+// error_log($res);
 
 error_log($list_weather[0]);
 
 // $post_data = 'access_token=' . $params['access_token'] . '&tasks=[{"title":"' . $list_weather[0] . '"}]';
 //$post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
-$post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"TEST","duedate":"1543060800"}]'];
+$post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"TEST ' . $list_weather[0] . '","duedate":"' . time() . '"}]'];
 
 error_log(http_build_query($post_data));
 
