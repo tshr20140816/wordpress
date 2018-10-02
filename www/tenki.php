@@ -95,7 +95,9 @@ for ($i = 0; $i < count($folders); $i++) {
 }
 
 // $post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
-$post_data = ['access_token' => $params['access_token'], 'tasks' => '[' . implode(',', $list_weather) . ']'];
+$tmp = implode(',', $list_weather);
+$tmp = str_replace('"tag":"WEATHER"', '"tag":"WEATHER","folder":"' . $weather_folder_id . '"', $tmp);
+$post_data = ['access_token' => $params['access_token'], 'tasks' => '[' . $tmp . ']'];
 
 error_log(http_build_query($post_data));
 
