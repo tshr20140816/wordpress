@@ -56,7 +56,20 @@ $params = json_decode($res, TRUE);
 error_log($params['access_token']);
 
 $res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $params['access_token'] . '&comp=0&fields=tag');
-error_log($res);
+//error_log($res);
+
+$tasks = json_decode($res, TRUE);
+$list_delete_task = [];
+foreach ($task as $tasks) {
+  if (array_key_exists('id', $task) && array_key_exists('tag', $task)) {
+    if ($task['tag'] == 'WEATHER') {
+      $list_delete_task[] = $task['id'];
+      error_log($task['tag']);
+      error_log($task['id']);
+    }
+  }
+}
+error_log(count($list_delete_task));
 
 // $post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
 $post_data = ['access_token' => $params['access_token'], 'tasks' => '[' . implode(',', $list_weather) . ']'];
