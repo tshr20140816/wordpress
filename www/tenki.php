@@ -55,10 +55,8 @@ error_log($res);
 $params = json_decode($res, TRUE);
 error_log($params['access_token']);
 
-// $res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $params['access_token'] . '&comp=0&fields=duedate,tag');
-// error_log($res);
-
-error_log($list_weather[0]);
+$res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $params['access_token'] . '&comp=0&fields=tag');
+error_log($res);
 
 // $post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
 $post_data = ['access_token' => $params['access_token'], 'tasks' => '[' . implode(',', $list_weather) . ']'];
