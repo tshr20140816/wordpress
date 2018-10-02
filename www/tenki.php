@@ -52,8 +52,7 @@ curl_close($ch);
 $params = json_decode($res, TRUE);
 error_log($params['access_token']);
 
-//$res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $params['access_token'] . '&comp=0&folder=WEATHER');
-$res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $params['access_token'] . '&comp=0&fields=duedate,tag');
+//$res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $params['access_token'] . '&comp=0&fields=duedate,tag');
 
 //error_log($res);
 
