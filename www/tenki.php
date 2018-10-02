@@ -81,6 +81,7 @@ if (count($list_delete_task) > 0) {
   curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
   $res = curl_exec($ch);
   curl_close($ch);
+  error_log($res);
 }
 
 // $post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
