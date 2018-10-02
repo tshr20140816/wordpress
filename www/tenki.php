@@ -1,5 +1,11 @@
 <?php
 
+if (!isset($_GET['code']) || !isset($_GET['state']) {
+  $url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . uniqid() . '&scope=basic%20tasks%20notes%20write';
+  header('Location: ' . $url, TRUE, 301);
+  exit();
+}
+
 $res = file_get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
 
 $rc = preg_match('/announce_datetime:(\d+-\d+-\d+)/', $res, $matches);
@@ -27,11 +33,11 @@ for ($i = 0; $i < 10; $i++) {
   $list_weather[] = '{"title":"' . '##### ' . $list_yobi[date('w', strtotime($dt . ' +' . $i . ' day'))] . '曜日 ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ##### ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1] . '","duedate":"' . strtotime($dt . ' +' . $i . ' day') . '","tag":"WEATHER"}';
 }
 
-//exit();
+if (count($list_weather) == 0) {
+  exit();
+}
 
-//$url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . getenv('TOODLEDO_SECRET') . '&scope=tasks';
-//$res = file_get_contents($url);
-//error_log($res);
+//exit();
 
 $code = $_GET['code'];
 $state = $_GET['state'];
