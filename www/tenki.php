@@ -25,7 +25,8 @@ for ($i = 0; $i < 10; $i++) {
   $tmp2 = str_replace('一時', '|', $tmp2);
   error_log('+++++ ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ' . $tmp2 . ' ' . $list[1] . ' ' . $list[2]. ' +++++');
   error_log(strtotime($dt . ' +' . $i . ' day'));
-  $list_weather[] = '+++++ ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ' . $tmp2 . ' ' . $list[1] . ' ' . $list[2]. ' +++++';
+  // $list_weather[] = '+++++ ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ' . $tmp2 . ' ' . $list[1] . ' ' . $list[2]. ' +++++';
+  $list_weather[] = '{"title":"' . '+++++ ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ' . $tmp2 . ' ' . $list[1] . ' ' . $list[2]. ' +++++","duedate":"' . strtotime($dt . ' +' . $i . ' day') . '","tag":"WEATHER"}';
 }
 
 //$url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . getenv('TOODLEDO_SECRET') . '&scope=tasks';
@@ -58,9 +59,8 @@ error_log($params['access_token']);
 
 error_log($list_weather[0]);
 
-// $post_data = 'access_token=' . $params['access_token'] . '&tasks=[{"title":"' . $list_weather[0] . '"}]';
-//$post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
-$post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"TEST ' . $list_weather[0] . '","duedate":"' . time() . '","folder":"WEATHER","TAG":"WEATHER"}]'];
+// $post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
+$post_data = ['access_token' => $params['access_token'], 'tasks' => '[' . implode(',', $list_weather) . ']'];
 
 error_log(http_build_query($post_data));
 
