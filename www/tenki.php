@@ -12,6 +12,7 @@ $dt = $matches[1];
 $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
 
+$list_yobi = array('日', '月', '火', '水', '木', '金', '土');
 $list_weather = [];
 for ($i = 0; $i < 10; $i++) {
   $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i + 1]))));
@@ -25,6 +26,8 @@ for ($i = 0; $i < 10; $i++) {
   error_log(date('w', strtotime($dt . ' +' . $i . ' day')));
   error_log(date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' # ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1]. ' #');
   $list_weather[] = '{"title":"' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' # ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1]. ' #","duedate":"' . strtotime($dt . ' +' . $i . ' day') . '","tag":"WEATHER"}';
+  
+  
 }
 
 exit();
