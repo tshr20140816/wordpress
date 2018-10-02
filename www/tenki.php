@@ -60,7 +60,7 @@ error_log($list_weather[0]);
 
 // $post_data = 'access_token=' . $params['access_token'] . '&tasks=[{"title":"' . $list_weather[0] . '"}]';
 //$post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"' . $list_weather[0] . '"}]'];
-$post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"TEST ' . $list_weather[0] . '","duedate":"' . time() . '"}]'];
+$post_data = ['access_token' => $params['access_token'], 'tasks' => '[{"title":"TEST ' . $list_weather[0] . '","duedate":"' . time() . '","folder":"WEATHER","TAG":"WEATHER"}]'];
 
 error_log(http_build_query($post_data));
 
