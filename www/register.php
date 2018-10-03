@@ -39,7 +39,31 @@ $pdo = new PDO(
   
 $sql = 'TRUNCATE TABLE m_authorization;';
 
-$pdo->exec($sql);
+$rc = $pdo->exec($sql);
+error_log('TRUNCATE RESULT : ' . $rc);
 
+$sql = <<< __HEREDOC__
+INSERT INTO m_authorization
+( access_token
+ ,expires_in
+ ,refresh_token
+ ,scope
+) VALUES (
+  :b_access_token
+ ,:b_expires_in
+ ,:b_refresh_token
+ ,:b_scope
+);
+__HEREDOC__;
+  
+$statement = $pdo->prepare($sql);
+$rc = $statement->execute(
+  [':b_access_token' => $params['access_token'],
+   ':b_expires_in' => $params['expires_in'],
+   ':b_refresh_token' => $params['refresh_token'],
+   ':b_scope' => $params['scope'],
+  ]);
+error_log('INSERT RESULT : ' . $rc);
 
+$pdo = null;
 ?>
