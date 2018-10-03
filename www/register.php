@@ -26,10 +26,6 @@ curl_close($ch);
 error_log($res);
 
 $params = json_decode($res, TRUE);
-$access_token = $params['access_token'];
-$expires_in = $params['expires_in'];
-$refresh_token = $params['refresh_token'];
-$scope = $params['scope'];
 
 $connection_info = parse_url(getenv('DATABASE_URL'));
 $pdo = new PDO(
