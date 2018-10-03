@@ -28,6 +28,7 @@ if ($access_token == NULL) {
 }
 
 if ($refresh_flag == 1) {
+  error_log('refresh_token : ' . $refresh_token);
   $post_data = ['grant_type' => 'refresh_token', 'refresh_token ' => $refresh_token];
   
   $ch = curl_init();
