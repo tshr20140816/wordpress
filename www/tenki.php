@@ -49,8 +49,7 @@ UPDATE m_authorization
 __HEREDOC__;
   
   $statement = $pdo->prepare($sql);
-  $rc = $statement->execute(
-    [':b_access_token' => $params['access_token']]);
+  $rc = $statement->execute([':b_access_token' => $params['access_token']]);
   error_log('UPDATE RESULT : ' . $rc);
   
   $access_token = $params['access_token'];
