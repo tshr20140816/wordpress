@@ -1,9 +1,94 @@
 <?php
 
-if (!isset($_GET['code']) || !isset($_GET['state'])) {
-  $url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . uniqid() . '&scope=basic%20tasks%20notes%20write';
+$connection_info = parse_url(getenv('DATABASE_URL'));
+$pdo = new PDO(
+  "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
+  $connection_info['user'],
+  $connection_info['pass']);
+
+$sql = <<< __HEREDOC__
+SELECT 'X'
+  FROM pg_class V1
+ WHERE V1.relkind = 'r'
+   AND V1.relname = 'm_authorization';
+__HEREDOC__;
+
+$count = $pdo->exec($sql);
+error_log('m_authorization : ' . $count);
+
+if ($count == 0) {
+  $sql = <<< __HEREDOC__
+CREATE TABLE m_authorization (
+  access_token character varying(255) NOT NULL
+ ,expires_in bigint NOT NULL
+ ,refresh_token character varying(255) NOT NULL
+ ,scope character varying(255) NOT NULL
+ ,create_time timestamp DEFAULT localtimestamp NOT NULL
+ ,update_time timestamp DEFAULT localtimestamp NOT NULL
+);
+__HEREDOC__;
+
+  $count = $pdo->exec($sql);
+  error_log('create table result : ' . $count);
+}
+
+$sql = <<< __HEREDOC__
+SELECT M1.expires_in
+  FROM m_authorization M1;
+__HEREDOC__;
+$expires_in = 0;
+foreach ($pdo->query($sql) as $row) {
+  $expires_in = $row['expires_in'];
+}
+
+if ($expires_in == 0 && (!isset($_GET['code']) || !isset($_GET['state']))) {
+  $url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . uniqid() . '&scope=basic%20tasks%20notes%20folders%20write';
   header('Location: ' . $url, TRUE, 301);
   exit();
+}
+
+if ($expires_in == 0) {
+  $code = $_GET['code'];
+  $state = $_GET['state'];
+
+  error_log($code);
+  error_log($state);
+
+  $post_data = ['grant_type' => 'authorization_code', 'code' => $code];
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/account/token.php'); 
+  curl_setopt($ch, CURLOPT_USERPWD, getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt($ch, CURLOPT_POST, TRUE);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+  $res = curl_exec($ch);
+  curl_close($ch);
+
+  error_log($res);
+
+  $params = json_decode($res, TRUE);
+  error_log($params['access_token']);
+  $access_token = $params['access_token'];
+  $expires_in = $params['expires_in'];
+  $refresh_token = $params['refresh_token'];
+  $scope = $params['scope'];
+  
+  $sql = <<< __HEREDOC__
+INSERT INTO m_authorization
+( access_token
+ ,expires_in
+ ,refresh_token
+ ,scope
+) VALUES (
+  :b_access_token
+ ,:b_expires_in
+ ,:b_refresh_token
+ ,:b_scope
+);
+__HEREDOC__;
+
+
 }
 
 $res = file_get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
@@ -36,32 +121,6 @@ for ($i = 0; $i < 10; $i++) {
 if (count($list_weather) == 0) {
   exit();
 }
-
-//exit();
-
-$code = $_GET['code'];
-$state = $_GET['state'];
-
-error_log($code);
-error_log($state);
-
-$post_data = ['grant_type' => 'authorization_code', 'code' => $code];
-
-$ch = curl_init();
-// curl_setopt($ch, CURLOPT_URL, 'https://' . getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET') . '@api.toodledo.com/3/account/token.php'); 
-curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/account/token.php'); 
-curl_setopt($ch, CURLOPT_USERPWD, getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-curl_setopt($ch, CURLOPT_POST, TRUE);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
-$res = curl_exec($ch);
-curl_close($ch);
-
-error_log($res);
-
-$params = json_decode($res, TRUE);
-error_log($params['access_token']);
-$access_token = $params['access_token'];
 
 $res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag');
 // error_log($res);
