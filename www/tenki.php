@@ -48,7 +48,9 @@ error_log($state);
 $post_data = ['grant_type' => 'authorization_code', 'code' => $code];
 
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://' . getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET') . '@api.toodledo.com/3/account/token.php'); 
+// curl_setopt($ch, CURLOPT_URL, 'https://' . getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET') . '@api.toodledo.com/3/account/token.php'); 
+curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/account/token.php'); 
+curl_setopt($ch, CURLOPT_USERPWD, getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_POST, TRUE);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
