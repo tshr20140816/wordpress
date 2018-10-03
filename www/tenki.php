@@ -29,7 +29,7 @@ if ($access_token == NULL) {
 
 if ($refresh_flag == 1) {
   error_log('refresh_token : ' . $refresh_token);
-  $post_data = ['grant_type' => 'refresh_token', 'refresh_token ' => $refresh_token];
+  $post_data = ['grant_type' => 'refresh_token', 'refresh_token' => $refresh_token];
   
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/account/token.php'); 
