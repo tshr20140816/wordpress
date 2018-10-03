@@ -65,6 +65,7 @@ error_log($matches[0]);
 error_log($matches[1]);
 
 $dt = $matches[1];
+
 $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
 $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
@@ -85,5 +86,65 @@ for ($i = 0; $i < 10; $i++) {
 if (count($list_weather) == 0) {
   exit();
 }
+
+$res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag');
+// error_log($res);
+
+$tasks = json_decode($res, TRUE);
+// error_log(print_r($tasks, TRUE));
+$list_delete_task = [];
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
+    if ($tasks[$i]['tag'] == 'WEATHER') {
+      $list_delete_task[] = $tasks[$i]['id'];
+      error_log($tasks[$i]['id']);
+      if (count($list_delete_task) == 50) {
+        break;
+      }
+    }
+  }
+}
+error_log('DELETE TARGET TASK COUNT : ' . count($list_delete_task));
+
+if (count($list_delete_task) > 0) {
+  $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/delete.php'); 
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt($ch, CURLOPT_POST, TRUE);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+  $res = curl_exec($ch);
+  curl_close($ch);
+  error_log($res);
+}
+
+$res = file_get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token);
+$folders = json_decode($res, TRUE);
+
+$weather_folder_id = 0;
+for ($i = 0; $i < count($folders); $i++) {
+  if ($folders[$i]['name'] == 'WEATHER') {
+    $weather_folder_id = $folders[$i]['id'];
+    break;
+  }
+}
+
+$tmp = implode(',', $list_weather);
+$tmp = str_replace('"tag":"WEATHER"', '"tag":"WEATHER","folder":"' . $weather_folder_id . '"', $tmp);
+$post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
+
+// error_log(http_build_query($post_data));
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/add.php'); 
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_POST, TRUE);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+$res = curl_exec($ch);
+curl_close($ch);
+
+error_log($res);
+
+exit();
 
 ?>
