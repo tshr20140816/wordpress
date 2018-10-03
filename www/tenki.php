@@ -46,11 +46,13 @@ if ($refresh_flag == 1) {
   $sql = <<< __HEREDOC__
 UPDATE m_authorization
    SET access_token = :b_access_token
+      ,refresh_token = :b_refresh_token;
       ,update_time = LOCALTIMESTAMP;
 __HEREDOC__;
   
   $statement = $pdo->prepare($sql);
-  $rc = $statement->execute([':b_access_token' => $params['access_token']]);
+  $rc = $statement->execute([':b_access_token' => $params['access_token'],
+                             ':b_refresh_token' => $params['refresh_token']]);
   error_log('UPDATE RESULT : ' . $rc);
   
   $access_token = $params['access_token'];
