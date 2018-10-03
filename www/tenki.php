@@ -33,7 +33,11 @@ __HEREDOC__;
 }
 
 $sql = <<< __HEREDOC__
-SELECT M1.expires_in
+SELECT M1.access_token
+      ,M1.refresh_token
+      ,M1.expires_in
+      ,M1.create_time
+      ,M1.update_time
   FROM m_authorization M1;
 __HEREDOC__;
 $expires_in = 0;
@@ -87,9 +91,25 @@ INSERT INTO m_authorization
  ,:b_scope
 );
 __HEREDOC__;
-
-
+  
+  $statement = $pdo->prepare($sql);
+  $rc = $statement->execute(
+    [':b_access_token' => $params['access_token'],
+     ':b_expires_in' => $params['expires_in'],
+     ':b_refresh_token' => $params['refresh_token'],
+     ':b_scope' => $params['scope'],
+    ]);
+  error_log('INSERT RESULT : ' . $rc);
 }
+
+$sql = <<< __HEREDOC__
+SELECT M1.access_token
+      ,M1.refresh_token
+      ,M1.expires_in
+      ,M1.create_time
+      ,M1.update_time
+  FROM m_authorization M1;
+__HEREDOC__;
 
 $res = file_get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
 
