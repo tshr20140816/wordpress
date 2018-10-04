@@ -48,7 +48,7 @@ if ($refresh_flag == 1) {
   $sql = <<< __HEREDOC__
 UPDATE m_authorization
    SET access_token = :b_access_token
-      ,refresh_token = :b_refresh_token;
+      ,refresh_token = :b_refresh_token
       ,update_time = LOCALTIMESTAMP;
 __HEREDOC__;
   
