@@ -7,6 +7,10 @@ $res = file_get_contents($url);
 
 $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
-error_log($res);
+// error_log($res);
+
+$tmp = explode("\n", $res);
+error_log($tmp[1]);
+error_log($tmp[2]);
 
 ?>
