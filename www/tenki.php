@@ -1,5 +1,7 @@
 <?php
 
+// Access Token
+
 $connection_info = parse_url(getenv('DATABASE_URL'));
 $pdo = new PDO(
   "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
@@ -60,14 +62,18 @@ __HEREDOC__;
 
 $pdo = null;
 
+// Weather Information
+
 $res = file_get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
 
-$rc = preg_match('/announce_datetime:(\d+-\d+-\d+)/', $res, $matches);
+$rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
 
 error_log($matches[0]);
 error_log($matches[1]);
+error_log($matches[2]);
 
 $dt = $matches[1];
+$update_marker = ' __' . substr($matches[1], 8) . $matches[2] . '__';
 
 $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
@@ -82,13 +88,15 @@ for ($i = 0; $i < 10; $i++) {
   $tmp2 = str_replace('のち', '/', $tmp2);
   $tmp2 = str_replace('時々', '|', $tmp2);
   $tmp2 = str_replace('一時', '|', $tmp2);
-  error_log('##### ' . $list_yobi[date('w', strtotime($dt . ' +' . $i . ' day'))] . '曜日 ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ##### ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1]);
-  $list_weather[] = '{"title":"' . '##### ' . $list_yobi[date('w', strtotime($dt . ' +' . $i . ' day'))] . '曜日 ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ##### ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1] . '","duedate":"' . strtotime($dt . ' +' . $i . ' day') . '","tag":"WEATHER"}';
+  error_log('##### ' . $list_yobi[date('w', strtotime($dt . ' +' . $i . ' day'))] . '曜日 ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ##### ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1] . $update_marker);
+  $list_weather[] = '{"title":"' . '##### ' . $list_yobi[date('w', strtotime($dt . ' +' . $i . ' day'))] . '曜日 ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ##### ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1] . $update_marker .'","duedate":"' . strtotime($dt . ' +' . $i . ' day') . '","tag":"WEATHER"}';
 }
 
 if (count($list_weather) == 0) {
   exit();
 }
+
+// Get Tasks
 
 $res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag');
 // error_log($res);
@@ -107,6 +115,9 @@ for ($i = 0; $i < count($tasks); $i++) {
     }
   }
 }
+
+// Delete Tasks
+
 error_log('DELETE TARGET TASK COUNT : ' . count($list_delete_task));
 
 if (count($list_delete_task) > 0) {
@@ -121,6 +132,8 @@ if (count($list_delete_task) > 0) {
   error_log($res);
 }
 
+// Get Folders
+
 $res = file_get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token);
 $folders = json_decode($res, TRUE);
 
@@ -131,6 +144,8 @@ for ($i = 0; $i < count($folders); $i++) {
     break;
   }
 }
+
+// Add Tasks
 
 $tmp = implode(',', $list_weather);
 $tmp = str_replace('"tag":"WEATHER"', '"tag":"WEATHER","folder":"' . $weather_folder_id . '"', $tmp);
