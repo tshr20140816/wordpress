@@ -73,7 +73,7 @@ error_log($matches[1]);
 error_log($matches[2]);
 
 $dt = $matches[1];
-$update_marker = ' __' . substr($matches[1], 8) . $matches[2] . '__';
+$update_marker = ' __' . substr($matches[1], 8) . $matches[2] . '__₀';
 
 $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
