@@ -13,6 +13,8 @@ $tmp_list = explode("\n", $res);
 
 for ($i = 1; $i < count($tmp_list); $i++) {
   error_log($tmp_list[$i]);
+  $tmp = explode(',', $tmp_list[$i]);
+  error_log($tmp[0] . $tmp[1] . $tmp[2] . $tmp[5] . $tmp[7]);
 }
 
 ?>
