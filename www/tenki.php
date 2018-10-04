@@ -74,15 +74,23 @@ error_log($matches[2]);
 
 $dt = $matches[1];
 $update_marker = ' __' . substr($matches[1], 8) . $matches[2] . '__';
-/*
+
 $subscript = '₀₁₂₃₄₅₆₇₈₉';
 for ($i = 0; $i < 10; $i++) {
-  $update_marker = str_replace($i, substr($subscript, $i, 1), $update_marker);
+  $update_marker = str_replace($i, mb_substr($subscript, $i, 1), $update_marker);
 }
-*/
+/*
 $update_marker = str_replace('0', '₀', $update_marker);
+$update_marker = str_replace('1', '₁', $update_marker);
+$update_marker = str_replace('2', '₂', $update_marker);
+$update_marker = str_replace('3', '₃', $update_marker);
 $update_marker = str_replace('4', '₄', $update_marker);
+$update_marker = str_replace('5', '₅', $update_marker);
+$update_marker = str_replace('6', '₆', $update_marker);
+$update_marker = str_replace('7', '₇', $update_marker);
 $update_marker = str_replace('8', '₈', $update_marker);
+$update_marker = str_replace('8', '₉', $update_marker);
+*/
 
 $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
