@@ -119,6 +119,10 @@ for ($i = 0; $i < count($holiday_diff_list); $i++) {
 
 error_log(print_r($add_task_list, TRUE));
 
+if (count($add_task_list) == 0) {
+  exit();
+}
+
 // Get Folders
 
 $res = file_get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token);
