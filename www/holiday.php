@@ -62,6 +62,23 @@ __HEREDOC__;
 
 $pdo = null;
 
+// Get Tasks
+
+$res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag');
+// error_log($res);
+
+$tasks = json_decode($res, TRUE);
+// error_log(print_r($tasks, TRUE));
+$list_holiday_task_title = [];
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
+    if ($tasks[$i]['tag'] == 'HOLIDAY') {
+      $list_holiday_task_title[] = $tasks[$i]['title'];
+      error_log($tasks[$i]['title']);
+    }
+  }
+}
+
 // Holiday
 
 // $url = 'http://calendar-service.net/cal?start_year=2018&start_mon=11&end_year=2020&end_mon=12&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
