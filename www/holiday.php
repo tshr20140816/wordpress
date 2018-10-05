@@ -95,8 +95,8 @@ $holiday_list = [];
 for ($i = 1; $i < count($tmp_list) - 1; $i++) {
   error_log($tmp_list[$i]);
   $tmp = explode(',', $tmp_list[$i]);
-  error_log('####+ ' . $tmp[7] . ' ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####');
-  $holiday_list[] = '####+ ' . $tmp[7] . ' ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####';
+  error_log('####+ ' . $tmp[7] . ' ' . $tmp[5] . ' ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####');
+  $holiday_list[] = '####+ ' . $tmp[7] . ' ' . $tmp[5] . ' ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####';
 }
 
 $holiday_diff_list = array_diff($holiday_list, $list_holiday_task_title);
