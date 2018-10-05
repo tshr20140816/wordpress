@@ -137,4 +137,15 @@ $tmp = str_replace('__FOLDER_ID__', $holiday_folder_id, $tmp);
 $post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
 
 error_log(print_r($post_data, TRUE));
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/add.php');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_POST, TRUE);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+$res = curl_exec($ch);
+curl_close($ch);
+
+error_log($res);
+
 ?>
