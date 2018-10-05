@@ -99,4 +99,8 @@ for ($i = 1; $i < count($tmp_list); $i++) {
   $holiday_list[] = '####+ ' . $tmp[7] . ' ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####';
 }
 
+$holiday_diff_list = array_diff($holiday_list, $list_holiday_task_title);
+
+error_log(print_r($holiday_diff_list, TRUE));
+
 ?>
