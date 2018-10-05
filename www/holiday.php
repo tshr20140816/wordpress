@@ -112,11 +112,11 @@ for ($i = 0; $i < count($holiday_diff_list); $i++) {
   if (array_key_exists($holiday_diff_list[$i], $holiday_list)) {
     error_log($holiday_list[$holiday_diff_list[$i]]);
     $tmp = str_replace('__TITLE__', $holiday_diff_list[$i], $add_task_template);
-    //$tmp = str_replace('__DUEDATE__', $holiday_diff_list[$i], $tmp);
-    //$add_task_list[] = $tmp;
+    $tmp = str_replace('__DUEDATE__', strtotime(substr($holiday_list[$holiday_diff_list[$i]], 0, 8)), $tmp);
+    $add_task_list[] = $tmp;
   }
 }
 
-error_log(date('Y/m/d', strtotime('20181005')));
+error_log(print_r($add_task_list, TRUE));
 
 ?>
