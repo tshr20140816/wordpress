@@ -136,6 +136,5 @@ $tmp = implode(',', $add_task_list);
 $tmp = str_replace('__FOLDER_ID__', $holiday_folder_id, $tmp);
 $post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
 
-error_log($post_data);
-
+error_log(print_r($post_data, TRUE));
 ?>
