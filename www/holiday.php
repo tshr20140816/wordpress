@@ -92,7 +92,7 @@ $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
 $tmp_list = explode("\n", $res);
 $holiday_list = [];
-for ($i = 1; $i < count($tmp_list); $i++) {
+for ($i = 1; $i < count($tmp_list) - 1; $i++) {
   error_log($tmp_list[$i]);
   $tmp = explode(',', $tmp_list[$i]);
   error_log('####+ ' . $tmp[7] . ' ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####');
