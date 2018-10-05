@@ -104,7 +104,7 @@ $holiday_diff_list = array_diff(array_keys($holiday_list), array_keys($list_holi
 
 error_log(print_r($holiday_diff_list, TRUE));
 
-// Add Tasks
+// Make Add Tasks List
 
 $add_task_list = [];
 $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","tag":"HOLIDAY","FOLDER":"__FOLDER__"}';
@@ -118,5 +118,24 @@ for ($i = 0; $i < count($holiday_diff_list); $i++) {
 }
 
 error_log(print_r($add_task_list, TRUE));
+
+// Get Folders
+
+$res = file_get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token);
+$folders = json_decode($res, TRUE);
+
+$holiday_folder_id = 0;
+for ($i = 0; $i < count($folders); $i++) {
+  if ($folders[$i]['name'] == 'HOLIDAY') {
+    $holiday_folder_id = $folders[$i]['id'];
+    break;
+  }
+}
+
+$tmp = implode(',', $add_task_list);
+$tmp = str_replace('__FOLDER_ID__', $holiday_folder_id, $tmp);
+$post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
+
+error_log($post_data);
 
 ?>
