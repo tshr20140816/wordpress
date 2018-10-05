@@ -73,8 +73,8 @@ $list_holiday_task_title = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'HOLIDAY') {
-      $list_holiday_task_title[$tasks[$i]['id']] = $tasks[$i]['title'];
-      error_log($tasks[$tasks[$i]['id']]['title']);
+      $list_holiday_task_title[$tasks[$i]['title']] = $tasks[$i]['id'];
+      error_log($tasks[$i]['title']);
     }
   }
 }
@@ -96,11 +96,18 @@ for ($i = 1; $i < count($tmp_list) - 1; $i++) {
   error_log($tmp_list[$i]);
   $tmp = explode(',', $tmp_list[$i]);
   error_log('####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####');
-  $holiday_list[$tmp[0] . $tmp[1] . $tmp[2] . $tmp[7]] = '####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####';
+  // $holiday_list[$tmp[0] . $tmp[1] . $tmp[2] . $tmp[7]] = '####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####';
+  $holiday_list['####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####'] = $tmp[0] . $tmp[1] . $tmp[2] . $tmp[7];
 }
 
-$holiday_diff_list = array_diff(array_values($holiday_list), array_values($list_holiday_task_title));
+$holiday_diff_list = array_diff(array_keys($holiday_list), array_keys($list_holiday_task_title));
 
 error_log(print_r($holiday_diff_list, TRUE));
+
+for ($i = 0; $i < count($holiday_diff_list); $i++) {
+  if (array_key_exists($holiday_diff_list[$i], $holiday_list)) {
+    error_log($holiday_list[$holiday_diff_list[$i]]);
+  }
+}
 
 ?>
