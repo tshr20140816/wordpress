@@ -81,8 +81,13 @@ for ($i = 0; $i < count($tasks); $i++) {
 
 // Holiday
 
+$start_yyyy = date('Y', strtotime('+2 month'));
+$start_m = date('n', strtotime('+2 month'));
+$finish_yyyy = $start_yyyy + 2;
+// $finish_m = 12;
+
 // $url = 'http://calendar-service.net/cal?start_year=2018&start_mon=11&end_year=2020&end_mon=12&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
-$url = 'http://calendar-service.net/cal?start_year=2018&start_mon=11&end_year=2018&end_mon=12&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
+$url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=12&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
 $res = file_get_contents($url);
 
@@ -103,6 +108,8 @@ for ($i = 1; $i < count($tmp_list) - 1; $i++) {
 $holiday_diff_list = array_diff(array_keys($holiday_list), array_keys($list_holiday_task_title));
 
 error_log(print_r($holiday_diff_list, TRUE));
+
+$holiday_diff_list = array_slice($holiday_diff_list, 0, 50);
 
 // Make Add Tasks List
 
