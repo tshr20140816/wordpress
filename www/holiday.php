@@ -107,7 +107,7 @@ error_log(print_r($holiday_diff_list, TRUE));
 // Make Add Tasks List
 
 $add_task_list = [];
-$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","tag":"HOLIDAY","FOLDER":"__FOLDER__"}';
+$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","tag":"HOLIDAY","folder":"__FOLDER_ID__"}';
 for ($i = 0; $i < count($holiday_diff_list); $i++) {
   if (array_key_exists($holiday_diff_list[$i], $holiday_list)) {
     error_log($holiday_list[$holiday_diff_list[$i]]);
