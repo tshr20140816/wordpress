@@ -73,8 +73,9 @@ error_log('$matches[1] : ' . $matches[1]);
 error_log('$matches[2] : ' . $matches[2]);
 
 $dt = $matches[1];
-$update_marker = ' __' . substr($matches[1], 8) . $matches[2] . '__';
+$update_marker = ' __' . substr($matches[1], 8) . $matches[2] . '__'; // __DDHH__
 
+// To Small Size
 $subscript = '₀₁₂₃₄₅₆₇₈₉';
 for ($i = 0; $i < 10; $i++) {
   $update_marker = str_replace($i, mb_substr($subscript, $i, 1), $update_marker);
