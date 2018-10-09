@@ -33,14 +33,12 @@ if ($refresh_flag == 1) {
   error_log('refresh_token : ' . $refresh_token);
   $post_data = ['grant_type' => 'refresh_token', 'refresh_token' => $refresh_token];
   
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/account/token.php'); 
-  curl_setopt($ch, CURLOPT_USERPWD, getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'));
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-  curl_setopt($ch, CURLOPT_POST, TRUE);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
-  $res = curl_exec($ch);
-  curl_close($ch);
+  $res = get_contents(
+    'https://api.toodledo.com/3/account/token.php',
+    [CURLOPT_USERPWD => getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'),
+     CURLOPT_POST => TRUE,
+     CURLOPT_POSTFIELDS => http_build_query($post_data),
+    ]);
   
   error_log($res);
   $params = json_decode($res, TRUE);
@@ -64,7 +62,7 @@ $pdo = null;
 
 // Weather Information
 
-$res = file_get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
+$res = get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/', NULL);
 
 $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
 
@@ -110,7 +108,7 @@ if (count($list_weather) == 0) {
 
 // Get Tasks
 
-$res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag');
+$res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag', NULL);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
@@ -133,20 +131,17 @@ for ($i = 0; $i < count($tasks); $i++) {
 error_log('DELETE TARGET TASK COUNT : ' . count($list_delete_task));
 
 if (count($list_delete_task) > 0) {
-  $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/delete.php'); 
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-  curl_setopt($ch, CURLOPT_POST, TRUE);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
-  $res = curl_exec($ch);
-  curl_close($ch);
+  $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];  
+  $res = get_contents(
+    'https://api.toodledo.com/3/tasks/delete.php',
+    [CURLOPT_POST => TRUE,
+     CURLOPT_POSTFIELDS => http_build_query($post_data),
+    ]);
   error_log($res);
 }
 
 // Get Folders
 
-// $res = file_get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token);
 $res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
 $folders = json_decode($res, TRUE);
 
