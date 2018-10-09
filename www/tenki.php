@@ -27,6 +27,7 @@ foreach ($pdo->query($sql) as $row) {
 
 if ($access_token == NULL) {
   error_log('ACCESS TOKEN NONE');
+  $pdo = null;
   exit();
 }
 
