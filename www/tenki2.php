@@ -26,6 +26,7 @@ foreach ($pdo->query($sql) as $row) {
 }
 
 if ($access_token == NULL) {
+  error_log('ACCESS TOKEN NONE');
   exit();
 }
 
@@ -40,7 +41,7 @@ if ($refresh_flag == 1) {
      CURLOPT_POSTFIELDS => http_build_query($post_data),
     ]);
   
-  error_log($res);
+  error_log('token.php RESPONSE : ' . $res);
   $params = json_decode($res, TRUE);
   
   $sql = <<< __HEREDOC__
@@ -66,9 +67,9 @@ $res = get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/', 
 
 $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
 
-error_log($matches[0]);
-error_log($matches[1]);
-error_log($matches[2]);
+error_log('$matches[0] : ' . $matches[0]);
+error_log('$matches[1] : ' . $matches[1]);
+error_log('$matches[2] : ' . $matches[2]);
 
 $dt = $matches[1];
 $update_marker = ' __' . substr($matches[1], 8) . $matches[2] . '__';
@@ -103,6 +104,7 @@ for ($i = 0; $i < 10; $i++) {
 }
 
 if (count($list_weather) == 0) {
+  error_log('WEATHER DATA NONE');
   exit();
 }
 
@@ -118,7 +120,7 @@ for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'WEATHER') {
       $list_delete_task[] = $tasks[$i]['id'];
-      error_log($tasks[$i]['id']);
+      error_log('DELETE TARGET TASK ID : ' . $tasks[$i]['id']);
       if (count($list_delete_task) == 50) {
         break;
       }
@@ -137,7 +139,7 @@ if (count($list_delete_task) > 0) {
     [CURLOPT_POST => TRUE,
      CURLOPT_POSTFIELDS => http_build_query($post_data),
     ]);
-  error_log($res);
+  error_log('delete.php RESPONSE : ' . $res);
 }
 
 // Get Folders
@@ -149,6 +151,7 @@ $weather_folder_id = 0;
 for ($i = 0; $i < count($folders); $i++) {
   if ($folders[$i]['name'] == 'WEATHER') {
     $weather_folder_id = $folders[$i]['id'];
+    error_log('WEATHER FOLDER ID : ' . $weather_folder_id);
     break;
   }
 }
@@ -167,7 +170,7 @@ $res = get_contents(
    CURLOPT_POSTFIELDS => http_build_query($post_data),
   ]);
 
-error_log($res);
+error_log('add.php RESPONSE : ' . $res);
 
 exit();
 
