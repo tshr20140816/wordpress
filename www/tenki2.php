@@ -181,7 +181,9 @@ function get_contents($url_, $options_) {
     CURLOPT_MAXREDIRS => 3,
     CURLOPT_SSL_FALSESTART => TRUE,
     ]);
-  curl_setopt_array($ch, $options_);
+  if (is_null($options_) == FALSE) {
+    curl_setopt_array($ch, $options_);
+  }
   $res = curl_exec($ch);
   curl_close($ch);
   
