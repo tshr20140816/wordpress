@@ -166,7 +166,7 @@ $post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
 // error_log(http_build_query($post_data));
 
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/add.php'); 
+curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/add.php');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_POST, TRUE);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
@@ -176,5 +176,21 @@ curl_close($ch);
 error_log($res);
 
 exit();
+
+function get_contents($ch_, $url_, $post_data_) {
+  curl_setopt($ch_, CURLOPT_URL, $url_); 
+  curl_setopt($ch_, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt($ch_, CURLOPT_ENCODING, "");
+  curl_setopt($ch_, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch_, CURLOPT_MAXREDIRS, 3);
+  curl_setopt($ch_, CURLOPT_SSL_FALSESTART, TRUE);
+  if (is_null($post_data_) == FALSE) {
+    curl_setopt($ch_, CURLOPT_POST, TRUE);
+    curl_setopt($ch_, CURLOPT_POSTFIELDS, http_build_query($post_data));
+  }
+  $res = curl_exec($ch);
+  
+  return $res;
+}
 
 ?>
