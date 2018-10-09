@@ -4,7 +4,8 @@ error_log('START');
 
 error_log(getenv('WEATHER_URL') . 'november-weather/' . getenv('WEATHER_SUB_CODE'));
 
-$res = get_contents(getenv('WEATHER_URL') . 'november-weather/' . getenv('WEATHER_SUB_CODE'), NULL);
+//$res = get_contents(getenv('WEATHER_URL') . 'november-weather/' . getenv('WEATHER_SUB_CODE'), NULL);
+$res = get_contents('https://www.accuweather.com/ja/jp/japan-weather', NULL);
 
 error_log($res);
 
