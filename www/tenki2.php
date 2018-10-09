@@ -146,7 +146,8 @@ if (count($list_delete_task) > 0) {
 
 // Get Folders
 
-$res = file_get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token);
+// $res = file_get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token);
+$res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
 $folders = json_decode($res, TRUE);
 
 $weather_folder_id = 0;
@@ -165,30 +166,29 @@ $post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
 
 // error_log(http_build_query($post_data));
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/add.php');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-curl_setopt($ch, CURLOPT_POST, TRUE);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
-$res = curl_exec($ch);
-curl_close($ch);
+$res = get_contents(
+  'https://api.toodledo.com/3/tasks/add.php',
+  [CURLOPT_POST => TRUE,
+   CURLOPT_POSTFIELDS => http_build_query($post_data),
+  ]);
 
 error_log($res);
 
 exit();
 
-function get_contents($ch_, $url_, $post_data_) {
-  curl_setopt($ch_, CURLOPT_URL, $url_); 
-  curl_setopt($ch_, CURLOPT_RETURNTRANSFER, TRUE);
-  curl_setopt($ch_, CURLOPT_ENCODING, "");
-  curl_setopt($ch_, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch_, CURLOPT_MAXREDIRS, 3);
-  curl_setopt($ch_, CURLOPT_SSL_FALSESTART, TRUE);
-  if (is_null($post_data_) == FALSE) {
-    curl_setopt($ch_, CURLOPT_POST, TRUE);
-    curl_setopt($ch_, CURLOPT_POSTFIELDS, http_build_query($post_data));
-  }
+function get_contents($url_, $options_) {
+  $ch = curl_init();
+  curl_setopt_array($ch, [
+    CURLOPT_URL => $url_,
+    CURLOPT_RETURNTRANSFER => TRUE,
+    CURLOPT_ENCODING => '',
+    CURLOPT_FOLLOWLOCATION => 1,
+    CURLOPT_MAXREDIRS => 3,
+    CURLOPT_SSL_FALSESTART => TRUE,
+    ]);
+  curl_setopt_array($ch, $options_);
   $res = curl_exec($ch);
+  curl_close($ch);
   
   return $res;
 }
