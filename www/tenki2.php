@@ -2,22 +2,26 @@
 
 error_log('START');
 
-error_log(date('m/d', strtotime('+10 days')));
+//error_log(date('m/d', strtotime('+10 days')));
+error_log(date('m/j', strtotime('+10 days')));
 
-error_log('https://feed43.com/' . getenv('SUB_ADDRESS') . '06-10.xml');
+error_log('https://feed43.com/' . getenv('SUB_ADDRESS') . '11-15.xml');
 
-$res = get_contents('https://feed43.com/' . getenv('SUB_ADDRESS') . '06-10.xml', NULL);
+$res = get_contents('https://feed43.com/' . getenv('SUB_ADDRESS') . '11-15.xml', NULL);
 
 error_log($res);
 
 $tmp = explode("\n", $res);
 error_log(print_r($tmp, TRUE));
 
+$list = [];
 foreach (explode("\n", $res) as $one_line) {
-  if (strpos($one_line, '<title>') !== FALSE) {
-    error_log($one_line);
+  if (strpos($one_line, '<title>_') !== FALSE) {
+    // error_log($one_line);
+    $list[] = $one_line;
   }
 }
+error_log(print_r($list, TRUE));
 
 function get_contents($url_, $options_) {
   $ch = curl_init();
