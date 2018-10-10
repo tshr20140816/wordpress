@@ -22,16 +22,17 @@ error_log(print_r($list_base, TRUE));
 
 $list_weather = [];
 $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
-$suffix = ' __ ' . date('md') . '__';
+$suffix = ' __' . date('md') . '__';
 for ($i = 0; $i < 15; $i++) {
   $timestamp = strtotime('+' . ($i + 10) . ' days');
   $dt = date('n/j', $timestamp);
   error_log($dt);
   if (array_key_exists($dt, $list_base)) {
     $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $list_base[$dt] . $suffix;
-    // error_log($tmp);
-    $list_weather[] = '{"title":"' . $tmp . '","duedate":"' . $timestamp . '","tag":"WEATHER2","folder":"__FOLDER_ID__"}';
+  } else {
+    $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ---- ' . $suffix;
   }
+  $list_weather[] = '{"title":"' . $tmp . '","duedate":"' . $timestamp . '","tag":"WEATHER2","folder":"__FOLDER_ID__"}';
 }
 error_log(print_r($list_weather, TRUE));
 
