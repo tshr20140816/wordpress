@@ -25,7 +25,7 @@ function get_contents($url_, $options_) {
       ],
     ]);
   if (is_null($options_) == FALSE) {
-    curl_setopt_array($ch, $options_);
+    // curl_setopt_array($ch, $options_);
   }
   $res = curl_exec($ch);
   curl_close($ch);
