@@ -18,11 +18,19 @@ for ($i = 0; $i < 3; $i++) {
 }
 error_log(print_r($list_base, TRUE));
 
-for ($i = 0; $i < 15; $i++) {
-  $dt = date('n/j', strtotime('+' . ($i + 10) . ' days'));
-  error_log($dt);
-}
+// ex) ##### 日曜日 01/13 ##### ☂/☀ 60% 25/18 __₁₀₁₀__
 
+$list_yobi = array('日', '月', '火', '水', '木', '金', '土');
+$suffix = ' __ ' . date('md') . '__';
+for ($i = 0; $i < 15; $i++) {
+  $timestamp = strtotime('+' . ($i + 10) . ' days');
+  $dt = date('n/j', $timestamp);
+  error_log($dt);
+  if (array_key_exists($dt, $list_base)) {
+    $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . '##### ' . $list_base[$dt] . $suffix;
+    error_log($tmp);
+  }
+}
 
 function get_contents($url_, $options_) {
   $ch = curl_init();
