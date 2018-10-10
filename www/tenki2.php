@@ -7,7 +7,7 @@ error_log(date('m/j', strtotime('+10 days')));
 
 $list = [];
 for ($i = 0; $i < 3; $i++) {
-  $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 16) . '.xml';
+  $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
   error_log($url);
   $res = get_contents($url, NULL);
   error_log($res);
