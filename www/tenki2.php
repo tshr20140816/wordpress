@@ -2,7 +2,7 @@
 
 error_log('START');
 
-error_log(date('m/d', strtotime('+10 days'));
+error_log(date('m/d', strtotime('+10 days')));
 
 error_log('https://feed43.com/' . getenv('SUB_ADDRESS') . '06-10.xml');
 
