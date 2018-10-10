@@ -2,9 +2,6 @@
 
 error_log('START');
 
-//error_log(date('m/d', strtotime('+10 days')));
-error_log(date('m/j', strtotime('+10 days')));
-
 $list_base = [];
 for ($i = 0; $i < 3; $i++) {
   $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
@@ -22,8 +19,8 @@ for ($i = 0; $i < 3; $i++) {
 error_log(print_r($list_base, TRUE));
 
 for ($i = 0; $i < 15; $i++) {
-  $dt = date('m/j', strtotime('+' . ($i + 10) . ' days'));
-  
+  $dt = date('n/j', strtotime('+' . ($i + 10) . ' days'));
+  error_log($dt);
 }
 
 
