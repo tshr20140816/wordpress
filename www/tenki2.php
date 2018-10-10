@@ -26,7 +26,7 @@ $subscript = '₀₁₂₃₄₅₆₇₈₉';
 for ($i = 0; $i < 10; $i++) {
   $update_marker = str_replace($i, mb_substr($subscript, $i, 1), $update_marker);
 }
-for ($i = 0; $i < 15; $i++) {
+for ($i = 0; $i < 20; $i++) {
   $timestamp = strtotime('+' . ($i + 10) . ' days');
   $dt = date('n/j', $timestamp);
   error_log($dt);
