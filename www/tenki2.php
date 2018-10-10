@@ -2,10 +2,9 @@
 
 error_log('START');
 
-error_log(getenv('WEATHER_URL') . 'november-weather/' . getenv('WEATHER_SUB_CODE'));
+error_log('https://feed43.com/' . getenv('SUB_ADDRESS') . '06-10.xml');
 
-//$res = get_contents(getenv('WEATHER_URL') . 'november-weather/' . getenv('WEATHER_SUB_CODE'), NULL);
-$res = get_contents('https://www.accuweather.com/ja/jp/japan-weather', NULL);
+$res = get_contents('https://feed43.com/' . getenv('SUB_ADDRESS') . '06-10.xml', NULL);
 
 error_log($res);
 
@@ -25,7 +24,7 @@ function get_contents($url_, $options_) {
       ],
     ]);
   if (is_null($options_) == FALSE) {
-    // curl_setopt_array($ch, $options_);
+    curl_setopt_array($ch, $options_);
   }
   $res = curl_exec($ch);
   curl_close($ch);
