@@ -11,6 +11,12 @@ error_log($res);
 $tmp = explode("\n", $res);
 error_log(print_r($tmp, TRUE));
 
+foreach (explode("\n", $res) as $one_line) {
+  if (strpos($one_line, '<title>') !== FALSE) {
+    error_log($one_line);
+  }
+}
+
 function get_contents($url_, $options_) {
   $ch = curl_init();
   curl_setopt_array($ch, [
