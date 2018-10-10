@@ -20,7 +20,7 @@ error_log(print_r($list_base, TRUE));
 
 $list_weather = [];
 $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
-$update_marker = ' __' . date('md') . '__';
+$update_marker = ' __' . date('ymd') . '__';
 // To Small Size
 $subscript = '₀₁₂₃₄₅₆₇₈₉';
 for ($i = 0; $i < 10; $i++) {
