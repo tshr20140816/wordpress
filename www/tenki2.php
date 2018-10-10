@@ -15,7 +15,7 @@ for ($i = 0; $i < 3; $i++) {
     if (strpos($one_line, '<title>_') !== FALSE) {
       // error_log($one_line);
       $tmp = explode('_', $one_line);
-      $list_base[$tmp[1]] = $one_line;
+      $list_base[$tmp[1]] = $tmp[2];
     }
   }
 }
