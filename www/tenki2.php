@@ -8,7 +8,7 @@ $res = get_contents('https://feed43.com/' . getenv('SUB_ADDRESS') . '06-10.xml',
 
 error_log($res);
 
-$tmp = explode("\r\n", $res);
+$tmp = explode("\n", $res);
 error_log(print_r($tmp, TRUE));
 
 function get_contents($url_, $options_) {
