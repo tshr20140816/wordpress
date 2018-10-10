@@ -20,6 +20,7 @@ error_log(print_r($list_base, TRUE));
 
 // ex) ##### 日曜日 01/13 ##### ☂/☀ 60% 25/18 __₁₀₁₀__
 
+$list_weather = [];
 $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
 $suffix = ' __ ' . date('md') . '__';
 for ($i = 0; $i < 15; $i++) {
@@ -28,9 +29,11 @@ for ($i = 0; $i < 15; $i++) {
   error_log($dt);
   if (array_key_exists($dt, $list_base)) {
     $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $list_base[$dt] . $suffix;
-    error_log($tmp);
+    // error_log($tmp);
+    $list_weather[] = '{"title":"' . $tmp . '","duedate":"' . $timestamp . '","tag":"WEATHER2","folder":"__FOLDER_ID__"}';
   }
 }
+error_log(print_r($list_weather, TRUE));
 
 function get_contents($url_, $options_) {
   $ch = curl_init();
