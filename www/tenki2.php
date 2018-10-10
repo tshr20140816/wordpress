@@ -3,7 +3,7 @@
 error_log('START');
 
 $list_base = [];
-for ($i = 0; $i < 3; $i++) {
+for ($i = 0; $i < 4; $i++) {
   $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
   error_log($url);
   $res = get_contents($url, NULL);
