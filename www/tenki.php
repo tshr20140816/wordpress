@@ -87,6 +87,7 @@ $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
 $list_weather = [];
 for ($i = 0; $i < 10; $i++) {
   // ex) ##### 日曜日 01/13 ##### ☂/☀ 60% 25/18 __₁₀₁₀__
+  $dt_tmp = strtotime($dt . ' +' . $i . ' day');
   $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i + 1]))));
   $tmp2 = $list[0];
   $tmp2 = str_replace('晴', '☀', $tmp2);
@@ -95,14 +96,14 @@ for ($i = 0; $i < 10; $i++) {
   $tmp2 = str_replace('のち', '/', $tmp2);
   $tmp2 = str_replace('時々', '|', $tmp2);
   $tmp2 = str_replace('一時', '|', $tmp2);
-  error_log('##### ' . $list_yobi[date('w', strtotime($dt . ' +' . $i . ' day'))] . '曜日 ' . date('m/d', strtotime($dt . ' +' . $i . ' day')) . ' ##### ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1] . $update_marker);
+  error_log('##### ' . $list_yobi[date('w', $dt_tmp)] . '曜日 ' . date('m/d', $dt_tmp) . ' ##### ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1] . $update_marker);
   $list_weather[] = '{"title":"' . '##### '
-    . $list_yobi[date('w', strtotime($dt . ' +' . $i . ' day'))] . '曜日 '
-    . date('m/d', strtotime($dt . ' +' . $i . ' day'))
+    . $list_yobi[date('w', $dt_tmp)] . '曜日 '
+    . date('m/d', $dt_tmp)
     . ' ##### '
     . $tmp2 . ' ' . $list[2] . ' ' . $list[1]
     . $update_marker
-    . '","duedate":"' . strtotime($dt . ' +' . $i . ' day')
+    . '","duedate":"' . $dt_tmp
     . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
 }
 
