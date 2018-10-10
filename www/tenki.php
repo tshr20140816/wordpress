@@ -130,20 +130,6 @@ for ($i = 0; $i < count($tasks); $i++) {
   }
 }
 
-// Delete Tasks
-
-error_log('DELETE TARGET TASK COUNT : ' . count($list_delete_task));
-
-if (count($list_delete_task) > 0) {
-  $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];  
-  $res = get_contents(
-    'https://api.toodledo.com/3/tasks/delete.php',
-    [CURLOPT_POST => TRUE,
-     CURLOPT_POSTFIELDS => http_build_query($post_data),
-    ]);
-  error_log('delete.php RESPONSE : ' . $res);
-}
-
 // Get Folders
 
 $res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
@@ -173,6 +159,20 @@ $res = get_contents(
   ]);
 
 error_log('add.php RESPONSE : ' . $res);
+
+// Delete Tasks
+
+error_log('DELETE TARGET TASK COUNT : ' . count($list_delete_task));
+
+if (count($list_delete_task) > 0) {
+  $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];  
+  $res = get_contents(
+    'https://api.toodledo.com/3/tasks/delete.php',
+    [CURLOPT_POST => TRUE,
+     CURLOPT_POSTFIELDS => http_build_query($post_data),
+    ]);
+  error_log('delete.php RESPONSE : ' . $res);
+}
 
 exit();
 
