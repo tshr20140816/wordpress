@@ -86,6 +86,7 @@ $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
 $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
 $list_weather = [];
 for ($i = 0; $i < 10; $i++) {
+  // ex) ##### 日曜日 01/13 ##### ☂/☀ 60% 25/18 __₁₀₁₀__
   $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i + 1]))));
   $tmp2 = $list[0];
   $tmp2 = str_replace('晴', '☀', $tmp2);
