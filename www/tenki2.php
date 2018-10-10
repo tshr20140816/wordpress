@@ -27,7 +27,7 @@ for ($i = 0; $i < 15; $i++) {
   $dt = date('n/j', $timestamp);
   error_log($dt);
   if (array_key_exists($dt, $list_base)) {
-    $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . '##### ' . $list_base[$dt] . $suffix;
+    $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $list_base[$dt] . $suffix;
     error_log($tmp);
   }
 }
