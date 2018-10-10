@@ -5,7 +5,10 @@ error_log('START');
 //error_log(date('m/d', strtotime('+10 days')));
 error_log(date('m/j', strtotime('+10 days')));
 
-error_log('https://feed43.com/' . getenv('SUB_ADDRESS') . '11-15.xml');
+for ($i = 0; $i < 3; $i++) {
+  error_log('https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 16) . '.xml');
+}
+exit();
 
 $res = get_contents('https://feed43.com/' . getenv('SUB_ADDRESS') . '11-15.xml', NULL);
 
