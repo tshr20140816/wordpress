@@ -31,10 +31,11 @@ for ($i = 0; $i < 15; $i++) {
   $dt = date('n/j', $timestamp);
   error_log($dt);
   if (array_key_exists($dt, $list_base)) {
-    $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $list_base[$dt] . $update_marker;
+    $tmp = $list_base[$dt];
   } else {
-    $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ---- ' . $update_marker;
+    $tmp = '----';
   }
+  $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $tmp . $update_marker;
   $list_weather[] = '{"title":"' . $tmp . '","duedate":"' . $timestamp . '","tag":"WEATHER2","folder":"__FOLDER_ID__"}';
 }
 error_log(print_r($list_weather, TRUE));
