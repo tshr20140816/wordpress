@@ -79,6 +79,7 @@ $pdo = null;
 
 // Get Tasks
 
+error_log('ACCESS TOKEN : ' . $access_token);
 $res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag', NULL);
 // error_log($res);
 
