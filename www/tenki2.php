@@ -1,13 +1,15 @@
 <?php
 
-error_log('START');
+$pid = getmypid();
+$requesturi = $_SERVER['REQUEST_URI'];
+error_log("${pid} START ${requesturi}");
 
 $list_base = [];
 for ($i = 0; $i < 4; $i++) {
   $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
-  error_log($url);
+  error_log($pid . ' ' . $url);
   $res = get_contents($url, NULL);
-  error_log($res);
+  error_log($pid . ' ' . $res);
   foreach (explode("\n", $res) as $one_line) {
     if (strpos($one_line, '<title>_') !== FALSE) {
       // error_log($one_line);
@@ -41,7 +43,7 @@ for ($i = 0; $i < 20; $i++) {
 error_log(print_r($list_weather, TRUE));
 
 if (count($list_weather) == 0) {
-  error_log('WEATHER DATA NONE');
+  error_log($pid . ' WEATHER DATA NONE');
   exit();
 }
 
@@ -71,7 +73,7 @@ foreach ($pdo->query($sql) as $row) {
 }
 
 if ($access_token == NULL) {
-  error_log('ACCESS TOKEN NONE');
+  error_log($pid . ' ACCESS TOKEN NONE');
   $pdo = null;
   exit();
 }
@@ -89,7 +91,7 @@ for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'WEATHER2') {
       $list_delete_task[] = $tasks[$i]['id'];
-      error_log('DELETE TARGET TASK ID : ' . $tasks[$i]['id']);
+      error_log($pid . ' DELETE TARGET TASK ID : ' . $tasks[$i]['id']);
       if (count($list_delete_task) == 50) {
         break;
       }
@@ -106,7 +108,7 @@ $weather_folder_id = 0;
 for ($i = 0; $i < count($folders); $i++) {
   if ($folders[$i]['name'] == 'WEATHER') {
     $weather_folder_id = $folders[$i]['id'];
-    error_log('WEATHER FOLDER ID : ' . $weather_folder_id);
+    error_log($pid . ' WEATHER FOLDER ID : ' . $weather_folder_id);
     break;
   }
 }
@@ -125,7 +127,7 @@ $res = get_contents(
    CURLOPT_POSTFIELDS => http_build_query($post_data),
   ]);
 
-error_log('add.php RESPONSE : ' . $res);
+error_log($pid . ' add.php RESPONSE : ' . $res);
 
 // Delete Tasks
 
@@ -138,8 +140,10 @@ if (count($list_delete_task) > 0) {
     [CURLOPT_POST => TRUE,
      CURLOPT_POSTFIELDS => http_build_query($post_data),
     ]);
-  error_log('delete.php RESPONSE : ' . $res);
+  error_log($pid . ' delete.php RESPONSE : ' . $res);
 }
+
+error_log("${pid} FINISH");
 
 exit();
 
