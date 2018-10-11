@@ -1,5 +1,9 @@
 <?php
 
+$pid = getmypid();
+$requesturi = $_SERVER['REQUEST_URI'];
+error_log("${pid} START ${requesturi}");
+
 // Access Token
 
 $connection_info = parse_url(getenv('DATABASE_URL'));
@@ -175,6 +179,8 @@ if (count($list_delete_task) > 0) {
     ]);
   error_log('delete.php RESPONSE : ' . $res);
 }
+
+error_log("${pid} FINISH");
 
 exit();
 
