@@ -72,9 +72,9 @@ $res = get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/', 
 
 $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
 
-error_log('$matches[0] : ' . $matches[0]);
-error_log('$matches[1] : ' . $matches[1]);
-error_log('$matches[2] : ' . $matches[2]);
+error_log($pid . ' $matches[0] : ' . $matches[0]);
+error_log($pid . ' $matches[1] : ' . $matches[1]);
+error_log($pid . ' $matches[2] : ' . $matches[2]);
 
 $dt = $matches[1];
 $update_marker = ' __' . substr($matches[1], 8) . $matches[2] . '__'; // __DDHH__
