@@ -30,13 +30,13 @@ foreach ($pdo->query($sql) as $row) {
 }
 
 if ($access_token == NULL) {
-  error_log('ACCESS TOKEN NONE');
+  error_log("${pid} ACCESS TOKEN NONE");
   $pdo = null;
   exit();
 }
 
 if ($refresh_flag == 1) {
-  error_log('refresh_token : ' . $refresh_token);
+  error_log("${pid} refresh_token : ${refresh_token}");
   $post_data = ['grant_type' => 'refresh_token', 'refresh_token' => $refresh_token];
   
   $res = get_contents(
@@ -46,7 +46,7 @@ if ($refresh_flag == 1) {
      CURLOPT_POSTFIELDS => http_build_query($post_data),
     ]);
   
-  error_log('token.php RESPONSE : ' . $res);
+  error_log("${pid} token.php RESPONSE : ${res}");
   $params = json_decode($res, TRUE);
   
   $sql = <<< __HEREDOC__
@@ -59,7 +59,7 @@ __HEREDOC__;
   $statement = $pdo->prepare($sql);
   $rc = $statement->execute([':b_access_token' => $params['access_token'],
                              ':b_refresh_token' => $params['refresh_token']]);
-  error_log('UPDATE RESULT : ' . $rc);
+  error_log("${pid} UPDATE RESULT : ${rc}");
   
   $access_token = $params['access_token'];
 }
@@ -100,7 +100,7 @@ for ($i = 0; $i < 10; $i++) {
   $tmp2 = str_replace('のち', '/', $tmp2);
   $tmp2 = str_replace('時々', '|', $tmp2);
   $tmp2 = str_replace('一時', '|', $tmp2);
-  error_log('##### ' . $list_yobi[date('w', $dt_tmp)] . '曜日 ' . date('m/d', $dt_tmp) . ' ##### ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1] . $update_marker);
+  error_log($pid . ' ##### ' . $list_yobi[date('w', $dt_tmp)] . '曜日 ' . date('m/d', $dt_tmp) . ' ##### ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1] . $update_marker);
   $list_weather[] = '{"title":"' . '##### '
     . $list_yobi[date('w', $dt_tmp)] . '曜日 '
     . date('m/d', $dt_tmp)
@@ -112,7 +112,7 @@ for ($i = 0; $i < 10; $i++) {
 }
 
 if (count($list_weather) == 0) {
-  error_log('WEATHER DATA NONE');
+  error_log("${pid} WEATHER DATA NONE");
   exit();
 }
 
@@ -128,7 +128,7 @@ for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'WEATHER') {
       $list_delete_task[] = $tasks[$i]['id'];
-      error_log('DELETE TARGET TASK ID : ' . $tasks[$i]['id']);
+      error_log("${pid} DELETE TARGET TASK ID : " . $tasks[$i]['id']);
       if (count($list_delete_task) == 50) {
         break;
       }
@@ -145,7 +145,7 @@ $weather_folder_id = 0;
 for ($i = 0; $i < count($folders); $i++) {
   if ($folders[$i]['name'] == 'WEATHER') {
     $weather_folder_id = $folders[$i]['id'];
-    error_log('WEATHER FOLDER ID : ' . $weather_folder_id);
+    error_log("${pid} WEATHER FOLDER ID : ${weather_folder_id}");
     break;
   }
 }
@@ -164,11 +164,11 @@ $res = get_contents(
    CURLOPT_POSTFIELDS => http_build_query($post_data),
   ]);
 
-error_log('add.php RESPONSE : ' . $res);
+error_log("${pid} add.php RESPONSE : ${res}");
 
 // Delete Tasks
 
-error_log('DELETE TARGET TASK COUNT : ' . count($list_delete_task));
+error_log("${pid} DELETE TARGET TASK COUNT : " . count($list_delete_task));
 
 if (count($list_delete_task) > 0) {
   $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];  
@@ -177,7 +177,7 @@ if (count($list_delete_task) > 0) {
     [CURLOPT_POST => TRUE,
      CURLOPT_POSTFIELDS => http_build_query($post_data),
     ]);
-  error_log('delete.php RESPONSE : ' . $res);
+  error_log("${pid} delete.php RESPONSE : ${res}");
 }
 
 error_log("${pid} FINISH");
