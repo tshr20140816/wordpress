@@ -2,8 +2,8 @@
 
 for ($i = 0; $i < 60; $i++) {
   $timestamp = strtotime('+' . ($i + 10) . ' days');
-  $diff = date_diff($timestamp, time());
-  error_log($diff['m']);
+  $diff = $timestamp - time();
+  error_log($diff);
 }
 
 ?>
