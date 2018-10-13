@@ -37,7 +37,7 @@ for ($i = 0; $i < 70; $i++) {
   } else {
     $tmp = '----';
   }
-  if ($i > 20 && date('N', $timestamp) < 6) {
+  if ($i > 20 && (date('w', $timestamp) + 1) % 7 > 2) {
     continue;
   }
   $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $tmp . $update_marker;
