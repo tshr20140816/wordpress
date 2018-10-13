@@ -28,7 +28,7 @@ $subscript = '₀₁₂₃₄₅₆₇₈₉';
 for ($i = 0; $i < 10; $i++) {
   $update_marker = str_replace($i, mb_substr($subscript, $i, 1), $update_marker);
 }
-for ($i = 0; $i < 20; $i++) {
+for ($i = 0; $i < 70; $i++) {
   $timestamp = strtotime('+' . ($i + 10) . ' days');
   $dt = date('n/j', $timestamp);
   error_log($dt);
@@ -36,6 +36,9 @@ for ($i = 0; $i < 20; $i++) {
     $tmp = $list_base[$dt];
   } else {
     $tmp = '----';
+  }
+  if ($i > 20 && date('N', $timestamp) < 6) {
+    continue;
   }
   $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $tmp . $update_marker;
   $list_weather[] = '{"title":"' . $tmp . '","duedate":"' . $timestamp . '","tag":"WEATHER2","folder":"__FOLDER_ID__"}';
