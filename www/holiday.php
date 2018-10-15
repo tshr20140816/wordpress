@@ -1,5 +1,9 @@
 <?php
 
+$pid = getmypid();
+$requesturi = $_SERVER['REQUEST_URI'];
+error_log("${pid} START ${requesturi}");
+
 // Access Token
 
 $connection_info = parse_url(getenv('DATABASE_URL'));
@@ -30,7 +34,7 @@ if ($access_token == NULL) {
 }
 
 if ($refresh_flag == 1) {
-  error_log('refresh_token : ' . $refresh_token);
+  error_log("${pid} refresh_token : ${refresh_token}");
   $post_data = ['grant_type' => 'refresh_token', 'refresh_token' => $refresh_token];
 
   $ch = curl_init();
@@ -42,7 +46,7 @@ if ($refresh_flag == 1) {
   $res = curl_exec($ch);
   curl_close($ch);
 
-  error_log($res);
+  error_log("${pid} ${res}");
   $params = json_decode($res, TRUE);
 
   $sql = <<< __HEREDOC__
@@ -74,10 +78,11 @@ for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'HOLIDAY') {
       $list_holiday_task_title[$tasks[$i]['title']] = $tasks[$i]['id'];
-      error_log($tasks[$i]['title']);
+      error_log($pid . ' ' . $tasks[$i]['title']);
     }
   }
 }
+error_log($pid . ' ' . print_r($list_holiday_task_title, TRUE));
 
 // Holiday
 
@@ -97,15 +102,15 @@ $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 $tmp_list = explode("\n", $res);
 $holiday_list = [];
 for ($i = 1; $i < count($tmp_list) - 1; $i++) {
-  error_log($tmp_list[$i]);
+  error_log($pid . ' ' . $tmp_list[$i]);
   $tmp = explode(',', $tmp_list[$i]);
-  error_log('####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####');
+  error_log($pid . ' ' . '####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####');
   $holiday_list['####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####'] = $tmp[0] . $tmp[1] . $tmp[2] . $tmp[7];
 }
 
 $holiday_diff_list = array_diff(array_keys($holiday_list), array_keys($list_holiday_task_title));
 
-error_log(print_r($holiday_diff_list, TRUE));
+error_log($pid . ' ' . print_r($holiday_diff_list, TRUE));
 
 $holiday_diff_list = array_slice($holiday_diff_list, 0, 50);
 
@@ -115,14 +120,14 @@ $add_task_list = [];
 $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","tag":"HOLIDAY","folder":"__FOLDER_ID__"}';
 for ($i = 0; $i < count($holiday_diff_list); $i++) {
   if (array_key_exists($holiday_diff_list[$i], $holiday_list)) {
-    error_log($holiday_list[$holiday_diff_list[$i]]);
+    error_log($pid . ' ' . $holiday_list[$holiday_diff_list[$i]]);
     $tmp = str_replace('__TITLE__', $holiday_diff_list[$i], $add_task_template);
     $tmp = str_replace('__DUEDATE__', strtotime(substr($holiday_list[$holiday_diff_list[$i]], 0, 8)), $tmp);
     $add_task_list[] = $tmp;
   }
 }
 
-error_log(print_r($add_task_list, TRUE));
+error_log($pid . ' ' . print_r($add_task_list, TRUE));
 
 if (count($add_task_list) == 0) {
   exit();
@@ -145,7 +150,7 @@ $tmp = implode(',', $add_task_list);
 $tmp = str_replace('__FOLDER_ID__', $holiday_folder_id, $tmp);
 $post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
 
-error_log(print_r($post_data, TRUE));
+error_log($pid . ' ' . print_r($post_data, TRUE));
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/add.php');
@@ -155,6 +160,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
 $res = curl_exec($ch);
 curl_close($ch);
 
-error_log($res);
+error_log("${pid} ${res}");
 
+error_log("${pid} FINISH");
 ?>
