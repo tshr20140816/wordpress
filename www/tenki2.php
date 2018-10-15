@@ -5,7 +5,7 @@ $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi}");
 
 $list_base = [];
-for ($i = 0; $i < 4; $i++) {
+for ($i = 0; $i < 6; $i++) {
   $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
   error_log($pid . ' ' . $url);
   $res = get_contents($url, NULL);
