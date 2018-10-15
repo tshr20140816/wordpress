@@ -4,6 +4,8 @@ set -x
 
 export TZ=JST-9
 
+php -i
+
 if [ ! -v BASIC_USER ]; then
   echo "Error : BASIC_USER not defined."
   exit
