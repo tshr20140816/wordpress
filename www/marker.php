@@ -95,8 +95,8 @@ for ($i = 0; $i < 1096 - 80; $i++) {
   if ($yyyy_limit == $yyyy) {
     break;
   }
-  $d = date('j', $timestamp);
-  if ($d == 1 || $d == 11 || $d == 21) {
+  $w = date('w', $timestamp);
+  if ($w == 0 || $w == 1 || $w == 6) {
     $marker_list['##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' #####'] = $timestamp;
   }
 }
