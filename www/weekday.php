@@ -115,7 +115,7 @@ for ($i = 0; $i < count($tasks); $i++) {
     error_log($i . ' ' . $context_id);
     error_log($i . ' ' . date('w', $duedate));
     error_log($i . ' ' . $yobi_list[intval(date('w', $duedate))]);
-    // error_log(print_r($tasks[$i], TRUE));
+    error_log(print_r($tasks[$i], TRUE));
   }
 }
 //error_log($pid . ' ' . print_r($list_marker_task_title, TRUE));
