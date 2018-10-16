@@ -110,13 +110,13 @@ $edit_task_list = [];
 $edit_task_template = '{"id":"__ID__","content":"__CONTENT__"}';
 
 for ($i = 0; $i < count($tasks); $i++) {
-  $duedate = $tasks[$i]['duedate'];
-  $context_id = $tasks[$i]['context'];
   if (array_key_exists('id', $tasks[$i])) {
-    if ($context_id == '0' || $context_id != $yobi_list[intval(date('w', $duedate))]) {
+    $real_content_id = $yobi_list[intval(date('w', $tasks[$i]['duedate']))];
+    $task_context_id = $tasks[$i]['context'];
+    if ($task_context_id == '0' || $task_context_id != $real_content_id) {
       error_log(print_r($tasks[$i], TRUE));
       $tmp = str_replace('__ID__', $tasks[$i]['id'], $edit_task_template);
-      $tmp = str_replace('__CONTENT__', $tasks[$i]['context'], $tmp);
+      $tmp = str_replace('__CONTENT__', $real_content_id, $tmp);
       $edit_task_list[] = $tmp;
       break;
     }
@@ -124,6 +124,18 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 error_log($pid . ' ' . print_r($edit_task_list, TRUE));
 // $edit_task_list = array_slice($edit_task_list, 0, 50);
+
+$tmp = implode(',', $edit_task_list);
+$post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]"];
+
+error_log($pid . ' ' . print_r($post_data, TRUE));
+
+$res = get_contents(
+  'https://api.toodledo.com/3/tasks/edit.php',
+  [CURLOPT_POST => TRUE,
+   CURLOPT_POSTFIELDS => http_build_query($post_data),
+  ]);
+error_log("${pid} edit.php RESPONSE : ${res}");
 
 error_log("${pid} FINISH");
 
