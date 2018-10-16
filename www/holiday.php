@@ -36,17 +36,15 @@ if ($access_token == NULL) {
 if ($refresh_flag == 1) {
   error_log("${pid} refresh_token : ${refresh_token}");
   $post_data = ['grant_type' => 'refresh_token', 'refresh_token' => $refresh_token];
-
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/account/token.php');
-  curl_setopt($ch, CURLOPT_USERPWD, getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'));
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-  curl_setopt($ch, CURLOPT_POST, TRUE);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
-  $res = curl_exec($ch);
-  curl_close($ch);
-
-  error_log("${pid} ${res}");
+  
+  $res = get_contents(
+    'https://api.toodledo.com/3/account/token.php',
+    [CURLOPT_USERPWD => getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'),
+     CURLOPT_POST => TRUE,
+     CURLOPT_POSTFIELDS => http_build_query($post_data),
+    ]);
+  
+  error_log("${pid} token.php RESPONSE : ${res}");
   $params = json_decode($res, TRUE);
 
   $sql = <<< __HEREDOC__
@@ -59,8 +57,8 @@ __HEREDOC__;
   $statement = $pdo->prepare($sql);
   $rc = $statement->execute([':b_access_token' => $params['access_token'],
                              ':b_refresh_token' => $params['refresh_token']]);
-  error_log('UPDATE RESULT : ' . $rc);
-
+  error_log("${pid} UPDATE RESULT : ${rc}");
+  
   $access_token = $params['access_token'];
 }
 
@@ -68,7 +66,7 @@ $pdo = null;
 
 // Get Tasks
 
-$res = file_get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag');
+$res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag', NULL);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
@@ -93,7 +91,7 @@ $finish_yyyy = $start_yyyy + 2;
 
 $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=12&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-$res = file_get_contents($url);
+$res = get_contents($url, NULL);
 
 $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
@@ -135,32 +133,51 @@ if (count($add_task_list) == 0) {
 
 // Get Folders
 
-$res = file_get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token);
+$res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
 $folders = json_decode($res, TRUE);
 
 $holiday_folder_id = 0;
 for ($i = 0; $i < count($folders); $i++) {
   if ($folders[$i]['name'] == 'HOLIDAY') {
     $holiday_folder_id = $folders[$i]['id'];
+    error_log("${pid} HOLIDAY FOLDER ID : ${holiday_folder_id}");
     break;
   }
 }
 
 $tmp = implode(',', $add_task_list);
 $tmp = str_replace('__FOLDER_ID__', $holiday_folder_id, $tmp);
-$post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
+$post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]"];
 
 error_log($pid . ' ' . print_r($post_data, TRUE));
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/tasks/add.php');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-curl_setopt($ch, CURLOPT_POST, TRUE);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
-$res = curl_exec($ch);
-curl_close($ch);
-
-error_log("${pid} ${res}");
+$res = get_contents(
+  'https://api.toodledo.com/3/tasks/add.php',
+  [CURLOPT_POST => TRUE,
+   CURLOPT_POSTFIELDS => http_build_query($post_data),
+  ]);
+error_log("${pid} add.php RESPONSE : ${res}");
 
 error_log("${pid} FINISH");
+
+exit();
+
+function get_contents($url_, $options_) {
+  $ch = curl_init();
+  curl_setopt_array($ch, [
+    CURLOPT_URL => $url_,
+    CURLOPT_RETURNTRANSFER => TRUE,
+    CURLOPT_ENCODING => '',
+    CURLOPT_FOLLOWLOCATION => 1,
+    CURLOPT_MAXREDIRS => 3,
+    CURLOPT_SSL_FALSESTART => TRUE,
+    ]);
+  if (is_null($options_) == FALSE) {
+    curl_setopt_array($ch, $options_);
+  }
+  $res = curl_exec($ch);
+  curl_close($ch);
+  
+  return $res;
+}
 ?>
