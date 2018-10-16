@@ -147,14 +147,12 @@ $post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]"];
 
 error_log($pid . ' ' . print_r($post_data, TRUE));
 
-/*
 $res = get_contents(
   'https://api.toodledo.com/3/tasks/add.php',
   [CURLOPT_POST => TRUE,
    CURLOPT_POSTFIELDS => http_build_query($post_data),
   ]);
 error_log("${pid} add.php RESPONSE : ${res}");
-*/
 
 error_log("${pid} FINISH");
 
