@@ -1,11 +1,11 @@
 <?php
 
-$year = date('%Y');
+$year = date('%Y') + 3;
 
-for ($i = 0; $i < 731 - 80; $i++) {
+for ($i = 0; $i < 1096 - 80; $i++) {
   $timestamp = strtotime('+' . ($i + 80) . ' days');
   $y = date('Y', $timestamp);
-  if ($year + 3 == $y) {
+  if ($year == $y) {
     break;
   }
   $d = date('j', $timestamp);
