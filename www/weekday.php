@@ -118,7 +118,6 @@ for ($i = 0; $i < count($tasks); $i++) {
       $tmp = str_replace('__ID__', $tasks[$i]['id'], $edit_task_template);
       $tmp = str_replace('__CONTEXT__', $real_context_id, $tmp);
       $edit_task_list[] = $tmp;
-      break;
     }
   }
 }
