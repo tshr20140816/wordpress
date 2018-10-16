@@ -4,6 +4,74 @@ $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi}");
 
+// Access Token
+
+$connection_info = parse_url(getenv('DATABASE_URL'));
+$pdo = new PDO(
+  "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
+  $connection_info['user'],
+  $connection_info['pass']);
+
+$sql = <<< __HEREDOC__
+SELECT M1.access_token
+      ,M1.refresh_token
+      ,M1.expires_in
+      ,M1.create_time
+      ,M1.update_time
+      ,CASE WHEN LOCALTIMESTAMP < M1.update_time + interval '90 minutes' THEN 0 ELSE 1 END refresh_flag
+  FROM m_authorization M1;
+__HEREDOC__;
+
+$access_token = NULL;
+foreach ($pdo->query($sql) as $row) {
+  $access_token = $row['access_token'];
+  $refresh_token = $row['refresh_token'];
+  $refresh_flag = $row['refresh_flag'];
+}
+
+if ($access_token == NULL) {
+  error_log($pid . ' ACCESS TOKEN NONE');
+  $pdo = null;
+  exit();
+}
+$pdo = null;
+
+// Get Contexts
+
+$res = get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $access_token, NULL);
+$contexts = json_decode($res, TRUE);
+
+$context_id_list = [];
+for ($i = 0; $i < count($contexts); $i++) {
+  switch ($contexts[$i]['name']) {
+    case '日......':
+      $context_id_list[0] = $contexts[$i]['id'];
+      break;
+    case '.月.....':
+      $context_id_list[1] = $contexts[$i]['id'];
+      break;
+    case '..火....':
+      $context_id_list[2] = $contexts[$i]['id'];
+      break;
+    case '...水...':
+      $context_id_list[3] = $contexts[$i]['id'];
+      break;
+    case '....木..':
+      $context_id_list[4] = $contexts[$i]['id'];
+      break;
+    case '.....金.':
+      $context_id_list[5] = $contexts[$i]['id'];
+      break;
+    case '......土':
+      $context_id_list[6] = $contexts[$i]['id'];
+      break;
+  }
+}
+
+error_log($pid . ' ' . print_r($context_id_list, TRUE));
+
+// Weather Information
+
 $list_base = [];
 for ($i = 0; $i < 8; $i++) {
   $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
@@ -41,7 +109,7 @@ for ($i = 0; $i < 70; $i++) {
     continue;
   }
   $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $tmp . $update_marker;
-  $list_weather[] = '{"title":"' . $tmp . '","duedate":"' . $timestamp . '","tag":"WEATHER2","folder":"__FOLDER_ID__"}';
+  $list_weather[] = '{"title":"' . $tmp . '","duedate":"' . $timestamp . '","tag":"WEATHER2","context":' . $context_id_list[date('w', $timestamp)] . ',"folder":__FOLDER_ID__}';
 }
 error_log(print_r($list_weather, TRUE));
 
@@ -49,38 +117,6 @@ if (count($list_weather) == 0) {
   error_log($pid . ' WEATHER DATA NONE');
   exit();
 }
-
-// Access Token
-
-$connection_info = parse_url(getenv('DATABASE_URL'));
-$pdo = new PDO(
-  "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
-  $connection_info['user'],
-  $connection_info['pass']);
-
-$sql = <<< __HEREDOC__
-SELECT M1.access_token
-      ,M1.refresh_token
-      ,M1.expires_in
-      ,M1.create_time
-      ,M1.update_time
-      ,CASE WHEN LOCALTIMESTAMP < M1.update_time + interval '90 minutes' THEN 0 ELSE 1 END refresh_flag
-  FROM m_authorization M1;
-__HEREDOC__;
-
-$access_token = NULL;
-foreach ($pdo->query($sql) as $row) {
-  $access_token = $row['access_token'];
-  $refresh_token = $row['refresh_token'];
-  $refresh_flag = $row['refresh_flag'];
-}
-
-if ($access_token == NULL) {
-  error_log($pid . ' ACCESS TOKEN NONE');
-  $pdo = null;
-  exit();
-}
-$pdo = null;
 
 // Get Tasks
 
