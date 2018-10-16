@@ -110,7 +110,7 @@ $tasks = json_decode($res, TRUE);
 for ($i = 0; $i < count($tasks); $i++) {
   $duedate = $tasks[$i]['duedate'];
   $context_id = $tasks[$i]['context'];
-  if ($yobi_list[date('w', $dudate)] == $context_id) {
+  if ($yobi_list[intval(date('w', $dudate))] == $context_id) {
     error_log($pid . ' ' . $tasks[$i]['name']);
   }
 }
