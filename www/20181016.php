@@ -69,14 +69,12 @@ $pdo = null;
 $res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag', NULL);
 // error_log($res);
 
-// For Holiday
-
 $tasks = json_decode($res, TRUE);
 // error_log(print_r($tasks, TRUE));
 $list_marker_task_title = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'HOLIDAY') {
+    if ($tasks[$i]['tag'] == 'MARKER') {
       $list_marker_task_title[$tasks[$i]['title']] = $tasks[$i]['id'];
     }
   }
@@ -113,12 +111,12 @@ $marker_diff_list = array_slice($marker_diff_list, 0, 50);
 // Make Add Tasks List
 
 $add_task_list = [];
-$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","tag":"HOLIDAY","folder":"__FOLDER_ID__"}';
-for ($i = 0; $i < count($holiday_diff_list); $i++) {
-  if (array_key_exists($holiday_diff_list[$i], $holiday_list)) {
-    error_log($pid . ' ' . $holiday_list[$holiday_diff_list[$i]]);
-    $tmp = str_replace('__TITLE__', $holiday_diff_list[$i], $add_task_template);
-    $tmp = str_replace('__DUEDATE__', strtotime(substr($holiday_list[$holiday_diff_list[$i]], 0, 8)), $tmp);
+$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","tag":"MARKER","folder":"__FOLDER_ID__"}';
+for ($i = 0; $i < count($marker_diff_list); $i++) {
+  if (array_key_exists($marker_diff_list[$i], $marker_list)) {
+    // error_log($pid . ' ' . $marker_list[$marker_diff_list[$i]]);
+    $tmp = str_replace('__TITLE__', $marker_diff_list[$i], $add_task_template);
+    $tmp = str_replace('__DUEDATE__', $marker_list[$marker_diff_list[$i]], $tmp);
     $add_task_list[] = $tmp;
   }
 }
@@ -134,27 +132,29 @@ if (count($add_task_list) == 0) {
 $res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
 $folders = json_decode($res, TRUE);
 
-$holiday_folder_id = 0;
+$marker_folder_id = 0;
 for ($i = 0; $i < count($folders); $i++) {
-  if ($folders[$i]['name'] == 'HOLIDAY') {
-    $holiday_folder_id = $folders[$i]['id'];
-    error_log("${pid} HOLIDAY FOLDER ID : ${holiday_folder_id}");
+  if ($folders[$i]['name'] == 'MARKER') {
+    $marker_folder_id = $folders[$i]['id'];
+    error_log("${pid} MARKER FOLDER ID : ${marker_folder_id}");
     break;
   }
 }
 
 $tmp = implode(',', $add_task_list);
-$tmp = str_replace('__FOLDER_ID__', $holiday_folder_id, $tmp);
+$tmp = str_replace('__FOLDER_ID__', $marker_folder_id, $tmp);
 $post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]"];
 
 error_log($pid . ' ' . print_r($post_data, TRUE));
 
+/*
 $res = get_contents(
   'https://api.toodledo.com/3/tasks/add.php',
   [CURLOPT_POST => TRUE,
    CURLOPT_POSTFIELDS => http_build_query($post_data),
   ]);
 error_log("${pid} add.php RESPONSE : ${res}");
+*/
 
 error_log("${pid} FINISH");
 
