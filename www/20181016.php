@@ -73,46 +73,42 @@ $res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $
 
 $tasks = json_decode($res, TRUE);
 // error_log(print_r($tasks, TRUE));
-$list_holiday_task_title = [];
+$list_marker_task_title = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'HOLIDAY') {
-      $list_holiday_task_title[$tasks[$i]['title']] = $tasks[$i]['id'];
-      // error_log($pid . ' ' . $tasks[$i]['title']);
+      $list_marker_task_title[$tasks[$i]['title']] = $tasks[$i]['id'];
     }
   }
 }
-error_log($pid . ' ' . print_r($list_holiday_task_title, TRUE));
+error_log($pid . ' ' . print_r($list_marker_task_title, TRUE));
 
-// Holiday
+// Marker
 
-$start_yyyy = date('Y', strtotime('+2 month'));
-$start_m = date('n', strtotime('+2 month'));
-$finish_yyyy = $start_yyyy + 2;
-// $finish_m = 12;
+$list_yobi = array('日', '月', '火', '水', '木', '金', '土');
 
-$url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=12&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
+$yyyy_limit = date('Y', strtotime('+3 years'));
+error_log("${pid} YEAR LIMIT : ${yyyy_limit}");
 
-$res = get_contents($url, NULL);
-
-$res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
-
-// error_log($res);
-
-$tmp_list = explode("\n", $res);
-$holiday_list = [];
-for ($i = 1; $i < count($tmp_list) - 1; $i++) {
-  error_log($pid . ' ' . $tmp_list[$i]);
-  $tmp = explode(',', $tmp_list[$i]);
-  error_log($pid . ' ' . '####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####');
-  $holiday_list['####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####'] = $tmp[0] . $tmp[1] . $tmp[2] . $tmp[7];
+$marker_list = [];
+for ($i = 0; $i < 1096 - 80; $i++) {
+  $timestamp = strtotime('+' . ($i + 80) . ' days');
+  $yyyy = date('Y', $timestamp);
+  if ($yyyy_limit == $yyyy) {
+    break;
+  }
+  $d = date('j', $timestamp);
+  if ($d == 1 || $d == 11 || $d == 21) {
+    $marker_list['##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' #####'] = $timestamp;
+  }
 }
+error_log(print_r($marker_list, TRUE));
 
-$holiday_diff_list = array_diff(array_keys($holiday_list), array_keys($list_holiday_task_title));
+$marker_diff_list = array_diff(array_keys($marker_list), array_keys($list_marker_task_title));
 
-error_log($pid . ' ' . print_r($holiday_diff_list, TRUE));
+error_log($pid . ' ' . print_r($marker_diff_list, TRUE));
 
-$holiday_diff_list = array_slice($holiday_diff_list, 0, 50);
+$marker_diff_list = array_slice($marker_diff_list, 0, 50);
 
 // Make Add Tasks List
 
