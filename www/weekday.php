@@ -104,14 +104,15 @@ $res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
-error_log(print_r($tasks, TRUE));
+//error_log(print_r($tasks, TRUE));
 
 // $list_marker_task_title = [];
 for ($i = 0; $i < count($tasks); $i++) {
   $duedate = $tasks[$i]['duedate'];
   $context_id = $tasks[$i]['context'];
-  if ($yobi_list[intval(date('w', $dudate))] == $context_id) {
-    error_log($pid . ' ' . $tasks[$i]['name']);
+  if ($context_id != '0') {
+    // error_log($pid . ' ' . $tasks[$i]['name']);
+    error_log(print_r($tasks[$i], TRUE));
   }
 }
 //error_log($pid . ' ' . print_r($list_marker_task_title, TRUE));
