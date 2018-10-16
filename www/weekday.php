@@ -122,8 +122,8 @@ for ($i = 0; $i < count($tasks); $i++) {
     }
   }
 }
+$edit_task_list = array_slice($edit_task_list, 0, 5);
 error_log($pid . ' ' . print_r($edit_task_list, TRUE));
-// $edit_task_list = array_slice($edit_task_list, 0, 50);
 
 $tmp = implode(',', $edit_task_list);
 $post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]", 'fields' => 'context'];
