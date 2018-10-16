@@ -64,13 +64,50 @@ __HEREDOC__;
 
 $pdo = null;
 
+// Get Contexts
+
+$res = get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $access_token, NULL);
+$contexts = json_decode($res, TRUE);
+
+$yobi_list = [];
+for ($i = 0; $i < count($contexts); $i++) {
+  switch ($contexts[$i]['name']) {
+    case '₀日':
+      $yobi_list[0] = $contexts[$i]['id'];
+      break;
+    case '₁月':
+      $yobi_list[1] = $contexts[$i]['id'];
+      break;
+    case '₂火':
+      $yobi_list[2] = $contexts[$i]['id'];
+      break;
+    case '₃水':
+      $yobi_list[3] = $contexts[$i]['id'];
+      break;
+    case '₄木':
+      $yobi_list[4] = $contexts[$i]['id'];
+      break;
+    case '₅金':
+      $yobi_list[5] = $contexts[$i]['id'];
+      break;
+    case '₆土':
+      $yobi_list[6] = $contexts[$i]['id'];
+      break;
+  }
+}
+
+error_log($pid . ' ' . print_r($yobi_list, TRUE));
+
 // Get Tasks
 
-$res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag', NULL);
+$res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag,context', NULL);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
-// error_log(print_r($tasks, TRUE));
+error_log(print_r($tasks, TRUE));
+
+exit();
+
 $list_marker_task_title = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
@@ -81,4 +118,26 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 error_log($pid . ' ' . print_r($list_marker_task_title, TRUE));
 
+error_log("${pid} FINISH");
+
+exit();
+
+function get_contents($url_, $options_) {
+  $ch = curl_init();
+  curl_setopt_array($ch, [
+    CURLOPT_URL => $url_,
+    CURLOPT_RETURNTRANSFER => TRUE,
+    CURLOPT_ENCODING => '',
+    CURLOPT_FOLLOWLOCATION => 1,
+    CURLOPT_MAXREDIRS => 3,
+    CURLOPT_SSL_FALSESTART => TRUE,
+    ]);
+  if (is_null($options_) == FALSE) {
+    curl_setopt_array($ch, $options_);
+  }
+  $res = curl_exec($ch);
+  curl_close($ch);
+  
+  return $res;
+}
 ?>
