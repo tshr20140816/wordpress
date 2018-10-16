@@ -72,25 +72,25 @@ $contexts = json_decode($res, TRUE);
 $yobi_list = [];
 for ($i = 0; $i < count($contexts); $i++) {
   switch ($contexts[$i]['name']) {
-    case '₀日':
+    case '日......':
       $yobi_list[0] = $contexts[$i]['id'];
       break;
-    case '₁月':
+    case '.月.....':
       $yobi_list[1] = $contexts[$i]['id'];
       break;
-    case '₂火':
+    case '..火....':
       $yobi_list[2] = $contexts[$i]['id'];
       break;
-    case '₃水':
+    case '...水...':
       $yobi_list[3] = $contexts[$i]['id'];
       break;
-    case '₄木':
+    case '....木..':
       $yobi_list[4] = $contexts[$i]['id'];
       break;
-    case '₅金':
+    case '.....金.':
       $yobi_list[5] = $contexts[$i]['id'];
       break;
-    case '₆土':
+    case '......土':
       $yobi_list[6] = $contexts[$i]['id'];
       break;
   }
