@@ -66,6 +66,40 @@ __HEREDOC__;
 
 $pdo = null;
 
+// Get Contexts
+
+$res = get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $access_token, NULL);
+$contexts = json_decode($res, TRUE);
+
+$context_id_list = [];
+for ($i = 0; $i < count($contexts); $i++) {
+  switch ($contexts[$i]['name']) {
+    case '日......':
+      $context_id_list[0] = $contexts[$i]['id'];
+      break;
+    case '.月.....':
+      $context_id_list[1] = $contexts[$i]['id'];
+      break;
+    case '..火....':
+      $context_id_list[2] = $contexts[$i]['id'];
+      break;
+    case '...水...':
+      $context_id_list[3] = $contexts[$i]['id'];
+      break;
+    case '....木..':
+      $context_id_list[4] = $contexts[$i]['id'];
+      break;
+    case '.....金.':
+      $context_id_list[5] = $contexts[$i]['id'];
+      break;
+    case '......土':
+      $context_id_list[6] = $contexts[$i]['id'];
+      break;
+  }
+}
+
+error_log($pid . ' ' . print_r($context_id_list, TRUE));
+
 // Weather Information
 
 $res = get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/', NULL);
@@ -108,6 +142,7 @@ for ($i = 0; $i < 10; $i++) {
     . $tmp2 . ' ' . $list[2] . ' ' . $list[1]
     . $update_marker
     . '","duedate":"' . $dt_tmp
+    . '","context":"' . $context_id_list[date('w', $dt_tmp)]
     . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
 }
 
