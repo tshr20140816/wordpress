@@ -1,6 +1,6 @@
 <?php
 
-$year = date('%Y') + 3;
+$year = date('%Y', '+3 years');
 
 for ($i = 0; $i < 1096 - 80; $i++) {
   $timestamp = strtotime('+' . ($i + 80) . ' days');
