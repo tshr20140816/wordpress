@@ -1,5 +1,7 @@
 <?php
 
+$list_yobi = array('日', '月', '火', '水', '木', '金', '土');
+
 $yyyy_limit = date('Y', strtotime('+3 years'));
 error_log($yyyy_limit);
 
@@ -11,7 +13,7 @@ for ($i = 0; $i < 1096 - 80; $i++) {
   }
   $d = date('j', $timestamp);
   if ($d == 1 || $d == 11 || $d == 21) {
-    error_log(date('m/d', $timestamp));
+    error_log($list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp));
   }
 }
 
