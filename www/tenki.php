@@ -217,6 +217,8 @@ if (count($list_delete_task) > 0) {
 
 error_log("${pid} FINISH");
 
+$res = file_get_contents('https://' . getenv('HEROKU_APP_NAME') . 'herokuapp.com/weekday.php');
+
 exit();
 
 function get_contents($url_, $options_) {
