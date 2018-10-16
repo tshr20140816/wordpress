@@ -104,19 +104,17 @@ $res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
-error_log(print_r($tasks, TRUE));
+// error_log(print_r($tasks, TRUE));
 
-exit();
-
-$list_marker_task_title = [];
+// $list_marker_task_title = [];
 for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'MARKER') {
-      $list_marker_task_title[$tasks[$i]['title']] = $tasks[$i]['id'];
-    }
+  $duedate = $tasks[$i]['duedate'];
+  $context_id = $tasks[$i]['context'];
+  if ($yobi_list[date('w', $dudate)] == $context_id) {
+    error_log($pid . ' ' . $tasks[$i]['name']);
   }
 }
-error_log($pid . ' ' . print_r($list_marker_task_title, TRUE));
+//error_log($pid . ' ' . print_r($list_marker_task_title, TRUE));
 
 error_log("${pid} FINISH");
 
