@@ -84,19 +84,6 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 error_log($pid . ' ' . print_r($list_holiday_task_title, TRUE));
 
-// For Marker
-
-$list_marker_task_title = [];
-for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'MARKER') {
-      $list_marker_task_title[$tasks[$i]['title']] = $tasks[$i]['id'];
-      // error_log($pid . ' ' . $tasks[$i]['title']);
-    }
-  }
-}
-error_log($pid . ' ' . print_r($list_marker_task_title, TRUE));
-
 // Holiday
 
 $start_yyyy = date('Y', strtotime('+2 month'));
@@ -152,15 +139,11 @@ $res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' .
 $folders = json_decode($res, TRUE);
 
 $holiday_folder_id = 0;
-$marker_folder_id = 0;
 for ($i = 0; $i < count($folders); $i++) {
   if ($folders[$i]['name'] == 'HOLIDAY') {
     $holiday_folder_id = $folders[$i]['id'];
     error_log("${pid} HOLIDAY FOLDER ID : ${holiday_folder_id}");
-  }
-  if ($folders[$i]['name'] == 'MARKER') {
-    $marker_folder_id = $folders[$i]['id'];
-    error_log("${pid} MARKER FOLDER ID : ${marker_folder_id}");
+    break;
   }
 }
 
@@ -176,28 +159,6 @@ $res = get_contents(
    CURLOPT_POSTFIELDS => http_build_query($post_data),
   ]);
 error_log("${pid} add.php RESPONSE : ${res}");
-
-// Marker
-
-$list_yobi = array('日', '月', '火', '水', '木', '金', '土');
-
-$yyyy_limit = date('Y', strtotime('+3 years'));
-error_log("${pid} YEAR LIMIT : ${yyyy_limit}");
-
-$list_base = [];
-for ($i = 0; $i < 1096 - 80; $i++) {
-  $timestamp = strtotime('+' . ($i + 80) . ' days');
-  $yyyy = date('Y', $timestamp);
-  if ($yyyy_limit == $yyyy) {
-    break;
-  }
-  $d = date('j', $timestamp);
-  if ($d == 1 || $d == 11 || $d == 21) {
-    $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' #####';
-    $list_base[$tmp] = $timestamp;
-  }
-}
-error_log(print_r($list_base, TRUE));
 
 error_log("${pid} FINISH");
 
