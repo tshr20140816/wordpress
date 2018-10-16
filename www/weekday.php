@@ -100,7 +100,7 @@ error_log($pid . ' ' . print_r($yobi_list, TRUE));
 
 // Get Tasks
 
-$res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag,context', NULL);
+$res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=duedate,context', NULL);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
