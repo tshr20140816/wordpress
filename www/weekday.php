@@ -126,7 +126,7 @@ error_log($pid . ' ' . print_r($edit_task_list, TRUE));
 // $edit_task_list = array_slice($edit_task_list, 0, 50);
 
 $tmp = implode(',', $edit_task_list);
-$post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]"];
+$post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}], fields=content"];
 
 error_log($pid . ' ' . print_r($post_data, TRUE));
 
