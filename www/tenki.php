@@ -134,13 +134,14 @@ for ($i = 0; $i < 10; $i++) {
   $tmp2 = str_replace('のち', '/', $tmp2);
   $tmp2 = str_replace('時々', '|', $tmp2);
   $tmp2 = str_replace('一時', '|', $tmp2);
-  error_log($pid . ' ##### ' . $list_yobi[date('w', $dt_tmp)] . '曜日 ' . date('m/d', $dt_tmp) . ' ##### ' . $tmp2 . ' ' . $list[2] . ' ' . $list[1] . $update_marker);
-  $list_weather[] = '{"title":"' . '##### '
+  $tmp3 = '##### '
     . $list_yobi[date('w', $dt_tmp)] . '曜日 '
     . date('m/d', $dt_tmp)
     . ' ##### '
     . $tmp2 . ' ' . $list[2] . ' ' . $list[1]
-    . $update_marker
+    . $update_marker;
+  error_log("${pid} ${tmp3}");
+  $list_weather[] = '{"title":"' . $tmp3
     . '","duedate":"' . $dt_tmp
     . '","context":"' . $context_id_list[date('w', $dt_tmp)]
     . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
