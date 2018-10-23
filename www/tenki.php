@@ -100,6 +100,30 @@ for ($i = 0; $i < count($contexts); $i++) {
 
 error_log($pid . ' ' . print_r($context_id_list, TRUE));
 
+// Moon
+
+$yyyy = date('Y');
+$mm = date('m');
+
+$res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html');
+
+$tmp = explode('<table ', $res);
+$tmp = explode('</table>', $tmp[1]);
+$tmp = explode('</tr>', $tmp[0]);
+array_shift($tmp);
+array_pop($tmp);
+
+$dt = date('Y-m-') . '01';
+
+$list_moon_age = [];
+for ($i = 0; $i < count($tmp); $i++) {
+  $timestamp = strtotime("${dt} +${i} day");
+  $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
+  // error_log(trim($matches[1]));
+  $list_moon_age[$timestamp] = trim($matches[1]);
+}
+error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
+
 // Weather Information
 
 $res = get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/', NULL);
