@@ -11,7 +11,9 @@ array_pop($tmp);
 error_log(print_r($tmp, TRUE));
 
 for ($i = 0; $i < count($tmp); $i++) {
-  error_log($tmp[$i]);
+  // error_log($tmp[$i]);
+  $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
+  error_log(print_r($matches));
 }
 
 ?>
