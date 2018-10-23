@@ -102,6 +102,8 @@ error_log($pid . ' ' . print_r($context_id_list, TRUE));
 
 // Moon
 
+error_log($pid . ' ' . date('H:i'));
+
 $yyyy = date('Y');
 $mm = date('m');
 
