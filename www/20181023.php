@@ -1,6 +1,9 @@
 <?php
 
-$res = file_get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/2018/m2011.html');
+$yyyy = date('Y');
+$mm = date('m');
+
+$res = file_get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html');
 
 $tmp = explode('<table ', $res);
 $tmp = explode('</table>', $tmp[1]);
