@@ -105,7 +105,7 @@ error_log($pid . ' ' . print_r($context_id_list, TRUE));
 $yyyy = date('Y');
 $mm = date('m');
 
-$res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html');
+$res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', NULL);
 
 $tmp = explode('<table ', $res);
 $tmp = explode('</table>', $tmp[1]);
