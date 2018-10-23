@@ -165,6 +165,10 @@ for ($i = 0; $i < 10; $i++) {
     . $tmp2 . ' ' . $list[2] . ' ' . $list[1]
     . $update_marker;
 
+  if (array_key_exists($timestamp, $list_moon_age)) {
+    $tmp3 .= ' 🌙' . $list_moon_age[$timestamp];
+  }
+  
   error_log("${pid} ${tmp3}");
 
   $list_weather[] = '{"title":"' . $tmp3
