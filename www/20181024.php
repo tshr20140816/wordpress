@@ -15,7 +15,7 @@ $tmp = explode('</table>', $tmp[1]);
 
 // error_log($tmp[0]);
 
-$tmp = explode('', $tmp[0]);
+$tmp = explode('<tr>', $tmp[0]);
 
 error_log(print_r($tmp, TRUE));
 
