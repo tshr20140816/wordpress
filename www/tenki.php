@@ -102,11 +102,9 @@ error_log($pid . ' ' . print_r($context_id_list, TRUE));
 
 // Moon
 
-date_default_timezone_set('Asia/Tokyo');
+$timestamp = time() + 9 * 60 * 60;
 
-error_log($pid . ' ' . date('H:i'));
-
-$timestamp = time();
+error_log($pid . ' ' . date('H:i', $timestamp));
 
 $yyyy = date('Y', $timestamp);
 $mm = date('m', $timestamp);
