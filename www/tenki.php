@@ -104,29 +104,32 @@ error_log($pid . ' ' . print_r($context_id_list, TRUE));
 
 $timestamp = time() + 9 * 60 * 60;
 
-error_log($pid . ' ' . date('H:i', $timestamp));
-
-$yyyy = date('Y', $timestamp);
-$mm = date('m', $timestamp);
-
-$res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', NULL);
-
-$tmp = explode('<table ', $res);
-$tmp = explode('</table>', $tmp[1]);
-$tmp = explode('</tr>', $tmp[0]);
-array_shift($tmp);
-array_pop($tmp);
-
-$dt = date('Y-m-', $timestamp) . '01';
-
-//intval
+$loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
 
 $list_moon_age = [];
-for ($i = 0; $i < count($tmp); $i++) {
-  $timestamp = strtotime("${dt} +${i} day");
-  $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
-  // error_log(trim($matches[1]));
-  $list_moon_age[$timestamp] = trim($matches[1]);
+for ($j = 0; $j < $loop_count; $j++) {
+  if ($j === 1) {
+    $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60;
+  }
+  $yyyy = date('Y', $timestamp);
+  $mm = date('m', $timestamp);
+
+  $res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', NULL);
+
+  $tmp = explode('<table ', $res);
+  $tmp = explode('</table>', $tmp[1]);
+  $tmp = explode('</tr>', $tmp[0]);
+  array_shift($tmp);
+  array_pop($tmp);
+
+  $dt = date('Y-m-', $timestamp) . '01';
+
+  for ($i = 0; $i < count($tmp); $i++) {
+    $timestamp = strtotime("${dt} +${i} day");
+    $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
+    // error_log(trim($matches[1]));
+    $list_moon_age[$timestamp] = trim($matches[1]);
+  }
 }
 error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
 
