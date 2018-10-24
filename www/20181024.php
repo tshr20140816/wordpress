@@ -20,6 +20,11 @@ array_shift($tmp);
 
 error_log(print_r($tmp, TRUE));
 
+for ($i = 0; $i < count($tmp); $i++) {
+  $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
+  error_log(print_r($matches, TRUE));
+}
+
 function get_contents($url_, $options_) {
   $ch = curl_init();
   curl_setopt_array($ch, [
