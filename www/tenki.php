@@ -102,10 +102,14 @@ error_log($pid . ' ' . print_r($context_id_list, TRUE));
 
 // Moon
 
+date_default_timezone_set('Asia/Tokyo');
+
 error_log($pid . ' ' . date('H:i'));
 
-$yyyy = date('Y');
-$mm = date('m');
+$timestamp = time();
+
+$yyyy = date('Y', $timestamp);
+$mm = date('m', $timestamp);
 
 $res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', NULL);
 
@@ -115,7 +119,9 @@ $tmp = explode('</tr>', $tmp[0]);
 array_shift($tmp);
 array_pop($tmp);
 
-$dt = date('Y-m-') . '01';
+$dt = date('Y-m-', $timestamp) . '01';
+
+//intval
 
 $list_moon_age = [];
 for ($i = 0; $i < count($tmp); $i++) {
