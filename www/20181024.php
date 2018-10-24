@@ -1,6 +1,6 @@
 <?php
 
-$post_data = ['from_year' => '2019']
+$post_data = ['from_year' => '2019'];
 
 $res = get_contents(
   'http://www.calc-site.com/calendars/solar_year',
