@@ -161,7 +161,7 @@ for ($j = 0; $j < $loop_count; $j++) {
     $timestamp = strtotime("${dt} +${i} day"); // UTC
     $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
     // error_log(trim($matches[1]));
-    $list_moon_age[$timestamp] = '月' . trim($matches[1]);
+    $list_moon_age[$timestamp] = '☽' . trim($matches[1]);
   }
 }
 error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
