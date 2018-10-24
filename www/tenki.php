@@ -102,14 +102,14 @@ error_log($pid . ' ' . print_r($context_id_list, TRUE));
 
 // Sun
 
-$timestamp = time() + 9 * 60 * 60;
+$timestamp = time() + 9 * 60 * 60; // JST
 
 $loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
 
 $list_sunrise_sunset = [];
 for ($j = 0; $j < $loop_count; $j++) {
   if ($j === 1) {
-    $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60;
+    $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60; // JST
   }
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
@@ -125,7 +125,7 @@ for ($j = 0; $j < $loop_count; $j++) {
   $dt = date('Y-m-', $timestamp) . '01';
 
   for ($i = 0; $i < count($tmp); $i++) {
-    $timestamp = strtotime("${dt} +${i} day");
+    $timestamp = strtotime("${dt} +${i} day"); // UTC
     $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
     // error_log(trim($matches[1]));
     $list_sunrise_sunset[$timestamp] = '出' . trim($matches[1]) . ' 入' . trim($matches[2]);
@@ -135,14 +135,14 @@ error_log($pid . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE
 
 // Moon
 
-$timestamp = time() + 9 * 60 * 60;
+$timestamp = time() + 9 * 60 * 60; // JST
 
 $loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
 
 $list_moon_age = [];
 for ($j = 0; $j < $loop_count; $j++) {
   if ($j === 1) {
-    $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60;
+    $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60; // JST
   }
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
@@ -158,7 +158,7 @@ for ($j = 0; $j < $loop_count; $j++) {
   $dt = date('Y-m-', $timestamp) . '01';
 
   for ($i = 0; $i < count($tmp); $i++) {
-    $timestamp = strtotime("${dt} +${i} day");
+    $timestamp = strtotime("${dt} +${i} day"); // UTC
     $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
     // error_log(trim($matches[1]));
     $list_moon_age[$timestamp] = '月' . trim($matches[1]);
