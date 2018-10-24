@@ -16,6 +16,7 @@ $tmp = explode('</table>', $tmp[1]);
 // error_log($tmp[0]);
 
 $tmp = explode('<tr>', $tmp[0]);
+array_shift($tmp);
 
 error_log(print_r($tmp, TRUE));
 
