@@ -168,6 +168,7 @@ function get_contents($url_, $options_) {
   $ch = curl_init();
   curl_setopt_array($ch, [
     CURLOPT_URL => $url_,
+    CURLOPT_USERAGENT => getenv('USER_AGENT'),
     CURLOPT_RETURNTRANSFER => TRUE,
     CURLOPT_ENCODING => '',
     CURLOPT_FOLLOWLOCATION => 1,
