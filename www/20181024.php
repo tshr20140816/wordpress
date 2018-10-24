@@ -1,6 +1,8 @@
 <?php
 
-$post_data = ['from_year' => '2019'];
+$yyyy = 2019;
+
+$post_data = ['from_year' => $yyyy];
 
 $res = get_contents(
   'http://www.calc-site.com/calendars/solar_year',
@@ -22,7 +24,13 @@ error_log(print_r($tmp, TRUE));
 
 for ($i = 0; $i < count($tmp); $i++) {
   $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
-  error_log(print_r($matches, TRUE));
+  // error_log(print_r($matches, TRUE));
+  // $yyyy
+  $tmp1 = $matches[2];
+  $tmp1 = str_replace('月', '-', $tmp1);
+  $tmp1 = str_replace('日', '', $tmp1);
+  $tmp1 = $yyyy . '-' . $tmp1;
+  error_log(date('Ymd', strtotime($tmp1)) . ' ' . $matches[1]);
 }
 
 function get_contents($url_, $options_) {
