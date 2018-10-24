@@ -14,6 +14,8 @@ if [ ! -v BASIC_PASSWORD ]; then
   exit
 fi
 
+export USER_AGENT=$(curl https://raw.githubusercontent.com/tshr20140816/heroku-mode-07/master/useragent.txt)
+
 htpasswd -c -b .htpasswd ${BASIC_USER} ${BASIC_PASSWORD}
 
 vendor/bin/heroku-php-apache2 -C apache.conf www
