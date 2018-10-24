@@ -128,7 +128,7 @@ for ($j = 0; $j < $loop_count; $j++) {
     $timestamp = strtotime("${dt} +${i} day"); // UTC
     $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
     // error_log(trim($matches[1]));
-    $list_sunrise_sunset[$timestamp] = '出' . trim($matches[1]) . ' 入' . trim($matches[2]);
+    $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
   }
 }
 error_log($pid . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
