@@ -13,7 +13,11 @@ $res = get_contents(
 $tmp = explode('<th>二十四節気</th>', $res);
 $tmp = explode('</table>', $tmp[1]);
 
-error_log($tmp[0]);
+// error_log($tmp[0]);
+
+$tmp = explode('', $tmp[0]);
+
+error_log(print_r($tmp, TRUE));
 
 function get_contents($url_, $options_) {
   $ch = curl_init();
