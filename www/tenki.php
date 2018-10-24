@@ -161,7 +161,7 @@ for ($j = 0; $j < $loop_count; $j++) {
     $timestamp = strtotime("${dt} +${i} day");
     $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
     // error_log(trim($matches[1]));
-    $list_moon_age[$timestamp] = trim($matches[1]);
+    $list_moon_age[$timestamp] = '月' . trim($matches[1]);
   }
 }
 error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
@@ -207,6 +207,9 @@ for ($i = 0; $i < 10; $i++) {
     . $tmp2 . ' ' . $list[2] . ' ' . $list[1]
     . $update_marker;
 
+  if (array_key_exists($timestamp, $list_sunrise_sunset)) {
+    $tmp3 .= ' ' . $list_sunrise_sunset[$timestamp];
+  }
   if (array_key_exists($timestamp, $list_moon_age)) {
     $tmp3 .= ' ' . $list_moon_age[$timestamp];
   }
