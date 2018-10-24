@@ -8,7 +8,12 @@ $res = get_contents(
    CURLOPT_POSTFIELDS => http_build_query($post_data),
   ]);
 
-error_log($res);
+// error_log($res);
+
+$tmp = explode('<th>二十四節気</th>', $res);
+$tmp = explode('</table>', $tmp[1]);
+
+error_log($tmp[0]);
 
 function get_contents($url_, $options_) {
   $ch = curl_init();
