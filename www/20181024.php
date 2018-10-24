@@ -25,7 +25,6 @@ error_log(print_r($tmp, TRUE));
 for ($i = 0; $i < count($tmp); $i++) {
   $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
   // error_log(print_r($matches, TRUE));
-  // $yyyy
   $tmp1 = $matches[2];
   $tmp1 = str_replace('月', '-', $tmp1);
   $tmp1 = str_replace('日', '', $tmp1);
