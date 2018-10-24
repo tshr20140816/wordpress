@@ -175,7 +175,7 @@ for ($i = 0; $i < 10; $i++) {
     . $update_marker;
 
   if (array_key_exists($timestamp, $list_moon_age)) {
-    $tmp3 .= ' 月齢:' . $list_moon_age[$timestamp];
+    $tmp3 .= ' ' . $list_moon_age[$timestamp];
   }
   
   error_log("${pid} ${tmp3}");
