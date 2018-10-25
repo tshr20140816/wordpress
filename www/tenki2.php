@@ -75,7 +75,7 @@ error_log($pid . ' ' . print_r($context_id_list, TRUE));
 $list_sunrise_sunset = [];
 
 for ($j = 0; $j < 3; $j++) {
-  $timestamp = strtotime('+${j} months');
+  $timestamp = strtotime("+${j} month");
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
   error_log('$yyyy : ' . $yyyy);
