@@ -100,8 +100,6 @@ for ($i = 0; $i < count($contexts); $i++) {
 
 error_log($pid . ' ' . print_r($context_id_list, TRUE));
 
-$subscript = '₀₁₂₃₄₅₆₇₈₉';
-
 // Sun
 
 $timestamp = time() + 9 * 60 * 60; // JST
@@ -133,6 +131,7 @@ for ($j = 0; $j < $loop_count; $j++) {
     $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
   }
 }
+$subscript = '₀₁₂₃₄₅₆₇₈₉';
 for ($i = 0; $i < 10; $i++) {
   $list_sunrise_sunset = str_replace($i, mb_substr($subscript, $i, 1), $list_sunrise_sunset);
 }
@@ -168,6 +167,10 @@ for ($j = 0; $j < $loop_count; $j++) {
     // error_log(trim($matches[1]));
     $list_moon_age[$timestamp] = '☽' . trim($matches[1]);
   }
+}
+$subscript = '₀₁₂₃₄₅₆₇₈₉';
+for ($i = 0; $i < 10; $i++) {
+  $list_moon_age = str_replace($i, mb_substr($subscript, $i, 1), $list_moon_age);
 }
 error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
 
