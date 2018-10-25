@@ -160,6 +160,7 @@ $tasks = json_decode($res, TRUE);
 // error_log(print_r($tasks, TRUE));
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
+  error_log($pid . ' ' . $i . ' ' . $tasks[$i]);
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'WEATHER2') {
       $list_delete_task[] = $tasks[$i]['id'];
