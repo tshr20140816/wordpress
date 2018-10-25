@@ -70,6 +70,39 @@ for ($i = 0; $i < count($contexts); $i++) {
 
 error_log($pid . ' ' . print_r($context_id_list, TRUE));
 
+// 24sekki
+
+$list_24sekki = [];
+
+$yyyy = (int)date('Y');
+for ($j = 0; $j < 2; $j++) {
+  $post_data = ['from_year' => ($yyyy + $j)];
+
+  $res = get_contents(
+    'http://www.calc-site.com/calendars/solar_year',
+    [CURLOPT_POST => TRUE,
+     CURLOPT_POSTFIELDS => http_build_query($post_data),
+    ]);
+  
+  $tmp = explode('<th>二十四節気</th>', $res);
+  $tmp = explode('</table>', $tmp[1]);
+  
+  $tmp = explode('<tr>', $tmp[0]);
+  array_shift($tmp);
+  
+  for ($i = 0; $i < count($tmp); $i++) {
+    $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
+    // error_log(print_r($matches, TRUE));
+    $tmp1 = $matches[2];
+    $tmp1 = str_replace('月', '-', $tmp1);
+    $tmp1 = str_replace('日', '', $tmp1);
+    $tmp1 = $yyyy . '-' . $tmp1;
+    // error_log(date('Ymd', strtotime($tmp1)) . ' ' . $matches[1]);
+    $list_24sekki[strtotime($tmp1)] = $matches[1];
+  }
+}
+error_log($pid . ' $list_24sekki : ' . print_r($list_24sekki, TRUE));
+
 // Sun
 
 $list_sunrise_sunset = [];
@@ -97,6 +130,7 @@ for ($j = 0; $j < 3; $j++) {
     $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
   }
 }
+// To Small Size
 $subscript = '₀₁₂₃₄₅₆₇₈₉';
 for ($i = 0; $i < 10; $i++) {
   $list_sunrise_sunset = str_replace($i, mb_substr($subscript, $i, 1), $list_sunrise_sunset);
