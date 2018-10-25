@@ -76,7 +76,7 @@ $list_24sekki = [];
 
 $yyyy = (int)date('Y');
 for ($j = 0; $j < 2; $j++) {
-  $post_data = ['from_year' => ($yyyy + $j)];
+  $post_data = ['from_year' => $yyyy];
 
   $res = get_contents(
     'http://www.calc-site.com/calendars/solar_year',
@@ -100,6 +100,7 @@ for ($j = 0; $j < 2; $j++) {
     error_log($tmp1 . ' ' . $matches[1]);
     $list_24sekki[strtotime($tmp1)] = $matches[1];
   }
+  $yyyy++;
 }
 error_log($pid . ' $list_24sekki : ' . print_r($list_24sekki, TRUE));
 
