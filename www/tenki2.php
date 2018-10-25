@@ -129,7 +129,7 @@ for ($i = 0; $i < 70; $i++) {
   // $timestamp = strtotime('+' . ($i + 10) . ' days');
   $timestamp = strtotime(date('Y-m-d') . ' +' . ($i + 10) . ' days');
   $dt = date('n/j', $timestamp);
-  error_log($dt);
+  error_log($pid . ' $dt : ' . $dt);
   if (array_key_exists($dt, $list_base)) {
     $tmp = $list_base[$dt];
   } else {
@@ -144,7 +144,7 @@ for ($i = 0; $i < 70; $i++) {
   }
   $list_weather[] = '{"title":"' . $tmp . '","duedate":"' . $timestamp . '","tag":"WEATHER2","context":' . $context_id_list[date('w', $timestamp)] . ',"folder":__FOLDER_ID__}';
 }
-error_log(print_r($list_weather, TRUE));
+error_log($pid . ' $list_weather : ' . print_r($list_weather, TRUE));
 
 if (count($list_weather) == 0) {
   error_log($pid . ' WEATHER DATA NONE');
@@ -203,7 +203,7 @@ error_log($pid . ' add.php RESPONSE : ' . $res);
 
 // Delete Tasks
 
-error_log('DELETE TARGET TASK COUNT : ' . count($list_delete_task));
+error_log($pid . ' DELETE TARGET TASK COUNT : ' . count($list_delete_task));
 
 if (count($list_delete_task) > 0) {
   $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];  
