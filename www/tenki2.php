@@ -78,8 +78,8 @@ for ($j = 0; $j < 3; $j++) {
   $timestamp = strtotime("+${j} month");
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
-  error_log('$yyyy : ' . $yyyy);
-  error_log('$mm : ' . $mm);
+  error_log($pid . ' $yyyy : ' . $yyyy);
+  error_log($pid . ' $mm : ' . $mm);
   $res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL);
   
   $tmp = explode('<table ', $res);
