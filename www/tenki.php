@@ -100,6 +100,8 @@ for ($i = 0; $i < count($contexts); $i++) {
 
 error_log($pid . ' ' . print_r($context_id_list, TRUE));
 
+$subscript = '₀₁₂₃₄₅₆₇₈₉';
+
 // Sun
 
 $timestamp = time() + 9 * 60 * 60; // JST
@@ -130,6 +132,9 @@ for ($j = 0; $j < $loop_count; $j++) {
     // error_log(trim($matches[1]));
     $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
   }
+}
+for ($i = 0; $i < 10; $i++) {
+  $list_sunrise_sunset = str_replace($i, mb_substr($subscript, $i, 1), $list_sunrise_sunset);
 }
 error_log($pid . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
 
