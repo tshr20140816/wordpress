@@ -126,7 +126,8 @@ for ($i = 0; $i < 10; $i++) {
   $update_marker = str_replace($i, mb_substr($subscript, $i, 1), $update_marker);
 }
 for ($i = 0; $i < 70; $i++) {
-  $timestamp = strtotime('+' . ($i + 10) . ' days');
+  // $timestamp = strtotime('+' . ($i + 10) . ' days');
+  $timestamp = strtotime(date('Y-m-d') . ' +' . ($i + 10) . ' days');
   $dt = date('n/j', $timestamp);
   error_log($dt);
   if (array_key_exists($dt, $list_base)) {
