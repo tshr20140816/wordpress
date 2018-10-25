@@ -78,6 +78,8 @@ for ($j = 0; $j < 3; $j++) {
   $timestamp = strtotime('+${j} months');
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
+  error_log('$yyyy : ' . $yyyy);
+  error_log('$mm : ' . $mm);
   $res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL);
   
   $tmp = explode('<table ', $res);
