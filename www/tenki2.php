@@ -157,10 +157,10 @@ $res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
-error_log($pid . ' $tasks : ' . print_r($tasks, TRUE));
+// error_log($pid . ' $tasks : ' . print_r($tasks, TRUE));
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
-  error_log($pid . ' ' . $i . ' ' . $tasks[$i]);
+  // error_log($pid . ' ' . $i . ' ' . print_r($tasks[$i], TRUE));
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'WEATHER2') {
       $list_delete_task[] = $tasks[$i]['id'];
