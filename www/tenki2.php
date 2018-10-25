@@ -70,6 +70,33 @@ for ($i = 0; $i < count($contexts); $i++) {
 
 error_log($pid . ' ' . print_r($context_id_list, TRUE));
 
+// Sun
+
+$list_sunrise_sunset = [];
+
+for ($j = 0; $j < 3; $j++) {
+  $timestamp = strtotime('+${j} months');
+  $yyyy = date('Y', $timestamp);
+  $mm = date('m', $timestamp);
+  $res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL);
+  
+  $tmp = explode('<table ', $res);
+  $tmp = explode('</table>', $tmp[1]);
+  $tmp = explode('</tr>', $tmp[0]);
+  array_shift($tmp);
+  array_pop($tmp);
+
+  $dt = date('Y-m-', $timestamp) . '01';
+
+  for ($i = 0; $i < count($tmp); $i++) {
+    $timestamp = strtotime("${dt} +${i} day"); // UTC
+    $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
+    // error_log(trim($matches[1]));
+    $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
+  }
+}
+error_log($pid . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
+
 // Weather Information
 
 $list_base = [];
@@ -109,6 +136,9 @@ for ($i = 0; $i < 70; $i++) {
     continue;
   }
   $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $tmp . $update_marker;
+  if (array_key_exists($timestamp, $list_sunrise_sunset)) {
+    $tmp .= ' ' . $list_sunrise_sunset[$timestamp];
+  }
   $list_weather[] = '{"title":"' . $tmp . '","duedate":"' . $timestamp . '","tag":"WEATHER2","context":' . $context_id_list[date('w', $timestamp)] . ',"folder":__FOLDER_ID__}';
 }
 error_log(print_r($list_weather, TRUE));
