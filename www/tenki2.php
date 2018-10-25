@@ -178,6 +178,9 @@ for ($i = 0; $i < 70; $i++) {
     continue;
   }
   $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $tmp . $update_marker;
+  if (array_key_exists($timestamp, $list_24sekki)) {
+    $tmp .= ' ' . $list_24sekki[$timestamp];
+  }
   if (array_key_exists($timestamp, $list_sunrise_sunset)) {
     $tmp .= ' ' . $list_sunrise_sunset[$timestamp];
   }
