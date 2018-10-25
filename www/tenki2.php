@@ -97,7 +97,7 @@ for ($j = 0; $j < 2; $j++) {
     $tmp1 = str_replace('月', '-', $tmp1);
     $tmp1 = str_replace('日', '', $tmp1);
     $tmp1 = $yyyy . '-' . $tmp1;
-    // error_log(date('Ymd', strtotime($tmp1)) . ' ' . $matches[1]);
+    error_log($tmp1 . ' ' . $matches[1]);
     $list_24sekki[strtotime($tmp1)] = $matches[1];
   }
 }
