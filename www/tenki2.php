@@ -97,6 +97,10 @@ for ($j = 0; $j < 3; $j++) {
     $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
   }
 }
+$subscript = '₀₁₂₃₄₅₆₇₈₉';
+for ($i = 0; $i < 10; $i++) {
+  $list_sunrise_sunset = str_replace($i, mb_substr($subscript, $i, 1), $list_sunrise_sunset);
+}
 error_log($pid . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
 
 // Weather Information
