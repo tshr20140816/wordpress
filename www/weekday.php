@@ -36,14 +36,14 @@ if ($access_token == NULL) {
 if ($refresh_flag == 1) {
   error_log("${pid} refresh_token : ${refresh_token}");
   $post_data = ['grant_type' => 'refresh_token', 'refresh_token' => $refresh_token];
-  
+
   $res = get_contents(
     'https://api.toodledo.com/3/account/token.php',
     [CURLOPT_USERPWD => getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'),
      CURLOPT_POST => TRUE,
      CURLOPT_POSTFIELDS => http_build_query($post_data),
     ]);
-  
+
   error_log("${pid} token.php RESPONSE : ${res}");
   $params = json_decode($res, TRUE);
 
@@ -58,7 +58,7 @@ __HEREDOC__;
   $rc = $statement->execute([':b_access_token' => $params['access_token'],
                              ':b_refresh_token' => $params['refresh_token']]);
   error_log("${pid} UPDATE RESULT : ${rc}");
-  
+
   $access_token = $params['access_token'];
 }
 
@@ -69,34 +69,34 @@ $pdo = null;
 $res = get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $access_token, NULL);
 $contexts = json_decode($res, TRUE);
 
-$yobi_list = [];
+$list_context_id = [];
 for ($i = 0; $i < count($contexts); $i++) {
   switch ($contexts[$i]['name']) {
     case '日......':
-      $yobi_list[0] = $contexts[$i]['id'];
+      $list_context_id[0] = $contexts[$i]['id'];
       break;
     case '.月.....':
-      $yobi_list[1] = $contexts[$i]['id'];
+      $list_context_id[1] = $contexts[$i]['id'];
       break;
     case '..火....':
-      $yobi_list[2] = $contexts[$i]['id'];
+      $list_context_id[2] = $contexts[$i]['id'];
       break;
     case '...水...':
-      $yobi_list[3] = $contexts[$i]['id'];
+      $list_context_id[3] = $contexts[$i]['id'];
       break;
     case '....木..':
-      $yobi_list[4] = $contexts[$i]['id'];
+      $list_context_id[4] = $contexts[$i]['id'];
       break;
     case '.....金.':
-      $yobi_list[5] = $contexts[$i]['id'];
+      $list_context_id[5] = $contexts[$i]['id'];
       break;
     case '......土':
-      $yobi_list[6] = $contexts[$i]['id'];
+      $list_context_id[6] = $contexts[$i]['id'];
       break;
   }
 }
 
-error_log($pid . ' $yobi_list : ' . print_r($yobi_list, TRUE));
+error_log($pid . ' $list_context_id : ' . print_r($list_context_id, TRUE));
 
 // Get Tasks
 
@@ -106,30 +106,30 @@ $res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $
 $tasks = json_decode($res, TRUE);
 //error_log(print_r($tasks, TRUE));
 
-$edit_task_list = [];
+$list_edit_task = [];
 $edit_task_template = '{"id":"__ID__","context":"__CONTEXT__"}';
 
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i])) {
-    $real_context_id = $yobi_list[intval(date('w', $tasks[$i]['duedate']))];
+    $real_context_id = $list_context_id[intval(date('w', $tasks[$i]['duedate']))];
     $task_context_id = $tasks[$i]['context'];
     if ($task_context_id == '0' || $task_context_id != $real_context_id) {
-      error_log(print_r($tasks[$i], TRUE));
+      error_log($pid . ' $tasks[$i] : ' . print_r($tasks[$i], TRUE));
       $tmp = str_replace('__ID__', $tasks[$i]['id'], $edit_task_template);
       $tmp = str_replace('__CONTEXT__', $real_context_id, $tmp);
-      $edit_task_list[] = $tmp;
+      $list_edit_task[] = $tmp;
     }
   }
 }
-$edit_task_list = array_slice($edit_task_list, 0, 50);
-error_log($pid . ' $edit_task_list : ' . print_r($edit_task_list, TRUE));
+$list_edit_task = array_slice($list_edit_task, 0, 50);
+error_log($pid . ' $list_edit_task : ' . print_r($list_edit_task, TRUE));
 
-if (count($edit_task_list) == 0) {
+if (count($list_edit_task) == 0) {
   error_log("${pid} EDIT COUNT : 0");
   exit();
 }
 
-$tmp = implode(',', $edit_task_list);
+$tmp = implode(',', $list_edit_task);
 $post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]", 'fields' => 'context'];
 
 error_log($pid . ' $post_data : ' . print_r($post_data, TRUE));
@@ -161,7 +161,7 @@ function get_contents($url_, $options_) {
   }
   $res = curl_exec($ch);
   curl_close($ch);
-  
+
   return $res;
 }
 ?>
