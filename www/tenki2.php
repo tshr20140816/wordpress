@@ -162,7 +162,7 @@ error_log($pid . ' $list_24sekki : ' . print_r($list_24sekki, TRUE));
 
 $list_sunrise_sunset = [];
 
-for ($j = 0; $j < 3; $j++) {
+for ($j = 0; $j < 4; $j++) {
   $timestamp = strtotime("+${j} month");
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
