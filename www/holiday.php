@@ -138,17 +138,17 @@ if (count($add_task_list) == 0) {
 $res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
 $folders = json_decode($res, TRUE);
 
-$holiday_folder_id = 0;
+$label_folder_id = 0;
 for ($i = 0; $i < count($folders); $i++) {
-  if ($folders[$i]['name'] == 'HOLIDAY') {
-    $holiday_folder_id = $folders[$i]['id'];
-    error_log("${pid} HOLIDAY FOLDER ID : ${holiday_folder_id}");
+  if ($folders[$i]['name'] == 'LABEL') {
+    $label_folder_id = $folders[$i]['id'];
+    error_log("${pid} LABEL FOLDER ID : ${label_folder_id}");
     break;
   }
 }
 
 $tmp = implode(',', $add_task_list);
-$tmp = str_replace('__FOLDER_ID__', $holiday_folder_id, $tmp);
+$tmp = str_replace('__FOLDER_ID__', $label_folder_id, $tmp);
 $post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]"];
 
 error_log($pid . ' ' . print_r($post_data, TRUE));
