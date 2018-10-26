@@ -96,7 +96,7 @@ for ($i = 0; $i < count($contexts); $i++) {
   }
 }
 
-error_log($pid . ' ' . print_r($yobi_list, TRUE));
+error_log($pid . ' $yobi_list : ' . print_r($yobi_list, TRUE));
 
 // Get Tasks
 
@@ -122,7 +122,7 @@ for ($i = 0; $i < count($tasks); $i++) {
   }
 }
 $edit_task_list = array_slice($edit_task_list, 0, 50);
-error_log($pid . ' ' . print_r($edit_task_list, TRUE));
+error_log($pid . ' $edit_task_list : ' . print_r($edit_task_list, TRUE));
 
 if (count($edit_task_list) == 0) {
   error_log("${pid} EDIT COUNT : 0");
@@ -132,7 +132,7 @@ if (count($edit_task_list) == 0) {
 $tmp = implode(',', $edit_task_list);
 $post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]", 'fields' => 'context'];
 
-error_log($pid . ' ' . print_r($post_data, TRUE));
+error_log($pid . ' $post_data : ' . print_r($post_data, TRUE));
 
 $res = get_contents(
   'https://api.toodledo.com/3/tasks/edit.php',
