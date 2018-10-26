@@ -98,7 +98,7 @@ for ($i = 0; $i < count($contexts); $i++) {
   }
 }
 
-error_log($pid . ' ' . print_r($list_context_id, TRUE));
+error_log($pid . ' $list_context_id : ' . print_r($list_context_id, TRUE));
 
 // holiday
 
