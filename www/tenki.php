@@ -71,34 +71,34 @@ $pdo = null;
 $res = get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $access_token, NULL);
 $contexts = json_decode($res, TRUE);
 
-$context_id_list = [];
+$list_context_id = [];
 for ($i = 0; $i < count($contexts); $i++) {
   switch ($contexts[$i]['name']) {
     case '日......':
-      $context_id_list[0] = $contexts[$i]['id'];
+      $list_context_id[0] = $contexts[$i]['id'];
       break;
     case '.月.....':
-      $context_id_list[1] = $contexts[$i]['id'];
+      $list_context_id[1] = $contexts[$i]['id'];
       break;
     case '..火....':
-      $context_id_list[2] = $contexts[$i]['id'];
+      $list_context_id[2] = $contexts[$i]['id'];
       break;
     case '...水...':
-      $context_id_list[3] = $contexts[$i]['id'];
+      $list_context_id[3] = $contexts[$i]['id'];
       break;
     case '....木..':
-      $context_id_list[4] = $contexts[$i]['id'];
+      $list_context_id[4] = $contexts[$i]['id'];
       break;
     case '.....金.':
-      $context_id_list[5] = $contexts[$i]['id'];
+      $list_context_id[5] = $contexts[$i]['id'];
       break;
     case '......土':
-      $context_id_list[6] = $contexts[$i]['id'];
+      $list_context_id[6] = $contexts[$i]['id'];
       break;
   }
 }
 
-error_log($pid . ' ' . print_r($context_id_list, TRUE));
+error_log($pid . ' ' . print_r($list_context_id, TRUE));
 
 // holiday
 
@@ -290,7 +290,7 @@ for ($i = 0; $i < 10; $i++) {
 
   $list_weather[] = '{"title":"' . $tmp3
     . '","duedate":"' . $timestamp
-    . '","context":"' . $context_id_list[date('w', $timestamp)]
+    . '","context":"' . $list_context_id[date('w', $timestamp)]
     . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
 }
 
