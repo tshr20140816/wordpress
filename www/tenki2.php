@@ -100,7 +100,7 @@ for ($i = 0; $i < count($contexts); $i++) {
 
 error_log($pid . ' $list_context_id : ' . print_r($list_context_id, TRUE));
 
-// holiday
+// holiday 今月含み4ヶ月分
 
 $start_yyyy = date('Y');
 $start_m = date('n');
@@ -124,7 +124,7 @@ for ($i = 0; $i < count($tmp); $i++) {
 }
 error_log($pid . ' $list_holiday : ' . print_r($list_holiday, TRUE));
 
-// 24sekki
+// 24sekki 今年と来年分
 
 $list_24sekki = [];
 
@@ -158,7 +158,7 @@ for ($j = 0; $j < 2; $j++) {
 }
 error_log($pid . ' $list_24sekki : ' . print_r($list_24sekki, TRUE));
 
-// Sun
+// Sun 今月含み4ヶ月分
 
 $list_sunrise_sunset = [];
 
@@ -192,7 +192,7 @@ for ($i = 0; $i < 10; $i++) {
 }
 error_log($pid . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
 
-// Weather Information
+// Weather Information 今日の10日後から70日分
 
 $list_base = [];
 for ($i = 0; $i < 8; $i++) {
@@ -228,6 +228,7 @@ for ($i = 0; $i < 70; $i++) {
   } else {
     $tmp = '----';
   }
+  // 30日後以降は土日月及び祝祭日、24節気のみ
   if ($i > 20 && (date('w', $timestamp) + 1) % 7 > 2 && !array_key_exists($timestamp, $list_holiday) && !array_key_exists($timestamp, $list_24sekki)) {
     continue;
   }
