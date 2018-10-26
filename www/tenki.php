@@ -119,7 +119,7 @@ array_pop($tmp);
 $list_holiday = [];
 for ($i = 0; $i < count($tmp); $i++) {
   $tmp1 = explode(',', $tmp[$i]);
-  $timestamp = mktime(0, 0, 0, $tmp1[2], $tmp1[1], $tmp1[0]);
+  $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
   $list_holiday[$timestamp] = $tmp1[7];
 }
 error_log($pid . ' $list_holiday : ' . print_r($list_holiday, TRUE));
