@@ -50,7 +50,7 @@ for ($i = 0; $i < count($folders); $i++) {
 
 // Get Tasks
 
-$res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=folder', NULL);
+$res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=folder,duedate', NULL);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
