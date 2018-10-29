@@ -92,6 +92,7 @@ for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
     if ($tasks[$i]['folder'] == $label_folder_id) {
       $list_label_task[] = $tasks[$i]['duedate'];
+      error_log($pid . ' ' . date('Y-m-d', $tasks[$i]['duedate']) . ' ' . $tasks[$i]['duedate']);
     }
   }
 }
