@@ -105,10 +105,6 @@ $start_m = date('n', strtotime('+2 month'));
 $finish_yyyy = $start_yyyy + 2;
 // $finish_m = 12;
 
-$start_yyyy = 2018;
-$start_m = 12;
-$finish_yyyy = 2018;
-
 $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=12&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
 $res = get_contents($url, NULL);
