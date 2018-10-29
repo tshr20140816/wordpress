@@ -30,6 +30,7 @@ foreach ($pdo->query($sql) as $row) {
 }
 
 if ($access_token == NULL) {
+  error_log("${pid} ACCESS TOKEN NONE");
   exit();
 }
 
