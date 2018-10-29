@@ -100,6 +100,20 @@ for ($i = 0; $i < count($contexts); $i++) {
 
 error_log($pid . ' $list_context_id : ' . print_r($list_context_id, TRUE));
 
+// Get Folders
+
+$res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
+$folders = json_decode($res, TRUE);
+
+$label_folder_id = 0;
+for ($i = 0; $i < count($folders); $i++) {
+  if ($folders[$i]['name'] == 'LABEL') {
+    $label_folder_id = $folders[$i]['id'];
+    error_log($pid . ' LABEL FOLDER ID : ' . $label_folder_id);
+    break;
+  }
+}
+
 // holiday 今月含み4ヶ月分
 
 $start_yyyy = date('Y');
@@ -242,7 +256,10 @@ for ($i = 0; $i < 70; $i++) {
   if (array_key_exists($timestamp, $list_sunrise_sunset)) {
     $tmp .= ' ' . $list_sunrise_sunset[$timestamp];
   }
-  $list_weather[] = '{"title":"' . $tmp . '","duedate":"' . $timestamp . '","tag":"WEATHER2","context":' . $list_context_id[date('w', $timestamp)] . ',"folder":__FOLDER_ID__}';
+  $list_weather[] = '{"title":"' . $tmp
+    . '","duedate":"' . $timestamp
+    . '","tag":"WEATHER2","context":' . $list_context_id[date('w', $timestamp)]
+    . ',"folder":' . $label_folder_id . '}';
 }
 error_log($pid . ' $list_weather : ' . print_r($list_weather, TRUE));
 
@@ -269,20 +286,6 @@ for ($i = 0; $i < count($tasks); $i++) {
         break;
       }
     }
-  }
-}
-
-// Get Folders
-
-$res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
-$folders = json_decode($res, TRUE);
-
-$label_folder_id = 0;
-for ($i = 0; $i < count($folders); $i++) {
-  if ($folders[$i]['name'] == 'LABEL') {
-    $label_folder_id = $folders[$i]['id'];
-    error_log($pid . ' LABEL FOLDER ID : ' . $label_folder_id);
-    break;
   }
 }
 
