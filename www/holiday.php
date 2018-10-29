@@ -84,20 +84,18 @@ for ($i = 0; $i < count($folders); $i++) {
 $res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag,folder,duedate', NULL);
 // error_log($res);
 
-// For Holiday
-
 $tasks = json_decode($res, TRUE);
 // error_log(print_r($tasks, TRUE));
-$list_holiday_task_title = [];
+
+$list_label_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'HOLIDAY') {
-      $list_holiday_task_title[$tasks[$i]['title']] = $tasks[$i]['id'];
-      // error_log($pid . ' ' . $tasks[$i]['title']);
+  if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+    if ($tasks[$i]['folder'] == $label_folder_id) {
+      $list_label_task[] = $tasks[$i]['duedate'];
     }
   }
 }
-error_log($pid . ' ' . print_r($list_holiday_task_title, TRUE));
+error_log($pid . ' $list_label_task : ' . print_r($list_label_task, TRUE));
 
 // Holiday
 
@@ -115,13 +113,12 @@ $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 error_log($pid . ' $res : ' . $res);
 
 $subscript = '₀₁₂₃₄₅₆₇₈₉';
-$tmp_list = explode("\n", $res);
-$holiday_list = [];
-for ($i = 1; $i < count($tmp_list) - 1; $i++) {
-  error_log($pid . ' ' . $tmp_list[$i]);
-  $tmp = explode(',', $tmp_list[$i]);
-  // error_log($pid . ' ' . '####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####');
-  // $holiday_list['####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####'] = $tmp[0] . $tmp[1] . $tmp[2] . $tmp[7];
+$list_tmp = explode("\n", $res);
+$list_holiday = [];
+$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","tag":"HOLIDAY","folder":"' . $label_folder_id . '"}';
+for ($i = 1; $i < count($list_tmp) - 1; $i++) {
+  error_log($pid . ' $list_tmp[$i] : ' . $list_tmp[$i]);
+  $tmp = explode(',', $list_tmp[$i]);
   $yyyy = $tmp[0];
   // To Small Size
   for ($j = 0; $j < 10; $j++) {
@@ -129,35 +126,21 @@ for ($i = 1; $i < count($tmp_list) - 1; $i++) {
   }
   $tmp1 = '##### ' . $tmp[5] . ' ' . $tmp[1] . '/' . $tmp[2] . ' ' . $tmp[7] . ' ##### ' . $yyyy;
   error_log($pid . ' $tmp1 : ' . $tmp1);
-  $holiday_list[$tmp1] = $tmp[0] . $tmp[1] . $tmp[2] . $tmp[7];
-}
-
-$holiday_diff_list = array_diff(array_keys($holiday_list), array_keys($list_holiday_task_title));
-
-error_log($pid . ' ' . print_r($holiday_diff_list, TRUE));
-
-$holiday_diff_list = array_slice($holiday_diff_list, 0, 50);
-
-// Make Add Tasks List
-
-$add_task_list = [];
-$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","tag":"HOLIDAY","folder":"' . $label_folder_id . '"}';
-for ($i = 0; $i < count($holiday_diff_list); $i++) {
-  if (array_key_exists($holiday_diff_list[$i], $holiday_list)) {
-    error_log($pid . ' ' . $holiday_list[$holiday_diff_list[$i]]);
-    $tmp = str_replace('__TITLE__', $holiday_diff_list[$i], $add_task_template);
-    $tmp = str_replace('__DUEDATE__', strtotime(substr($holiday_list[$holiday_diff_list[$i]], 0, 8)), $tmp);
-    $add_task_list[] = $tmp;
+  $timestamp = mktime(0, 0, 0, $tmp[1], $tmp[2], $tmp[0]);
+  if (!in_array($timestamp, $list_label_task)) {
+    $tmp1 = str_replace('__TITLE__', $tmp1, $add_task_template);
+    $tmp1 = str_replace('__DUEDATE__', $timestamp, $tmp1);    
+    $list_holiday[] = $tmp1;
   }
 }
+$list_holiday = array_slice($list_holiday, 0, 50);
+error_log($pid . ' $list_holiday : ' . print_r($list_holiday, TRUE));
 
-error_log($pid . ' ' . print_r($add_task_list, TRUE));
-
-if (count($add_task_list) == 0) {
+if (count($list_holiday) == 0) {
   exit();
 }
 
-$tmp = implode(',', $add_task_list);
+$tmp = implode(',', $list_holiday);
 $post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]"];
 
 error_log($pid . ' ' . print_r($post_data, TRUE));
