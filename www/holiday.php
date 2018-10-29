@@ -97,7 +97,7 @@ $res = get_contents($url, NULL);
 
 $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
-// error_log($res);
+error_log($pid . ' $res : ' . $res);
 
 $tmp_list = explode("\n", $res);
 $holiday_list = [];
@@ -153,12 +153,14 @@ $post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]"];
 
 error_log($pid . ' ' . print_r($post_data, TRUE));
 
+/*
 $res = get_contents(
   'https://api.toodledo.com/3/tasks/add.php',
   [CURLOPT_POST => TRUE,
    CURLOPT_POSTFIELDS => http_build_query($post_data),
   ]);
 error_log("${pid} add.php RESPONSE : ${res}");
+*/
 
 error_log("${pid} FINISH");
 
