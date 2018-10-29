@@ -77,7 +77,7 @@ $timestamp = strtotime('+20 day');
 for ($i = 0; $i < count($list_non_label); $i++) {
   if ($list_non_label[$i] > $timestamp) {
     // error_log(date('Y-m-d', $list_non_label[$i]));
-    $yyyy = date('Y', $list_non_label[$i]]);
+    $yyyy = date('Y', $list_non_label[$i]);
     for ($j = 0; $j < 10; $j++) {
       $yyyy = str_replace($j, mb_substr($subscript, $j, 1), $yyyy);
     }
