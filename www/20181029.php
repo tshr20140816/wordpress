@@ -69,6 +69,7 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 
 $list_non_label = array_values(array_diff($list_schedule_task, $list_label_task));
+sort($list_non_label);
 error_log(print_r($list_non_label, TRUE));
 
 $list_additional_label = [];
