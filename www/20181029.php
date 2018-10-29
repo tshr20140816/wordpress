@@ -54,22 +54,25 @@ $res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
-error_log(print_r($tasks, TRUE));
+// error_log(print_r($tasks, TRUE));
 
-exit;
-
-$list_delete_task = [];
+$list_label_task = [];
+$list_schedule_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('id', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'WEATHER') {
-      $list_delete_task[] = $tasks[$i]['id'];
-      error_log("${pid} DELETE TARGET TASK ID : " . $tasks[$i]['id']);
-      if (count($list_delete_task) == 50) {
-        break;
-      }
+  if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+    if ($tasks[$i]['folder'] == $label_folder_id) {
+      $list_label_task[] = $tasks[$i]['duedate'];
+    } else {
+      $list_schedule_task[] = $tasks[$i]['duedate'];
     }
   }
 }
+
+$list_non_label = array_diff($list_schedule_task, $list_label_task);
+
+error_log(print_r($list_non_label, TRUE));
+
+exit();
 
 function get_contents($url_, $options_) {
   $ch = curl_init();
