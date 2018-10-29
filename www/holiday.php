@@ -145,7 +145,7 @@ if (count($list_holiday) == 0) {
 $tmp = implode(',', $list_holiday);
 $post_data = ['access_token' => $access_token, 'tasks' => "[${tmp}]"];
 
-error_log($pid . ' ' . print_r($post_data, TRUE));
+error_log($pid . ' $post_data : ' . print_r($post_data, TRUE));
 
 $res = get_contents(
   'https://api.toodledo.com/3/tasks/add.php',
