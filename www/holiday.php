@@ -99,13 +99,22 @@ $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
 error_log($pid . ' $res : ' . $res);
 
+$subscript = '₀₁₂₃₄₅₆₇₈₉';
 $tmp_list = explode("\n", $res);
 $holiday_list = [];
 for ($i = 1; $i < count($tmp_list) - 1; $i++) {
   error_log($pid . ' ' . $tmp_list[$i]);
   $tmp = explode(',', $tmp_list[$i]);
-  error_log($pid . ' ' . '####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####');
-  $holiday_list['####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####'] = $tmp[0] . $tmp[1] . $tmp[2] . $tmp[7];
+  // error_log($pid . ' ' . '####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####');
+  // $holiday_list['####+ ' . $tmp[7] . ' (' . $tmp[5] . ') ' . $tmp[0] . '/' . $tmp[1] . '/' . $tmp[2] . ' +####'] = $tmp[0] . $tmp[1] . $tmp[2] . $tmp[7];
+  $yyyy = $tmp[0];
+  // To Small Size
+  for ($j = 0; $j < 10; $j++) {
+    $yyyy = str_replace($j, mb_substr($subscript, $j, 1), $yyyy);
+  }
+  $tmp1 = '##### ' . $tmp[5] . ' ' . $tmp[1] . '/' . $tmp[2] . ' ' . $tmp[7] . ' ##### ' . $yyyy;
+  error_log($pid . ' $tmp1 : ' . $tmp1);
+  $holiday_list[$tmp1] = $tmp[0] . $tmp[1] . $tmp[2] . $tmp[7];
 }
 
 $holiday_diff_list = array_diff(array_keys($holiday_list), array_keys($list_holiday_task_title));
