@@ -91,7 +91,7 @@ $list_label_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
     if ($tasks[$i]['folder'] == $label_folder_id) {
-      $list_label_task[] = $tasks[$i]['duedate'];
+      $list_label_task[] = date('Ymd', $tasks[$i]['duedate']);
       error_log($pid . ' ' . date('Y-m-d', $tasks[$i]['duedate']) . ' ' . $tasks[$i]['duedate']);
     }
   }
@@ -132,7 +132,7 @@ for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   $tmp1 = '##### ' . $tmp[5] . ' ' . $tmp[1] . '/' . $tmp[2] . ' ' . $tmp[7] . ' ##### ' . $yyyy;
   error_log($pid . ' $tmp1 : ' . $tmp1);
   $timestamp = gmmktime(0, 0, 0, $tmp[1], $tmp[2], $tmp[0]);
-  if (!in_array($timestamp, $list_label_task)) {
+  if (!in_array(date('Ymd', $timestamp), $list_label_task)) {
     error_log($pid . ' TARGET TIMESTAMP : ' . $timestamp);
     $tmp1 = str_replace('__TITLE__', $tmp1, $add_task_template);
     $tmp1 = str_replace('__DUEDATE__', $timestamp, $tmp1);    
