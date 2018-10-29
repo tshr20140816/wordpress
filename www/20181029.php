@@ -71,30 +71,34 @@ for ($i = 0; $i < count($tasks); $i++) {
 $list_non_label = array_values(array_diff($list_schedule_task, $list_label_task));
 error_log(print_r($list_non_label, TRUE));
 
+$list_additional_label = [];
 $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
 $subscript = '₀₁₂₃₄₅₆₇₈₉';
 $timestamp = strtotime('+20 day');
 for ($i = 0; $i < count($list_non_label); $i++) {
   if ($list_non_label[$i] > $timestamp) {
     // error_log(date('Y-m-d', $list_non_label[$i]));
+    
     $yyyy = date('Y', $list_non_label[$i]);
+    // To Small Size
     for ($j = 0; $j < 10; $j++) {
       $yyyy = str_replace($j, mb_substr($subscript, $j, 1), $yyyy);
     }
+    
     $tmp = '##### '
       . $list_yobi[date('w', $list_non_label[$i])] . '曜日 '
       . date('m/d', $list_non_label[$i])
       . ' ##### '
       . $yyyy;
-    error_log($tmp);
+    // error_log($tmp);
+    $list_additional_label[] = '{"title":"' . $tmp
+      . '","duedate":"' . $list_non_label[$i]
+      . '","tag":"ADDITIONAL","folder":"' . $label_folder_id . '"}';
   }
 }
+error_log(print_r($list_additional_label, TRUE));
 
-// To Small Size
 
-for ($i = 0; $i < 10; $i++) {
-  $update_marker = str_replace($i, mb_substr($subscript, $i, 1), $update_marker);
-}
 exit();
 
 function get_contents($url_, $options_) {
