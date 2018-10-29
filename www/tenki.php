@@ -274,7 +274,7 @@ for ($i = 0; $i < 10; $i++) {
     . $update_marker;
   
   if (array_key_exists($timestamp, $list_holiday)) {
-    $tmp3 = str_replace(' #####', ' ' . $list_holiday[$timestamp] . ' #####', $tmp3);
+    $tmp3 = str_replace(' #####', ' ★' . $list_holiday[$timestamp] . '★ #####', $tmp3);
   }
   if (array_key_exists($timestamp, $list_24sekki)) {
     $tmp3 .= $list_24sekki[$timestamp];
