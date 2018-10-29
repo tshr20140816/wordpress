@@ -71,8 +71,11 @@ for ($i = 0; $i < count($tasks); $i++) {
 $list_non_label = array_values(array_diff($list_schedule_task, $list_label_task));
 error_log(print_r($list_non_label, TRUE));
 
+$timestamp = strtotime('+20 day');
 for ($i = 0; $i < count($list_non_label); $i++) {
-  error_log(date('Y-m-d', $list_non_label[$i]));
+  if ($list_non_label[$i] > $timestamp) {
+    error_log(date('Y-m-d', $list_non_label[$i]));
+  }
 }
 
 exit();
