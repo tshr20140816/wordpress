@@ -76,7 +76,11 @@ $timestamp = strtotime('+20 day');
 for ($i = 0; $i < count($list_non_label); $i++) {
   if ($list_non_label[$i] > $timestamp) {
     // error_log(date('Y-m-d', $list_non_label[$i]));
-    $tmp = '##### ' . $list_yobi[date('w', $list_non_label[$i])] . ' ' . date('m/d', $list_non_label[$i]) . ' ##### ' . date('Y', $list_non_label[$i]);
+    $tmp = '##### '
+      . $list_yobi[date('w', $list_non_label[$i])] . '曜日 '
+      . date('m/d', $list_non_label[$i])
+      . ' ##### '
+      . date('Y', $list_non_label[$i]]);
     error_log($tmp);
   }
 }
