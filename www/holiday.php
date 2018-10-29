@@ -129,6 +129,7 @@ for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   error_log($pid . ' $tmp1 : ' . $tmp1);
   $timestamp = mktime(0, 0, 0, $tmp[1], $tmp[2], $tmp[0]);
   if (!in_array($timestamp, $list_label_task)) {
+    error_log($pid . ' TARGET TIMESTAMP : ' . $timestamp);
     $tmp1 = str_replace('__TITLE__', $tmp1, $add_task_template);
     $tmp1 = str_replace('__DUEDATE__', $timestamp, $tmp1);    
     $list_holiday[] = $tmp1;
