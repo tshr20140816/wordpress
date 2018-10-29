@@ -234,7 +234,7 @@ for ($i = 0; $i < 70; $i++) {
   }
   $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $tmp . $update_marker;
   if (array_key_exists($timestamp, $list_holiday)) {
-    $tmp = str_replace(' #####', ' ' . $list_holiday[$timestamp] . ' #####', $tmp);
+    $tmp = str_replace(' #####', ' ★' . $list_holiday[$timestamp] . '★ #####', $tmp);
   }
   if (array_key_exists($timestamp, $list_24sekki)) {
     $tmp .= ' ' . $list_24sekki[$timestamp];
