@@ -125,9 +125,9 @@ for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   for ($j = 0; $j < 10; $j++) {
     $yyyy = str_replace($j, mb_substr($subscript, $j, 1), $yyyy);
   }
-  $tmp1 = '##### ' . $tmp[5] . ' ' . $tmp[1] . '/' . $tmp[2] . ' ' . $tmp[7] . ' ##### ' . $yyyy;
+  $tmp1 = '##### ' . $tmp[5] . ' ' . $tmp[1] . '/' . $tmp[2] . ' ★' . $tmp[7] . '★ ##### ' . $yyyy;
   error_log($pid . ' $tmp1 : ' . $tmp1);
-  $timestamp = gmmktime(0, 0, 0, $tmp[1], $tmp[2], $tmp[0]);
+  $timestamp = mktime(0, 0, 0, $tmp[1], $tmp[2], $tmp[0]);
   if (!in_array(date('Ymd', $timestamp), $list_label_task)) {
     error_log($pid . ' TARGET TIMESTAMP : ' . $timestamp);
     $tmp1 = str_replace('__TITLE__', $tmp1, $add_task_template);
