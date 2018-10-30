@@ -281,13 +281,14 @@ for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'WEATHER2') {
       $list_delete_task[] = $tasks[$i]['id'];
-      error_log($pid . ' DELETE TARGET TASK ID : ' . $tasks[$i]['id']);
-      if (count($list_delete_task) == 50) {
-        break;
+    } else if ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
+      if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_weather) {
+        $list_delete_task[] = $tasks[$i]['id'];
       }
     }
   }
 }
+error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
 // Add Tasks
 
@@ -310,13 +311,16 @@ error_log($pid . ' add.php RESPONSE : ' . $res);
 error_log($pid . ' DELETE TARGET TASK COUNT : ' . count($list_delete_task));
 
 if (count($list_delete_task) > 0) {
-  $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];  
-  $res = get_contents(
-    'https://api.toodledo.com/3/tasks/delete.php',
-    [CURLOPT_POST => TRUE,
-     CURLOPT_POSTFIELDS => http_build_query($post_data),
-    ]);
-  error_log($pid . ' delete.php RESPONSE : ' . $res);
+  $tmp = array_chunk($list_delete_task, 50);
+  for ($i = 0; $i < count($tmp); $i++) {
+    $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $tmp[$i]) . ']'];  
+    $res = get_contents(
+      'https://api.toodledo.com/3/tasks/delete.php',
+      [CURLOPT_POST => TRUE,
+       CURLOPT_POSTFIELDS => http_build_query($post_data),
+      ]);
+    error_log($pid . ' delete.php RESPONSE : ' . $res);
+  }
 }
 
 error_log("${pid} FINISH");
