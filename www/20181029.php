@@ -70,7 +70,7 @@ for ($i = 0; $i < count($tasks); $i++) {
 
 $list_non_label = array_unique(array_diff($list_schedule_task, $list_label_task));
 sort($list_non_label);
-error_log(print_r($list_non_label, TRUE));
+error_log($pid . ' $list_non_label : ' . print_r($list_non_label, TRUE));
 
 $list_additional_label = [];
 $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
@@ -111,6 +111,8 @@ $res = get_contents(
   ]);
 
 error_log($pid . ' add.php RESPONSE : ' . $res);
+
+error_log("${pid} FINISH");
 
 exit();
 
