@@ -97,8 +97,20 @@ for ($i = 0; $i < count($list_non_label); $i++) {
       . '","tag":"ADDITIONAL","folder":"' . $label_folder_id . '"}';
   }
 }
-error_log(print_r($list_additional_label, TRUE));
+error_log($pid . ' $list_additional_label : ' . print_r($list_additional_label, TRUE));
 
+$list_additional_label = array_slice($list_additional_label, 0, 50);
+
+$tmp = implode(',', $list_additional_label);
+$post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
+
+$res = get_contents(
+  'https://api.toodledo.com/3/tasks/add.php',
+  [CURLOPT_POST => TRUE,
+   CURLOPT_POSTFIELDS => http_build_query($post_data),
+  ]);
+
+error_log($pid . ' add.php RESPONSE : ' . $res);
 
 exit();
 
