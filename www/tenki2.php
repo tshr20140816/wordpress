@@ -4,7 +4,7 @@ $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi}");
 
-const $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
+const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
 
 // Access Token
 
@@ -247,7 +247,7 @@ for ($i = 0; $i < 70; $i++) {
   if ($i > 20 && (date('w', $timestamp) + 1) % 7 > 2 && !array_key_exists($timestamp, $list_holiday) && !array_key_exists($timestamp, $list_24sekki)) {
     continue;
   }
-  $tmp = '##### ' . $list_yobi[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $tmp . $update_marker;
+  $tmp = '##### ' . LIST_YOBI[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $tmp . $update_marker;
   if (array_key_exists($timestamp, $list_holiday)) {
     $tmp = str_replace(' #####', ' ★' . $list_holiday[$timestamp] . '★ #####', $tmp);
   }
