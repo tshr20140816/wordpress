@@ -4,6 +4,8 @@ $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi}");
 
+const $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
+
 // Access Token
 
 $connection_info = parse_url(getenv('DATABASE_URL'));
@@ -225,7 +227,6 @@ for ($i = 0; $i < 8; $i++) {
 error_log($pid . ' $list_base : ' . print_r($list_base, TRUE));
 
 $list_weather = [];
-$list_yobi = array('日', '月', '火', '水', '木', '金', '土');
 $update_marker = ' _' . date('ymd') . '_';
 // To Small Size
 $subscript = '₀₁₂₃₄₅₆₇₈₉';
