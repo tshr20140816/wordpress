@@ -282,7 +282,7 @@ for ($i = 0; $i < count($tasks); $i++) {
     if ($tasks[$i]['tag'] == 'WEATHER2') {
       $list_delete_task[] = $tasks[$i]['id'];
     } else if ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
-      if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_weather) {
+      if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_weather)) {
         $list_delete_task[] = $tasks[$i]['id'];
       }
     }
