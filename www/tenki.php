@@ -366,7 +366,7 @@ if (count($list_delete_task) > 0) {
 error_log("${pid} FINISH");
 
 $res = get_contents(
-  'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/weekday.php',
+  'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/add_label.php',
   [CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
   ]);
 
