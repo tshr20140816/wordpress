@@ -256,7 +256,7 @@ for ($i = 0; $i < 70; $i++) {
   if (array_key_exists($timestamp, $list_sunrise_sunset)) {
     $tmp .= ' ' . $list_sunrise_sunset[$timestamp];
   }
-  $list_weather[] = '{"title":"' . $tmp
+  $list_weather[date('Ymd', $timestamp)] = '{"title":"' . $tmp
     . '","duedate":"' . $timestamp
     . '","tag":"WEATHER2","context":' . $list_context_id[date('w', $timestamp)]
     . ',"folder":' . $label_folder_id . '}';
