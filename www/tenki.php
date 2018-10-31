@@ -4,6 +4,8 @@ $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi}");
 
+const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
+
 // Access Token
 
 $connection_info = parse_url(getenv('DATABASE_URL'));
@@ -253,7 +255,7 @@ for ($i = 0; $i < 10; $i++) {
 
 $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
-$list_yobi = array('日', '月', '火', '水', '木', '金', '土');
+// $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
 $list_weather = [];
 for ($i = 0; $i < 10; $i++) {
   // ex) ##### 日曜日 01/13 ##### ☂/☀ 60% 25/18 _₁₀₁₀_
@@ -267,7 +269,7 @@ for ($i = 0; $i < 10; $i++) {
   $tmp2 = str_replace('時々', '|', $tmp2);
   $tmp2 = str_replace('一時', '|', $tmp2);
   $tmp3 = '##### '
-    . $list_yobi[date('w', $timestamp)] . '曜日 '
+    . LIST_YOBI[date('w', $timestamp)] . '曜日 '
     . date('m/d', $timestamp)
     . ' ##### '
     . $tmp2 . ' ' . $list[2] . ' ' . $list[1]
