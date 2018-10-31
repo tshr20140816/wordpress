@@ -122,7 +122,9 @@ $start_m = date('n');
 $finish_yyyy = date('Y', strtotime('+3 month'));
 $finish_m = date('n', strtotime('+3 month'));
 
-$url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
+$url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy
+  . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
+  . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
 $res = get_contents($url, NULL);
 $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
@@ -243,7 +245,9 @@ for ($i = 0; $i < 70; $i++) {
     $tmp = '----';
   }
   // 30日後以降は土日月及び祝祭日、24節気のみ
-  if ($i > 20 && (date('w', $timestamp) + 1) % 7 > 2 && !array_key_exists($timestamp, $list_holiday) && !array_key_exists($timestamp, $list_24sekki)) {
+  if ($i > 20 && (date('w', $timestamp) + 1) % 7 > 2
+      && !array_key_exists($timestamp, $list_holiday)
+      && !array_key_exists($timestamp, $list_24sekki)) {
     continue;
   }
   $tmp = '##### ' . LIST_YOBI[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ##### ' . $tmp . $update_marker;
