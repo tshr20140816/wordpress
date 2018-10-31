@@ -179,7 +179,7 @@ error_log($pid . ' $list_24sekki : ' . print_r($list_24sekki, TRUE));
 $list_sunrise_sunset = [];
 
 for ($j = 0; $j < 4; $j++) {
-  $timestamp = strtotime("+${j} month");
+  $timestamp = strtotime(date('Y-m-01') . " +${j} month");
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
   error_log($pid . ' $yyyy : ' . $yyyy);
@@ -192,7 +192,7 @@ for ($j = 0; $j < 4; $j++) {
   array_shift($tmp);
   array_pop($tmp);
 
-  $dt = date('Y-m-', $timestamp) . '01';
+  $dt = date('Y-m-01', $timestamp);
 
   for ($i = 0; $i < count($tmp); $i++) {
     $timestamp = strtotime("${dt} +${i} day"); // UTC
