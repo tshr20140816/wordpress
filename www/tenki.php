@@ -230,7 +230,7 @@ $subscript = '₀₁₂₃₄₅₆₇₈₉';
 for ($i = 0; $i < 10; $i++) {
   $list_moon_age = str_replace($i, mb_substr($subscript, $i, 1), $list_moon_age);
 }
-c
+error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
 
 // Weather Information
 
