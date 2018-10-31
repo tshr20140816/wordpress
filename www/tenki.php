@@ -230,7 +230,7 @@ $subscript = '₀₁₂₃₄₅₆₇₈₉';
 for ($i = 0; $i < 10; $i++) {
   $list_moon_age = str_replace($i, mb_substr($subscript, $i, 1), $list_moon_age);
 }
-error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
+c
 
 // Weather Information
 
@@ -311,13 +311,14 @@ for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'WEATHER') {
       $list_delete_task[] = $tasks[$i]['id'];
-      error_log("${pid} DELETE TARGET TASK ID : " . $tasks[$i]['id']);
+      // error_log("${pid} DELETE TARGET TASK ID : " . $tasks[$i]['id']);
       if (count($list_delete_task) == 50) {
         break;
       }
     }
   }
 }
+error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
 // Get Folders
 
