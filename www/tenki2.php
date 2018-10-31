@@ -74,17 +74,6 @@ $res = get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' 
 $contexts = json_decode($res, TRUE);
 
 $list_context_id = [];
-for ($j = 0; $j < 7; $j++) {
-  for ($i = 0; $i < count($contexts); $i++) {
-    if (strpos($contexts[$i]['name'], LIST_YOBI[$j]) !== FALSE) {
-      $list_context_id[$j] = $contexts[$i]['id'];
-      break;
-    }
-  }
-}
-error_log($pid . ' $list_context_id : ' . print_r($list_context_id, TRUE));
-
-/*
 for ($i = 0; $i < count($contexts); $i++) {
   switch ($contexts[$i]['name']) {
     case '日......':
@@ -111,7 +100,6 @@ for ($i = 0; $i < count($contexts); $i++) {
   }
 }
 error_log($pid . ' $list_context_id : ' . print_r($list_context_id, TRUE));
-*/
 
 // Get Folders
 
