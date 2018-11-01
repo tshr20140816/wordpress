@@ -101,7 +101,8 @@ error_log($pid . ' $list_context_id : ' . print_r($list_context_id, TRUE));
 
 // Get Tasks
 
-$res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=duedate,context', NULL);
+// $res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=duedate,context', NULL);
+$res = get_contents('https://api.toodledo.com/3/tasks/get.php?comp=0&fields=duedate,context&access_token=' . $access_token, NULL);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
