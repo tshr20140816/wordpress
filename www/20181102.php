@@ -78,7 +78,7 @@ $tasks = json_decode($res, TRUE);
 // $list_delete_task = [];
 // $tasks[$i]['duedate']
 for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('duedate', $tasks[$i])) {
+  if (array_key_exists('duedate', $tasks[$i]) && $tasks[$i]['duedate'] == 0) {
     error_log(print_r($tasks[$i], TRUE));
   }
 }
