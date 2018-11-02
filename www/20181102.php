@@ -81,13 +81,26 @@ $edit_task_template = '{"id":"__ID__","duedate":"__DUEDATE__"}';
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('duedate', $tasks[$i]) && $tasks[$i]['duedate'] == 0) {
     error_log(print_r($tasks[$i], TRUE));
-    //if (
+    $tmp = $tasks[$i]['title'];
+    if (strlen($tmp) < 5 && preg_match('/\d\d\/\d\d /', $tmp) != 1) {
+      continue;
+    }
+    $tmp = explode('/', $tmp);
+    $mm = $tmp[0];
+    $dd = $tmp[1];
+    $yyyy = date('Y')
+    if (date('md') > ($mm . $dd)) {
+      $yyyy++;
+    }
+    if (!checkdate($mm, $dd, $yyyy)) {
+      continue;
+    }
     $tmp = str_replace('__ID__', $tasks[$i]['id'], $edit_task_template);
-    // $tmp = str_replace('__DUEDATE__', $real_context_id, $tmp);
-    //$list_edit_task[] = 
+    $tmp = str_replace('__DUEDATE__', mktime(0, 0, 0, $mm, $dd, $yyyy), $tmp);
+    $list_edit_task[] = $tmp;
   }
 }
-//error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
+error_log($pid . ' $list_edit_task : ' . print_r($list_edit_task, TRUE));
 
 error_log("${pid} FINISH ${requesturi}");
 
