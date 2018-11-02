@@ -84,4 +84,27 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 //error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
+error_log("${pid} FINISH ${requesturi}");
+
+exit();
+
+function get_contents($url_, $options_) {
+  $ch = curl_init();
+  curl_setopt_array($ch, [
+    CURLOPT_URL => $url_,
+    CURLOPT_USERAGENT => getenv('USER_AGENT'),
+    CURLOPT_RETURNTRANSFER => TRUE,
+    CURLOPT_ENCODING => '',
+    CURLOPT_FOLLOWLOCATION => 1,
+    CURLOPT_MAXREDIRS => 3,
+    CURLOPT_SSL_FALSESTART => TRUE,
+    ]);
+  if (is_null($options_) == FALSE) {
+    curl_setopt_array($ch, $options_);
+  }
+  $res = curl_exec($ch);
+  curl_close($ch);
+  
+  return $res;
+}
 ?>
