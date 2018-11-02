@@ -88,7 +88,7 @@ for ($i = 0; $i < count($tasks); $i++) {
     $tmp = explode('/', $tmp);
     $mm = $tmp[0];
     $dd = $tmp[1];
-    $yyyy = date('Y')
+    $yyyy = date('Y');
     if (date('md') > ($mm . $dd)) {
       $yyyy++;
     }
