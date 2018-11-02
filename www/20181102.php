@@ -75,11 +75,16 @@ $res = get_contents('https://api.toodledo.com/3/tasks/get.php?comp=0&fields=dued
 
 $tasks = json_decode($res, TRUE);
 // error_log(print_r($tasks, TRUE));
-// $list_delete_task = [];
-// $tasks[$i]['duedate']
+
+$list_edit_task = [];
+$edit_task_template = '{"id":"__ID__","duedate":"__DUEDATE__"}';
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('duedate', $tasks[$i]) && $tasks[$i]['duedate'] == 0) {
     error_log(print_r($tasks[$i], TRUE));
+    //if (
+    $tmp = str_replace('__ID__', $tasks[$i]['id'], $edit_task_template);
+    // $tmp = str_replace('__DUEDATE__', $real_context_id, $tmp);
+    //$list_edit_task[] = 
   }
 }
 //error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
