@@ -4,8 +4,6 @@ $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi}");
 
-const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
-
 // Access Token
 
 $connection_info = parse_url(getenv('DATABASE_URL'));
