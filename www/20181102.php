@@ -68,4 +68,20 @@ __HEREDOC__;
 
 $pdo = null;
 
+// Get Tasks
+
+$res = get_contents('https://api.toodledo.com/3/tasks/get.php?comp=0&fields=duedate&access_token=' . $access_token, NULL);
+// error_log($res);
+
+$tasks = json_decode($res, TRUE);
+// error_log(print_r($tasks, TRUE));
+// $list_delete_task = [];
+// $tasks[$i]['duedate']
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('duedate', $tasks[$i])) {
+    error_log(print_r($tasks[$i], TRUE));
+  }
+}
+//error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
+
 ?>
