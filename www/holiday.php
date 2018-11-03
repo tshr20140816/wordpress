@@ -110,7 +110,6 @@ $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy
   . '&end_mon=12&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
 $res = get_contents($url, NULL);
-
 $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
 error_log($pid . ' $res : ' . $res);
