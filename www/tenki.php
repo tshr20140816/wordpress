@@ -162,7 +162,7 @@ for ($j = 0; $j < 2; $j++) {
 }
 error_log($pid . ' $list_24sekki : ' . print_r($list_24sekki, TRUE));
 
-// Sun
+// Sun rise set
 
 $timestamp = time() + 9 * 60 * 60; // JST
 
@@ -199,7 +199,7 @@ for ($i = 0; $i < 10; $i++) {
 }
 error_log($pid . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
 
-// Moon
+// Moon age
 
 $timestamp = time() + 9 * 60 * 60; // JST
 
