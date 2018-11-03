@@ -81,7 +81,7 @@ for ($i = 0; $i < count($folders); $i++) {
 
 // Get Tasks
 
-$res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag,folder,duedate', NULL);
+$res = get_contents('https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,folder,duedate&access_token=' . $access_token, NULL);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
@@ -105,7 +105,9 @@ $start_m = date('n', strtotime('+2 month'));
 $finish_yyyy = $start_yyyy + 2;
 // $finish_m = 12;
 
-$url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=12&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
+$url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy
+  . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy
+  . '&end_mon=12&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
 $res = get_contents($url, NULL);
 
