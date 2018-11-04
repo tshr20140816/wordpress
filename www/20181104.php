@@ -4,7 +4,10 @@ include(dirname(__FILE__) . "/../classes/MyUtils.php");
 
 $mu = new MyUtils();
 
-$url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=2018&mon=11';
+$y = date('Y');
+$m = date('n');
+
+$url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=' . $y . '&mon=' . $m;
 
 // $res = file_get_contents($url);
 $res = $mu->get_contents($url, NULL);
@@ -29,7 +32,8 @@ for ($i = 0; $i < count($matches); $i++) {
     $tmp = str_replace('　', '', $tmp);
     $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
     $tmp = trim(str_replace('<br>', ' ', $tmp));
-    error_log($matches[$i][1] . ' ' . $tmp);
+    $timestamp = mktime(0, 0, 0, $m, $matches[$i][1], $y);
+    error_log(date('Y-m-d', $timestamp) . ' ' . $tmp);
   }
 }
 
