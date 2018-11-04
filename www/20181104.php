@@ -10,9 +10,14 @@ $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 $tmp = explode('<col span=1 align=right>', $res);
 $tmp = explode('</table>', $tmp[1]);
 
-error_log($tmp[0]);
+// error_log($tmp[0]);
 
 $rc = preg_match_all('/<tr .+?<b>(.+?)<.*?<td(.*?)<\/td><\/tr>/s', $tmp[0], $matches, PREG_SET_ORDER);
 
 error_log(print_r($matches, TRUE));
+
+for ($i = 0; $i < count($matches); $i++) {
+  error_log(print_r($matches[$i], TRUE));
+}
+
 ?>
