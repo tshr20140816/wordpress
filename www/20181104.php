@@ -19,7 +19,7 @@ error_log(print_r($matches, TRUE));
 for ($i = 0; $i < count($matches); $i++) {
   $matches[$i][2] = trim($matches[$i][2], " \t\n\r\0\t>");
   if (strlen($matches[$i][2]) > 0) {
-    $matches[$i][2] = preg_replace('/<font .+?>/', '', $matches[$i][2]);
+    $matches[$i][2] = preg_replace('/<font .+?>.+?>/', '', $matches[$i][2]);
     error_log(print_r($matches[$i], TRUE));
   }
 }
