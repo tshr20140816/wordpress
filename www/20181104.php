@@ -11,8 +11,11 @@ $tmp = explode('<col span=1 align=right>', $res);
 $tmp = explode('</table>', $tmp[1]);
 
 error_log($tmp[0]);
-
-$rc = preg_match('/<tr .+?<b>(.+?)<.*>(.*)<\/td><\/tr>/s', $tmp[0], $matches);
+/*
+<tr bgcolor="#fef0ef"><td width=60><font color="#c00000"><b>3</b> (土)</font></td><td>
+<font color="#c00000">文化の日</font>　×××大混雑9:00～21:00</td></tr>
+*/
+$rc = preg_match('/<tr .+?<b>(.+?)<.*?<td>(.*?)<\/td><\/tr>/s', $tmp[0], $matches);
 
 error_log(print_r($matches, TRUE));
 ?>
