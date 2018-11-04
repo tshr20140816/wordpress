@@ -17,13 +17,14 @@ $rc = preg_match_all('/<tr .+?<b>(.+?)<.*?<td(.*?)<\/td><\/tr>/s', $tmp[0], $mat
 error_log(print_r($matches, TRUE));
 
 for ($i = 0; $i < count($matches); $i++) {
-  $matches[$i][2] = trim($matches[$i][2], " \t\n\r\0\t>");
-  if (strlen($matches[$i][2]) > 0) {
-    $matches[$i][2] = str_replace('　', '', $matches[$i][2]);
-    $matches[$i][2] = preg_replace('/<font .+?>.+?>/', '', $matches[$i][2]);
-    $matches[$i][2] = preg_replace('/bgcolor.+?>/', '', $matches[$i][2]);
-    $matches[$i][2] = trim(str_replace('<br>', ' ', $matches[$i][2]));
-    error_log(print_r($matches[$i], TRUE));
+  $tmp = $matches[$i][2];
+  $tmp = trim($tmp, " \t\n\r\0\t>");
+  $tmp = preg_replace('/<font .+?>.+?>/', '', $tmp);
+  if (strlen($tmp) > 0) {
+    $tmp = str_replace('　', '', $tmp);
+    $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
+    $tmp = trim(str_replace('<br>', ' ', $tmp));
+    error_log($matches[$i][1] . ' ' . $tmp);
   }
 }
 
