@@ -34,7 +34,7 @@ for ($j = 0; $j < 2; $j++) {
       $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
       $tmp = trim(str_replace('<br>', ' ', $tmp));
       $timestamp = mktime(0, 0, 0, $m, $matches[$i][1], $y);
-      error_log(date('m/d', $timestamp) . ' ★ ' . $tmp);
+      error_log(date('m/d', $timestamp) . ' 文セ ★ ' . $tmp);
     }
   }
   if ($m == 12) {
