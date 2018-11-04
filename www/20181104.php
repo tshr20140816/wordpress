@@ -1,8 +1,13 @@
 <?php
 
-$url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=2018&mon=7';
+include(dirname(__FILE__) . "/../classes/MyUtils.php");
 
-$res = file_get_contents($url);
+$mu = new MyUtils();
+
+$url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=2018&mon=11';
+
+// $res = file_get_contents($url);
+$res = $mu->get_contents($url, NULL);
 $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 
 // error_log($res);
