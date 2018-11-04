@@ -29,8 +29,8 @@ for ($j = 0; $j < 2; $j++) {
     $tmp = $matches[$i][2];
     $tmp = trim($tmp, " \t\n\r\0\t>");
     $tmp = preg_replace('/<font .+?>.+?>/', '', $tmp);
+    $tmp = str_replace('　', '', $tmp);
     if (strlen($tmp) > 0) {
-      $tmp = str_replace('　', '', $tmp);
       $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
       $tmp = trim(str_replace('<br>', ' ', $tmp));
       $timestamp = mktime(0, 0, 0, $m, $matches[$i][1], $y);
