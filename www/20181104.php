@@ -1,6 +1,6 @@
 <?php
 
-$url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=2018&mon=11'
+$url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=2018&mon=11';
 
 $res = file_get_contents($url);
 
