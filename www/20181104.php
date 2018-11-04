@@ -17,6 +17,7 @@ $rc = preg_match_all('/<tr .+?<b>(.+?)<.*?<td(.*?)<\/td><\/tr>/s', $tmp[0], $mat
 error_log(print_r($matches, TRUE));
 
 for ($i = 0; $i < count($matches); $i++) {
+  $matches[$i][2] = trim($matches[$i][2]);
   error_log(print_r($matches[$i], TRUE));
 }
 
