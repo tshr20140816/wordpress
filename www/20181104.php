@@ -12,7 +12,7 @@ $tmp = explode('</table>', $tmp[1]);
 
 error_log($tmp[0]);
 
-$rc = preg_match('/<tr .+?<b>(.+?)<.*>(.*)<\/td><\/tr>/', $tmp[0], $matches);
+$rc = preg_match('/<tr .+?<b>(.+?)<.*>(.*)<\/td><\/tr>/s', $tmp[0], $matches);
 
 error_log(print_r($matches, TRUE));
 ?>
