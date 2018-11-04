@@ -1,6 +1,6 @@
 <?php
 
-$url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=2018&mon=11';
+$url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=2018&mon=7';
 
 $res = file_get_contents($url);
 $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
