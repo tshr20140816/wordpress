@@ -18,7 +18,9 @@ error_log(print_r($matches, TRUE));
 
 for ($i = 0; $i < count($matches); $i++) {
   $matches[$i][2] = trim($matches[$i][2], " \t\n\r\0\t>");
-  error_log(print_r($matches[$i], TRUE));
+  if (strlen($matches[$i][2]) > 0) {
+    error_log(print_r($matches[$i], TRUE));
+  }
 }
 
 ?>
