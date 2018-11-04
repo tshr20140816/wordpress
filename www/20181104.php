@@ -26,6 +26,10 @@ for ($j = 0; $j < 2; $j++) {
   error_log(print_r($matches, TRUE));
 
   for ($i = 0; $i < count($matches); $i++) {
+    $timestamp = mktime(0, 0, 0, $m, $matches[$i][1], $y);
+    if (date('Ymd') > date('Ymd', $timestamp)) {
+      continue;
+    }
     $tmp = $matches[$i][2];
     $tmp = trim($tmp, " \t\n\r\0\t>");
     $tmp = preg_replace('/<font .+?>.+?>/', '', $tmp);
@@ -33,7 +37,6 @@ for ($j = 0; $j < 2; $j++) {
     $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
     $tmp = trim(str_replace('<br>', ' ', $tmp));
     if (strlen($tmp) > 0) {
-      $timestamp = mktime(0, 0, 0, $m, $matches[$i][1], $y);
       $list_library[$timestamp] = date('m/d', $timestamp) . ' 文セ ★ ' . $tmp;
       // error_log(date('m/d', $timestamp) . ' 文セ ★ ' . $tmp);
     }
