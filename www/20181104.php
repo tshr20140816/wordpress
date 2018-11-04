@@ -33,7 +33,7 @@ for ($i = 0; $i < count($matches); $i++) {
     $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
     $tmp = trim(str_replace('<br>', ' ', $tmp));
     $timestamp = mktime(0, 0, 0, $m, $matches[$i][1], $y);
-    error_log(date('Y-m-d', $timestamp) . ' ' . $tmp);
+    error_log(date('m/d', $timestamp) . ' ★ ' . $tmp);
   }
 }
 
