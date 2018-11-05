@@ -2,12 +2,13 @@
 
 class MyUtils
 {
-  private $_pid;
+  private $_pid = 0;
   private $_pdo;
   private $_access_token;
   
   function __construct() {
     $this->$_pid = getmypid();
+    error_log($this->$_pid . ' getmypid()');
     
     $connection_info = parse_url(getenv('DATABASE_URL'));
     $this->$_pdo = new PDO(
