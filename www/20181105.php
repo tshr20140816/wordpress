@@ -16,7 +16,12 @@ for ($i < 0; $i < count($matches); $i++) {
   $rc = preg_match('/(.+?)<\/td>.+?<span.*?>(.+?)<\/span>.*?<td class="team">(.+?)<\/td>.+?<td class="team">(.+?)<\/td>.*?<td class="">(.+?)<\/td>/s', $tmp, $matches2);
   
   if ($rc == 1) {
-    error_log(print_r($matches2, TRUE));
+    // error_log(print_r($matches2, TRUE));
+    error_log($matches2[1]);
+    error_log($matches2[2]);
+    error_log(trim(preg_replace('/<.+?>/s', '', $matches2[3])));
+    error_log(trim(preg_replace('/<.+?>/s', '', $matches2[4])));
+    error_log($matches2[5]);
   }
 }
 ?>
