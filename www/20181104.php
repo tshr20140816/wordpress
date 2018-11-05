@@ -128,6 +128,7 @@ for ($j = 0; $j < 2; $j++) {
     $tmp = preg_replace('/<font .+?>.+?>/', '', $tmp);
     $tmp = str_replace('　', '', $tmp);
     $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
+    error_log($tmp);
     $tmp = trim(str_replace('<br>', ' ', $tmp));
     if (strlen($tmp) == 0) {
       continue;
@@ -151,6 +152,7 @@ $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $li
 
 // error_log(http_build_query($post_data));
 
+/*
 $res = get_contents(
   'https://api.toodledo.com/3/tasks/add.php',
   [CURLOPT_POST => TRUE,
@@ -158,6 +160,7 @@ $res = get_contents(
   ]);
 
 error_log("${pid} add.php RESPONSE : ${res}");
+*/
 
 // Delete Tasks
 
