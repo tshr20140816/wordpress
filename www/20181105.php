@@ -17,8 +17,9 @@ for ($i < 0; $i < count($matches); $i++) {
   
   if ($rc == 1) {
     // error_log(print_r($matches2, TRUE));
+    error_log('-----');
     error_log($matches2[1]);
-    error_log($matches2[2]);
+    error_log(trim(preg_replace('/<.+?>/s', '', $matches2[2])));
     error_log(trim(preg_replace('/<.+?>/s', '', $matches2[3])));
     error_log(trim(preg_replace('/<.+?>/s', '', $matches2[4])));
     error_log($matches2[5]);
