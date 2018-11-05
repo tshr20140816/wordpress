@@ -10,6 +10,8 @@ $mu = new MyUtils();
 
 $access_token = $mu->get_access_token();
 
+$label_folder_id = $mu->get_folder_id('LABEL');
+
 $url = 'https://fukkou-shuyu.jp/';
 
 $res = $mu->get_contents($url, [CURLOPT_HEADER => 1]);
