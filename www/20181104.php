@@ -70,11 +70,11 @@ $pdo = null;
 $res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
 $folders = json_decode($res, TRUE);
 
-$label_folder_id = 0;
+$private_folder_id = 0;
 for ($i = 0; $i < count($folders); $i++) {
-  if ($folders[$i]['name'] == 'LABEL') {
-    $label_folder_id = $folders[$i]['id'];
-    error_log("${pid} LABEL FOLDER ID : ${label_folder_id}");
+  if ($folders[$i]['name'] == 'PRIVATE') {
+    $private_folder_id = $folders[$i]['id'];
+    error_log("${pid} PRIVATE FOLDER ID : ${private_folder_id}");
     break;
   }
 }
@@ -135,7 +135,7 @@ for ($j = 0; $j < 2; $j++) {
     }
     $list_library[] = '{"title":"' . date('m/d', $timestamp) . ' 文セ ★ ' . $tmp
       . '","duedate":"' . $timestamp
-    . '","tag":"CULTURECENTER","folder":"' . $label_folder_id . '"}';
+    . '","tag":"CULTURECENTER","folder":"' . $private_folder_id . '"}';
   }
   if ($m == 12) {
     $yyyy++;
