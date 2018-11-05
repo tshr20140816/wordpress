@@ -6,17 +6,17 @@ class MyUtils
   private $_pdo;
   
   function __construct() {
-    $_pid = getmypid();
+    $this->$_pid = getmypid();
     
     $connection_info = parse_url(getenv('DATABASE_URL'));
-    $_pdo = new PDO(
+    $this->$_pdo = new PDO(
       "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
       $connection_info['user'],
       $connection_info['pass']);
   }
   
   function __destruct() {
-    $_pdo = NULL;
+    $this->$_pdo = NULL;
   }
   
   function get_access_token() {
@@ -32,14 +32,14 @@ SELECT M1.access_token
 __HEREDOC__;
     
     $access_token = NULL;
-    foreach ($_pdo->query($sql) as $row) {
+    foreach ($this->$_pdo->query($sql) as $row) {
       $access_token = $row['access_token'];
       $refresh_token = $row['refresh_token'];
       $refresh_flag = $row['refresh_flag'];
     }
     
     if ($access_token == NULL) {
-      error_log("${_pid} ACCESS TOKEN NONE");
+      error_log($this->$_pid . ' ACCESS TOKEN NONE');
       exit();
     }
     
