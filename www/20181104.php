@@ -147,7 +147,7 @@ for ($j = 0; $j < 2; $j++) {
   // error_log($tmp[0]);
 
   $rc = preg_match_all('/<tr .+?<b>(.+?)<.*?<td(.*?)<\/td><\/tr>/s', $tmp[0], $matches, PREG_SET_ORDER);
-  error_log(print_r($matches, TRUE));
+  // error_log(print_r($matches, TRUE));
 
   for ($i = 0; $i < count($matches); $i++) {
     $timestamp = mktime(0, 0, 0, $m, $matches[$i][1], $y);
@@ -159,7 +159,7 @@ for ($j = 0; $j < 2; $j++) {
     $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
     $tmp = trim($tmp, " \t\n\r\0\t>");
     $tmp = str_replace('　', '', $tmp);
-    error_log($tmp);
+    // error_log($tmp);
     $tmp = trim(str_replace('<br>', ' ', $tmp));
     if (strlen($tmp) == 0) {
       continue;
