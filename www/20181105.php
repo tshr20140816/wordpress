@@ -10,8 +10,6 @@ $mu = new MyUtils();
 
 $access_token = $mu->get_access_token();
 
-error_log($pid . ' $access_token : ' . $access_token);
-
 $url = 'https://fukkou-shuyu.jp/';
 
 $res = $mu->get_contents($url, [CURLOPT_HEADER => 1]);
