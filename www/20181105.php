@@ -12,6 +12,10 @@ $rc = preg_match('/Last-Modified: (.+)/', $res, $matches);
 
 error_log(print_r($matches, TRUE));
 
+$tmp = strtotime($matches[1]);
+
+error_log(date('Y-m-d H:i', $tmp));
+
 exit();
 
 function get_contents($url_, $options_ = NULL) {
