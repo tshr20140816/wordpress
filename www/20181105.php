@@ -14,7 +14,7 @@ error_log(print_r($matches, TRUE));
 
 $tmp = strtotime($matches[1]);
 
-error_log(date('Y-m-d H:i', $tmp));
+error_log(date('Y/m/d H:i:s', $tmp));
 
 exit();
 
