@@ -51,15 +51,15 @@ __HEREDOC__;
     return $access_token;
   }
   
-  function get_folder_id($folder_name) {
+  function get_folder_id($folder_name_) {
     $res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $this->$access_token, NULL);
     $folders = json_decode($res, TRUE);
 
     $target_folder_id = 0;
     for ($i = 0; $i < count($folders); $i++) {
-      if ($folders[$i]['name'] == $folder_name) {
+      if ($folders[$i]['name'] == $folder_name_) {
         $target_folder_id = $folders[$i]['id'];
-        error_log($this->$_pid . " TARGET FOLDER ID : ${target_folder_id}");
+        error_log($this->$_pid . " ${folder_name_} FOLDER ID : ${target_folder_id}");
         break;
       }
     }
