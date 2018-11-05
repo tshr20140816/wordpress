@@ -1,8 +1,12 @@
 <?php
 
+include(dirname(__FILE__) . '/../classes/MyUtils.php');
+
+$mu = new MyUtils();
+
 $url = 'https://fukkou-shuyu.jp/';
 
-$res = get_contents($url, [CURLOPT_HEADER => 1]);
+$res = $mu->get_contents($url, [CURLOPT_HEADER => 1]);
 
 // error_log($res);
 
