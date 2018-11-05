@@ -103,7 +103,8 @@ $m = date('n');
 $list_library = [];
 for ($j = 0; $j < 2; $j++) {
   $url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=' . $y . '&mon=' . $m;
-
+  error_log($pid . ' $url : ' . $url);
+  
   $res = get_contents($url, NULL);
   $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 
@@ -115,8 +116,7 @@ for ($j = 0; $j < 2; $j++) {
   // error_log($tmp[0]);
 
   $rc = preg_match_all('/<tr .+?<b>(.+?)<.*?<td(.*?)<\/td><\/tr>/s', $tmp[0], $matches, PREG_SET_ORDER);
-
-  error_log(print_r($matches, TRUE));
+  // error_log(print_r($matches, TRUE));
 
   for ($i = 0; $i < count($matches); $i++) {
     $timestamp = mktime(0, 0, 0, $m, $matches[$i][1], $y);
@@ -143,7 +143,7 @@ for ($j = 0; $j < 2; $j++) {
     $m++;
   }
 }
-error_log(print_r($list_library, TRUE));
+error_log($pid . ' $list_library : ' . print_r($list_library, TRUE));
 
 
 error_log("${pid} FINISH");
