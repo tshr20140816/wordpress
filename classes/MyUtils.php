@@ -43,6 +43,8 @@ __HEREDOC__;
       exit();
     }
     
+    error_log($this->$_pid . ' $access_token : ' . $access_token);
+    
     return $access_token;
   }
   
