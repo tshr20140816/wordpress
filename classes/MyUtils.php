@@ -4,6 +4,7 @@ class MyUtils
 {
   private $_pid;
   private $_pdo;
+  private $_access_token;
   
   function __construct() {
     $this->$_pid = getmypid();
@@ -44,6 +45,8 @@ __HEREDOC__;
     }
     
     error_log($this->$_pid . ' $access_token : ' . $access_token);
+    
+    $this->$_access_token = $access_token;
     
     return $access_token;
   }
