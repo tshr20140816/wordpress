@@ -145,6 +145,33 @@ for ($j = 0; $j < 2; $j++) {
 }
 error_log($pid . ' $list_library : ' . print_r($list_library, TRUE));
 
+// Add Tasks
+
+$post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_library) . ']'];
+
+// error_log(http_build_query($post_data));
+
+$res = get_contents(
+  'https://api.toodledo.com/3/tasks/add.php',
+  [CURLOPT_POST => TRUE,
+   CURLOPT_POSTFIELDS => http_build_query($post_data),
+  ]);
+
+error_log("${pid} add.php RESPONSE : ${res}");
+
+// Delete Tasks
+
+error_log("${pid} DELETE TARGET TASK COUNT : " . count($list_delete_task));
+
+if (count($list_delete_task) > 0) {
+  $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];  
+  $res = get_contents(
+    'https://api.toodledo.com/3/tasks/delete.php',
+    [CURLOPT_POST => TRUE,
+     CURLOPT_POSTFIELDS => http_build_query($post_data),
+    ]);
+  error_log("${pid} delete.php RESPONSE : ${res}");
+}
 
 error_log("${pid} FINISH");
 
