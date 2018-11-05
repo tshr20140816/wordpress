@@ -95,6 +95,37 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
+// Get Contexts
+$res = get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $access_token, NULL);
+$contexts = json_decode($res, TRUE);
+$list_context_id = [];
+for ($i = 0; $i < count($contexts); $i++) {
+  switch ($contexts[$i]['name']) {
+    case '日......':
+      $list_context_id[0] = $contexts[$i]['id'];
+      break;
+    case '.月.....':
+      $list_context_id[1] = $contexts[$i]['id'];
+      break;
+    case '..火....':
+      $list_context_id[2] = $contexts[$i]['id'];
+      break;
+    case '...水...':
+      $list_context_id[3] = $contexts[$i]['id'];
+      break;
+    case '....木..':
+      $list_context_id[4] = $contexts[$i]['id'];
+      break;
+    case '.....金.':
+      $list_context_id[5] = $contexts[$i]['id'];
+      break;
+    case '......土':
+      $list_context_id[6] = $contexts[$i]['id'];
+      break;
+  }
+}
+error_log($pid . ' $list_context_id : ' . print_r($list_context_id, TRUE));
+
 // Culture Center
 
 $y = date('Y');
@@ -135,6 +166,7 @@ for ($j = 0; $j < 2; $j++) {
     }
     $list_library[] = '{"title":"' . date('m/d', $timestamp) . ' 文セ ★ ' . $tmp
       . '","duedate":"' . $timestamp
+    . '","context":"' . $list_context_id[date('w', $timestamp)]
     . '","tag":"CULTURECENTER","folder":"' . $private_folder_id . '"}';
   }
   if ($m == 12) {
