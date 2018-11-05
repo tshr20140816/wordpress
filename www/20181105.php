@@ -4,7 +4,13 @@ $url = 'https://fukkou-shuyu.jp/';
 
 $res = get_contents($url, [CURLOPT_HEADER => 1]);
 
-error_log($res);
+// error_log($res);
+
+//Last-Modified:
+
+$rc = preg_match('/Last-Modified: (.+)/', $res, $matches);
+
+error_log(print_r($matches));
 
 exit();
 
