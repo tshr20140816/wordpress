@@ -124,10 +124,10 @@ for ($j = 0; $j < 2; $j++) {
       continue;
     }
     $tmp = $matches[$i][2];
-    $tmp = trim($tmp, " \t\n\r\0\t>");
     $tmp = preg_replace('/<font .+?>.+?>/', '', $tmp);
-    $tmp = str_replace('　', '', $tmp);
     $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
+    $tmp = trim($tmp, " \t\n\r\0\t>");
+    $tmp = str_replace('　', '', $tmp);
     error_log($tmp);
     $tmp = trim(str_replace('<br>', ' ', $tmp));
     if (strlen($tmp) == 0) {
