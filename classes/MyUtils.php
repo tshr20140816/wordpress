@@ -52,7 +52,7 @@ __HEREDOC__;
   }
   
   function get_folder_id($folder_name) {
-    $res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
+    $res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $this->$access_token, NULL);
     $folders = json_decode($res, TRUE);
 
     $target_folder_id = 0;
