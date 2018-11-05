@@ -81,24 +81,21 @@ for ($i = 0; $i < count($folders); $i++) {
 
 // Get Tasks
 
-$res = get_contents('https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,folder,duedate&access_token=' . $access_token, NULL);
-// error_log($res);
+$res = get_contents('https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag&access_token=' . $access_token, NULL);
 
 $tasks = json_decode($res, TRUE);
-// error_log(print_r($tasks, TRUE));
 
-$list_label_task = [];
+$list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
-    if ($tasks[$i]['folder'] == $label_folder_id) {
-      $list_label_task[] = date('Ymd', $tasks[$i]['duedate']);
-      // error_log($pid . ' ' . date('Y-m-d', $tasks[$i]['duedate']) . ' ' . $tasks[$i]['duedate']);
+  if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
+    if ($tasks[$i]['tag'] == 'CULTURECENTER') {
+      $list_delete_task[] = $tasks[$i]['id'];
     }
   }
 }
-error_log($pid . ' $list_label_task : ' . print_r($list_label_task, TRUE));
+error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
-//
+// Culture Center
 
 $y = date('Y');
 $m = date('n');
@@ -107,7 +104,7 @@ $list_library = [];
 for ($j = 0; $j < 2; $j++) {
   $url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=' . $y . '&mon=' . $m;
 
-  $res = $mu->get_contents($url, NULL);
+  $res = get_contents($url, NULL);
   $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 
   // error_log($res);
