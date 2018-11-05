@@ -8,9 +8,9 @@ $res = get_contents($url, [CURLOPT_HEADER => 1]);
 
 //Last-Modified:
 
-$rc = preg_match('/Last-Modified(.+)/', $res, $matches);
+$rc = preg_match('/Last-Modified: (.+)/', $res, $matches);
 
-error_log(print_r($matches));
+error_log(print_r($matches, TRUE));
 
 exit();
 
