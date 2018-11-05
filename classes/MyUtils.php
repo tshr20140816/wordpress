@@ -51,6 +51,22 @@ __HEREDOC__;
     return $access_token;
   }
   
+  function get_folder_id($folder_name) {
+    $res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
+    $folders = json_decode($res, TRUE);
+
+    $target_folder_id = 0;
+    for ($i = 0; $i < count($folders); $i++) {
+      if ($folders[$i]['name'] == $folder_name) {
+        $target_folder_id = $folders[$i]['id'];
+        error_log($this->$_pid . " TARGET FOLDER ID : ${target_folder_id}");
+        break;
+      }
+    }
+    
+    return $target_folder_id;
+  }
+  
   function get_contents($url_, $options_ = NULL) {
     $ch = curl_init();
     curl_setopt_array($ch, [
