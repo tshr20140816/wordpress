@@ -44,7 +44,7 @@ __HEREDOC__;
       exit();
     }
     
-    error_log($this->$_pid . ' $access_token : ' . $access_token);
+    // error_log($this->$_pid . ' $access_token : ' . $access_token);
     
     $this->$_access_token = $access_token;
     
