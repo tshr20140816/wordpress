@@ -129,10 +129,12 @@ for ($j = 0; $j < 2; $j++) {
     $tmp = str_replace('　', '', $tmp);
     $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
     $tmp = trim(str_replace('<br>', ' ', $tmp));
-    if (strlen($tmp) > 0) {
-      $list_library[$timestamp] = date('m/d', $timestamp) . ' 文セ ★ ' . $tmp;
-      // error_log(date('m/d', $timestamp) . ' 文セ ★ ' . $tmp);
+    if (strlen($tmp) == 0) {
+      continue;
     }
+    $list_library = '{"title":"' . date('m/d', $timestamp) . ' 文セ ★ ' . $tmp
+      . '","duedate":"' . $timestamp
+    . '","tag":"CULTURECENTER","folder":"' . $label_folder_id . '"}';
   }
   if ($m == 12) {
     $yyyy++;
