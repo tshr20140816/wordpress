@@ -132,7 +132,7 @@ for ($j = 0; $j < 2; $j++) {
     if (strlen($tmp) == 0) {
       continue;
     }
-    $list_library = '{"title":"' . date('m/d', $timestamp) . ' 文セ ★ ' . $tmp
+    $list_library[] = '{"title":"' . date('m/d', $timestamp) . ' 文セ ★ ' . $tmp
       . '","duedate":"' . $timestamp
     . '","tag":"CULTURECENTER","folder":"' . $label_folder_id . '"}';
   }
