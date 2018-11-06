@@ -22,7 +22,9 @@ $tmp = strtotime($matches[1]);
 error_log($pid . ' ' . date('Y/m/d H:i:s', $tmp));
 error_log($pid . ' ' . date('Y/m/d H:i:s', strtotime('+9 hours', $tmp)));
 
-$tmp = '[{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . ' ' . $url . " Last-Modified : " . date('Y/m/d H:i:s', strtotime('+9 hours', $tmp))
+$tmp = '[{"title":"' . date('m/d H:i:s', strtotime('+ 9 hours')) . ' ' . $url . " Last-Modified : " . date('Y/m/d H:i:s', strtotime('+9 hours', $tmp))
+  . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018). '"}]';
+$tmp = '[{"title":"' . date('Y/m/d H:i:s', strtotime('+9 hours', $tmp)) . ' ' . $url . ' ' . date('m/d H:i:s', strtotime('+ 9 hours'))
   . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018). '"}]';
 $post_data = ['access_token' => $access_token, 'tasks' => $tmp];
 
