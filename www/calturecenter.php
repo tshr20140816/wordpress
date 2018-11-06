@@ -192,6 +192,20 @@ $res = get_contents(
 
 error_log("${pid} add.php RESPONSE : ${res}");
 
+$count_add = substr_count($res, '"completed":0');
+
+$tmp = '[{"title":"' . date('Y/m/d H:i:s') . ' ' . $requesturi . " Add : " . $count_add
+  . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018). '"}]';
+$post_data = ['access_token' => $access_token, 'tasks' => $tmp];
+
+$res = get_contents(
+  'https://api.toodledo.com/3/tasks/add.php',
+  [CURLOPT_POST => TRUE,
+   CURLOPT_POSTFIELDS => http_build_query($post_data),
+  ]);
+
+error_log("${pid} add.php RESPONSE : ${res}");
+
 // Delete Tasks
 
 error_log("${pid} DELETE TARGET TASK COUNT : " . count($list_delete_task));
