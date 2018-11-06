@@ -16,10 +16,6 @@ $url = 'https://fukkou-shuyu.jp/';
 
 $res = $mu->get_contents($url, [CURLOPT_HEADER => 1]);
 
-// error_log($res);
-
-//Last-Modified:
-
 $rc = preg_match('/Last-Modified: (.+)/', $res, $matches);
 
 error_log(print_r($matches, TRUE));
@@ -27,6 +23,9 @@ error_log(print_r($matches, TRUE));
 $tmp = strtotime($matches[1]);
 
 error_log(date('Y/m/d H:i:s', $tmp));
+error_log(date('Y/m/d H:i:s', strtotime(date('Y/m/d H:i:s') . ' + 9 hours'));
+
+error_log("${pid} FINISH");
 
 exit();
 
