@@ -194,7 +194,7 @@ error_log("${pid} add.php RESPONSE : ${res}");
 
 $count_add = substr_count($res, '"completed":0');
 
-$tmp = '[{"title":"' . date('Y/m/d H:i:s') . ' ' . $requesturi . " Add : " . $count_add
+$tmp = '[{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . ' ' . $requesturi . " Add : " . $count_add
   . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018). '"}]';
 $post_data = ['access_token' => $access_token, 'tasks' => $tmp];
 
