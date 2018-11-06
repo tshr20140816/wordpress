@@ -10,10 +10,7 @@ $mu = new MyUtils();
 
 $access_token = $mu->get_access_token();
 
-$label_folder_id = $mu->get_folder_id('LABEL');
-
 $url = 'https://fukkou-shuyu.jp/';
-
 $res = $mu->get_contents($url, [CURLOPT_HEADER => 1]);
 
 $rc = preg_match('/Last-Modified: (.+)/', $res, $matches);
@@ -22,8 +19,19 @@ error_log(print_r($matches, TRUE));
 
 $tmp = strtotime($matches[1]);
 
-error_log(date('Y/m/d H:i:s', $tmp));
-error_log(date('Y/m/d H:i:s', strtotime('+9 hours', $tmp)));
+error_log($pid . ' ' . date('Y/m/d H:i:s', $tmp));
+error_log($pid . ' ' . date('Y/m/d H:i:s', strtotime('+9 hours', $tmp)));
+
+$tmp = '[{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . ' ' . $url . " Last-Modified : " . date('Y/m/d H:i:s', strtotime('+9 hours', $tmp))
+  . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018). '"}]';
+$post_data = ['access_token' => $access_token, 'tasks' => $tmp];
+
+$res = $mu->get_contents(
+  'https://api.toodledo.com/3/tasks/add.php',
+  [CURLOPT_POST => TRUE,
+   CURLOPT_POSTFIELDS => http_build_query($post_data),
+  ]);
+error_log("${pid} add.php RESPONSE : ${res}");
 
 error_log("${pid} FINISH");
 
