@@ -13,7 +13,7 @@ $access_token = $mu->get_access_token();
 // Last-Modified
 
 $url = 'https://fukkou-shuyu.jp/';
-$res = $mu->get_contents($url . '?' . md5(uniqid), [CURLOPT_HEADER => 1]);
+$res = $mu->get_contents($url . '?' . md5(uniqid()), [CURLOPT_HEADER => 1]);
 
 $rc = preg_match('/Last-Modified: (.+)/', $res, $matches);
 
