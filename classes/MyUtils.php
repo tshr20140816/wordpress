@@ -41,6 +41,35 @@ __HEREDOC__;
       exit();
     }
     
+    if ($refresh_flag == 1) {
+      error_log(getmypid() . " refresh_token : ${refresh_token}");
+      $post_data = ['grant_type' => 'refresh_token', 'refresh_token' => $refresh_token];
+
+      $res = get_contents(
+        'https://api.toodledo.com/3/account/token.php',
+        [CURLOPT_USERPWD => getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'),
+         CURLOPT_POST => TRUE,
+         CURLOPT_POSTFIELDS => http_build_query($post_data),
+        ]);
+
+      error_log(getmypid() . " token.php RESPONSE : ${res}");
+      $params = json_decode($res, TRUE);
+  
+      $sql = <<< __HEREDOC__
+UPDATE m_authorization
+   SET access_token = :b_access_token
+      ,refresh_token = :b_refresh_token
+      ,update_time = LOCALTIMESTAMP;
+__HEREDOC__;
+  
+      $statement = $this->$_pdo->prepare($sql);
+      $rc = $statement->execute([':b_access_token' => $params['access_token'],
+                                 ':b_refresh_token' => $params['refresh_token']]);
+      error_log(getmypid() . " UPDATE RESULT : ${rc}");
+  
+      $access_token = $params['access_token'];
+    }
+    
     error_log(getmypid() . ' $access_token : ' . $access_token);
     
     $this->$_access_token = $access_token;
