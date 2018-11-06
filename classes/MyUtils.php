@@ -2,14 +2,10 @@
 
 class MyUtils
 {
-  private $_pid = 0;
   private $_pdo;
   private $_access_token;
   
-  function __construct() {
-    $this->$_pid = getmypid();
-    error_log($this->$_pid . ' getmypid()');
-    
+  function __construct() {    
     $connection_info = parse_url(getenv('DATABASE_URL'));
     $this->$_pdo = new PDO(
       "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
@@ -41,11 +37,11 @@ __HEREDOC__;
     }
     
     if ($access_token == NULL) {
-      error_log($this->$_pid . ' ACCESS TOKEN NONE');
+      error_log(getmypid() . ' ACCESS TOKEN NONE');
       exit();
     }
     
-    // error_log($this->$_pid . ' $access_token : ' . $access_token);
+    error_log(getmypid() . ' $access_token : ' . $access_token);
     
     $this->$_access_token = $access_token;
     
@@ -60,7 +56,7 @@ __HEREDOC__;
     for ($i = 0; $i < count($folders); $i++) {
       if ($folders[$i]['name'] == $folder_name_) {
         $target_folder_id = $folders[$i]['id'];
-        error_log($this->$_pid . " ${folder_name_} FOLDER ID : ${target_folder_id}");
+        error_log(getmypid() . " ${folder_name_} FOLDER ID : ${target_folder_id}");
         break;
       }
     }
