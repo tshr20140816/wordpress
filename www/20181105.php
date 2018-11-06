@@ -8,6 +8,8 @@ error_log("${pid} START ${requesturi}");
 
 $mu = new MyUtils();
 
+// Access Token
+
 $access_token = $mu->get_access_token();
 
 // Last-Modified
