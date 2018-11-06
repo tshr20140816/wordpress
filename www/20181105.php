@@ -23,7 +23,7 @@ error_log(print_r($matches, TRUE));
 $tmp = strtotime($matches[1]);
 
 error_log(date('Y/m/d H:i:s', $tmp));
-error_log(date('Y/m/d H:i:s', strtotime(date('Y/m/d H:i:s') . ' + 9 hours')));
+error_log(date('Y/m/d H:i:s', strtotime(date('Y/m/d H:i:s') . ' +9 hours')));
 
 error_log("${pid} FINISH");
 
