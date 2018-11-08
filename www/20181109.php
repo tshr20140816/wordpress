@@ -31,5 +31,7 @@ $dyno_quota = (int)$data['account_quota'];
 error_log('$dyno_used : ' . $dyno_used);
 error_log('$dyno_quota : ' . $dyno_quota);
 
-
+$tmp = $dyno_quota - $dyno_used;
+$tmp = ($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
+error_log($tmp);
 ?>
