@@ -6,9 +6,22 @@ $url = 'https://api.heroku.com/account';
 $res = $mu->get_contents($url,
                          ['Accept: application/vnd.heroku+json; version=3',
                           "Authorization: Bearer ${api_key}",
-                          'Connection: Keep-Alive',
                          ]);
 
-$data = json_decode($res, true);
+$data = json_decode($res, TRUE);
 
+$url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
+
+$res = $mu->get_contents($url,
+                         ['Accept: application/vnd.heroku+json; version=3.account-quotas',
+                          "Authorization: Bearer ${api_key}",
+                         ]);
+
+$data = json_decode($res, TRUE);
+
+$dyno_used = $data['quota_used'];
+$dyno_quota = $data['account_quota'];
+
+error_log('$dyno_used : ' . $dyno_used);
+error_log('$dyno_quota : ' . $dyno_quota);
 ?>
