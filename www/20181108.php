@@ -8,4 +8,10 @@ error_log("${pid} START ${requesturi}");
 
 $mu = new MyUtils();
 
+$url = 'http://soccer.phew.homeip.net/download/schedule/data/SJIS_all_hirosima.csv';
+$res = $mu->get_contents($url);
+$res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
+
+error_log($res);
+
 ?>
