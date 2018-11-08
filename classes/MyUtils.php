@@ -98,8 +98,8 @@ __HEREDOC__;
     return $target_folder_id;
   }
   
-  function get_contents() {
-    $file_name = '/tmp/contents';
+  function get_contexts() {
+    $file_name = '/tmp/contexts';
     if (file_exists($file_name)) {
       $list_context_id = unserialize(file_get_contents($file_name));
       error_log(getmypid() . ' (CACHE HIT) $list_context_id : ' . print_r($list_context_id, TRUE));
