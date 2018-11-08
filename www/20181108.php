@@ -10,14 +10,11 @@ $mu = new MyUtils();
 
 // Soccer
 
-$url = 'http://soccer.phew.homeip.net/download/schedule/data/' . getenv('SOCCER_TEAM_FILE');
-$res = $mu->get_contents($url);
+$res = $mu->get_contents(getenv('SOCCER_TEAM_CSV_FILE'));
 $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
-
-error_log($res);
+// error_log($res);
 
 $list_tmp = explode("\n", $res);
-
 // error_log(print_r($list_tmp, TRUE));
 
 $list_soccer = [];
@@ -37,6 +34,25 @@ for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   // error_log($tmp1);
   $list_soccer[$timestamp] = $tmp1;
 }
-error_log(print_r($list_soccer, TRUE));
+error_log($pid . ' $list_soccer : ' . print_r($list_soccer, TRUE));
+
+// Access Token
+$access_token = $mu->get_access_token();
+
+// Get Tasks
+
+$res = get_contents('https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag&access_token=' . $access_token, NULL);
+// error_log($res);
+
+$tasks = json_decode($res, TRUE);
+// error_log(print_r($tasks, TRUE));
+
+$list_delete_task = [];
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('tag', $tasks[$i]) && $tasks[$i]['tag'] == 'SOCCER') {
+    $list_delete_task[] = $tasks[$i]['id'];
+  }
+}
+error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
 ?>
