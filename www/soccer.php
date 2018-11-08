@@ -27,7 +27,8 @@ $list_tmp = explode("\n", $res);
 // error_log(print_r($list_tmp, TRUE));
 
 $list_soccer = [];
-$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"SOCCER","folder":"' . $folder_id_private . '"}';
+$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"SOCCER","folder":"'
+  . $folder_id_private . '"}';
 for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   $tmp = explode(',', $list_tmp[$i]);
   $timestamp = strtotime(trim($tmp[1], '"'));
