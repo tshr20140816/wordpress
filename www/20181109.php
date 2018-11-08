@@ -2,20 +2,22 @@
 
 $api_key = getenv('API_KEY');
 $url = 'https://api.heroku.com/account';
-  
-$res = $mu->get_contents($url,
-                         ['Accept: application/vnd.heroku+json; version=3',
+
+$res = $mu->get_contents(
+  $url,
+  [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
                           "Authorization: Bearer ${api_key}",
-                         ]);
+                         ]]);
 
 $data = json_decode($res, TRUE);
 
 $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
 
-$res = $mu->get_contents($url,
-                         ['Accept: application/vnd.heroku+json; version=3.account-quotas',
+$res = $mu->get_contents(
+  $url,
+  [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3.account-quotas',
                           "Authorization: Bearer ${api_key}",
-                         ]);
+                         ]]);
 
 $data = json_decode($res, TRUE);
 
