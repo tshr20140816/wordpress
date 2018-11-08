@@ -16,8 +16,7 @@ $label_folder_id = $mu->get_folder_id('LABEL');
 
 // Get Tasks
 
-$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=folder,duedate&access_token=' . $access_token
-  . '&after=' . strtotime('-2 day');
+$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=folder,duedate&access_token=' . $access_token;
 $res = $mu->get_contents($url);
 // error_log($res);
 
