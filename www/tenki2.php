@@ -128,8 +128,8 @@ for ($i = 0; $i < 12; $i++) {
       $tmp1 = explode(' ', $tmp[2]);
       $tmp2 = explode('/', $tmp1[1]);
       if ((int)$tmp2[0] > 38) {
-        $tmp2[0] = (int)((int)$tmp2[0] - 32) * 5 / 9);
-        $tmp2[1] = (int)((int)$tmp2[1] - 32) * 5 / 9);
+        $tmp2[0] = (int)(((int)$tmp2[0] - 32) * 5 / 9);
+        $tmp2[1] = (int)(((int)$tmp2[1] - 32) * 5 / 9);
         $tmp[2] = $tmp1[0] . ' ' . $tmp2[0] . '/' . $tmp2[1];
       }
       $list_base[$tmp[1]] = $tmp[2];
