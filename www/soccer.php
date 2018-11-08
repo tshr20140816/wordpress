@@ -14,6 +14,9 @@ $access_token = $mu->get_access_token();
 // Get Folders
 $folder_id_private = $mu->get_folder_id('PRIVATE');
 
+// Get Contexts
+$list_context_id = $mu->get_contexts();
+
 // Soccer
 
 $res = $mu->get_contents(getenv('SOCCER_TEAM_CSV_FILE'));
@@ -24,7 +27,7 @@ $list_tmp = explode("\n", $res);
 // error_log(print_r($list_tmp, TRUE));
 
 $list_soccer = [];
-$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","tag":"SOCCER","folder":"' . $folder_id_private . '"}';
+$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"SOCCER","folder":"' . $folder_id_private . '"}';
 for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   $tmp = explode(',', $list_tmp[$i]);
   $timestamp = strtotime(trim($tmp[1], '"'));
@@ -41,6 +44,7 @@ for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   // error_log($tmp1);
   $tmp1 = str_replace('__TITLE__', $tmp1, $add_task_template);
   $tmp1 = str_replace('__DUEDATE__', $timestamp, $tmp1);
+  $tmp1 = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp1);
   $list_soccer[] = $tmp1;
 }
 error_log($pid . ' $list_soccer : ' . print_r($list_soccer, TRUE));
