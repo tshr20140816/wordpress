@@ -33,7 +33,7 @@ for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   }
   $tmp1 = substr(trim($tmp[1], '"'), 5) . ' ' . $tmp1 . ' ' . trim($tmp[0], '"') . ' ' . trim($tmp[6], '"');
   // error_log($tmp1);
-  $list_soccer[date('Ymd', $timestamp)] = $tmp1;
+  $list_soccer[$timestamp] = $tmp1;
 }
 error_log(print_r($list_soccer, TRUE));
 
