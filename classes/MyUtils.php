@@ -21,6 +21,16 @@ class MyUtils
     
     $file_name = '/tmp/access_token';
     
+    if (file_exists($file_name)) {
+      $timestamp = filemtime($file_name);
+      if ($timestamp > strtotime('-15 minutes')) {
+        $access_token = file_get_contents($file_name);
+        error_log(getmypid() . ' (CACHE HIT) $access_token : ' . $access_token);
+        $this->$_access_token = $access_token;
+        return $access_token;
+      }
+    }
+    
     $sql = <<< __HEREDOC__
 SELECT M1.access_token
       ,M1.refresh_token
