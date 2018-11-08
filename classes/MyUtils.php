@@ -129,6 +129,8 @@ __HEREDOC__;
       }
     }
     error_log(getmypid() . ' $list_context_id : ' . print_r($list_context_id, TRUE));
+    
+    return $list_context_id;
   }
   
   function get_contents($url_, $options_ = NULL) {
