@@ -14,4 +14,8 @@ $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 
 error_log($res);
 
+$list_tmp = explode("\n", $res);
+
+error_log(print_r($list_tmp, TRUE));
+
 ?>
