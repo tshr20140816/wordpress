@@ -25,9 +25,11 @@ $res = $mu->get_contents(
 
 $data = json_decode($res, TRUE);
 
-$dyno_used = $data['quota_used'];
-$dyno_quota = $data['account_quota'];
+$dyno_used = (int)$data['quota_used'];
+$dyno_quota = (int)$data['account_quota'];
 
 error_log('$dyno_used : ' . $dyno_used);
 error_log('$dyno_quota : ' . $dyno_quota);
+
+
 ?>
