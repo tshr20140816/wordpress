@@ -45,7 +45,7 @@ __HEREDOC__;
       error_log(getmypid() . " refresh_token : ${refresh_token}");
       $post_data = ['grant_type' => 'refresh_token', 'refresh_token' => $refresh_token];
 
-      $res = get_contents(
+      $res = $this->get_contents(
         'https://api.toodledo.com/3/account/token.php',
         [CURLOPT_USERPWD => getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'),
          CURLOPT_POST => TRUE,
@@ -78,7 +78,7 @@ __HEREDOC__;
   }
   
   function get_folder_id($folder_name_) {
-    $res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $this->$access_token, NULL);
+    $res = $this->get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $this->$access_token);
     $folders = json_decode($res, TRUE);
 
     $target_folder_id = 0;
