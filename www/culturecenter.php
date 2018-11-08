@@ -131,5 +131,10 @@ if (count($list_delete_task) > 0) {
 
 error_log("${pid} FINISH");
 
+$res = $mu->get_contents(
+  'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/soccer.php',
+  [CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
+  ]);
+
 exit();
 ?>
