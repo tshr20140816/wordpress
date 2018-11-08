@@ -19,6 +19,8 @@ class MyUtils
   
   function get_access_token() {
     
+    $file_name = '/tmp/access_token';
+    
     $sql = <<< __HEREDOC__
 SELECT M1.access_token
       ,M1.refresh_token
@@ -73,6 +75,8 @@ __HEREDOC__;
     error_log(getmypid() . ' $access_token : ' . $access_token);
     
     $this->$_access_token = $access_token;
+    
+    file_put_contents($file_name, $access_token);
     
     return $access_token;
   }
