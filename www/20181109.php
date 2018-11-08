@@ -2,6 +2,10 @@
 
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
+$pid = getmypid();
+$requesturi = $_SERVER['REQUEST_URI'];
+error_log("${pid} START ${requesturi}");
+
 $mu = new MyUtils();
 
 $api_key = getenv('API_KEY');
@@ -28,10 +32,26 @@ $data = json_decode($res, TRUE);
 $dyno_used = (int)$data['quota_used'];
 $dyno_quota = (int)$data['account_quota'];
 
-error_log('$dyno_used : ' . $dyno_used);
-error_log('$dyno_quota : ' . $dyno_quota);
+error_log($pid . ' $dyno_used : ' . $dyno_used);
+error_log($pid . ' $dyno_quota : ' . $dyno_quota);
 
 $tmp = $dyno_quota - $dyno_used;
 $tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
-error_log($tmp);
+
+$access_token = $mu->get_access_token();
+
+$tmp = '[{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . ' QUOTA ' . $tmp
+  . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018). '"}]';
+$post_data = ['access_token' => $access_token, 'tasks' => $tmp];
+
+$res = $mu->get_contents(
+  'https://api.toodledo.com/3/tasks/add.php',
+  [CURLOPT_POST => TRUE,
+   CURLOPT_POSTFIELDS => http_build_query($post_data),
+  ]);
+error_log("${pid} add.php RESPONSE : ${res}");
+
+error_log("${pid} FINISH");
+
+exit();
 ?>
