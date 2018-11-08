@@ -78,6 +78,11 @@ __HEREDOC__;
   }
   
   function get_folder_id($folder_name_) {
+    $file_name = '/tmp/' . $folder_name_;
+    if (file_exists($file_name)) {
+      error_log(getmypid() . " (CACHE HIT) ${folder_name_} FOLDER ID : ${target_folder_id}");
+      return file_get_contents($file_name);
+    }
     $res = $this->get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $this->$access_token);
     $folders = json_decode($res, TRUE);
 
@@ -89,7 +94,7 @@ __HEREDOC__;
         break;
       }
     }
-    
+    file_put_contents($file_name, $target_folder_id);
     return $target_folder_id;
   }
   
