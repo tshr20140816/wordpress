@@ -98,6 +98,39 @@ __HEREDOC__;
     return $target_folder_id;
   }
   
+  function get_contents() {
+    
+    $res = $this->get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $this->$access_token);
+    $contexts = json_decode($res, TRUE);
+    $list_context_id = [];
+    for ($i = 0; $i < count($contexts); $i++) {
+      switch ($contexts[$i]['name']) {
+        case '日......':
+          $list_context_id[0] = $contexts[$i]['id'];
+          break;
+        case '.月.....':
+          $list_context_id[1] = $contexts[$i]['id'];
+          break;
+        case '..火....':
+          $list_context_id[2] = $contexts[$i]['id'];
+          break;
+        case '...水...':
+          $list_context_id[3] = $contexts[$i]['id'];
+          break;
+        case '....木..':
+          $list_context_id[4] = $contexts[$i]['id'];
+          break;
+        case '.....金.':
+          $list_context_id[5] = $contexts[$i]['id'];
+          break;
+        case '......土':
+          $list_context_id[6] = $contexts[$i]['id'];
+          break;
+      }
+    }
+    error_log(getmypid() . ' $list_context_id : ' . print_r($list_context_id, TRUE));
+  }
+  
   function get_contents($url_, $options_ = NULL) {
     $ch = curl_init();
     curl_setopt_array($ch, [
