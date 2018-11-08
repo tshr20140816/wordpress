@@ -47,7 +47,7 @@ error_log($pid . ' $list_soccer : ' . print_r($list_soccer, TRUE));
 
 // Get Tasks
 
-$res = get_contents('https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag&access_token=' . $access_token, NULL);
+$res = $mu->get_contents('https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag&access_token=' . $access_token);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
