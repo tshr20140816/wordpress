@@ -50,6 +50,11 @@ for ($i = 1; $i < count($list_tmp) - 1; $i++) {
 }
 error_log($pid . ' $list_soccer : ' . print_r($list_soccer, TRUE));
 
+if (count($list_soccer) == 0) {
+  error_log($pid . ' $list_soccer count : 0');
+  exit();
+}
+
 // Get Tasks
 
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag&access_token=' . $access_token
