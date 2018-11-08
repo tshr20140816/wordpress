@@ -22,8 +22,8 @@ $res = $mu->get_contents('$url);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
-//error_log(print_r($tasks, TRUE));
-error_log($pid . ' TASK COUNT : ' . count($tasks));
+error_log(print_r($tasks, TRUE));
+//error_log($pid . ' TASK COUNT : ' . count($tasks));
 
 $list_edit_task = [];
 $edit_task_template = '{"id":"__ID__","context":"__CONTEXT__"}';
