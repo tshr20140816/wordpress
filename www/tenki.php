@@ -70,7 +70,9 @@ $pdo = null;
 
 // Get Contexts
 
-$res = get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $access_token, NULL);
+$url = 'https://api.toodledo.com/3/contexts/get.php?access_token=' . $access_token
+  . '&after=' . strtotime('-2 day');
+$res = get_contents($url, NULL);
 $contexts = json_decode($res, TRUE);
 
 $list_context_id = [];
