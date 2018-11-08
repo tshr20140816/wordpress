@@ -24,7 +24,15 @@ for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   if (date('Ymd') >= date('Ymd', $timestamp)) {
     continue;
   }
-  error_log(print_r($tmp, TRUE));  
+  error_log(print_r($tmp, TRUE));
+  $rc = preg_match('/\d+:\d+:\d\d/', $tmp[2]);
+  if ($rc == 1) {
+    $tmp1 = substr($tmp[2], 0, strlen($tmp[2]) - 3);
+  } else {
+    $tmp1 = $tmp[2];
+  }
+  $tmp1 = substr($tmp[1], 5) . ' ' . $tmp1 . ' ' . $tmp[0] . ' ' . $tmp[6];
+  error_log($tmp1);
 }
 
 ?>
