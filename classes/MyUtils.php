@@ -99,7 +99,12 @@ __HEREDOC__;
   }
   
   function get_contents() {
-    
+    $file_name = '/tmp/contents';
+    if (file_exists($file_name)) {
+      $list_context_id = unserialize(file_get_contents($file_name));
+      error_log(getmypid() . ' (CACHE HIT) $list_context_id : ' . print_r($list_context_id, TRUE));
+      return $list_context_id;
+    }
     $res = $this->get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $this->$access_token);
     $contexts = json_decode($res, TRUE);
     $list_context_id = [];
@@ -129,6 +134,8 @@ __HEREDOC__;
       }
     }
     error_log(getmypid() . ' $list_context_id : ' . print_r($list_context_id, TRUE));
+    
+    file_put_contents($file_name, serialize($list_context_id));
     
     return $list_context_id;
   }
