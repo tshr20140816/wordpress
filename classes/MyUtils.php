@@ -156,6 +156,8 @@ __HEREDOC__;
   }
   
   function get_contents($url_, $options_ = NULL) {
+    error_log(getmypid() . ' URL : ' . $url_);
+    
     $ch = curl_init();
     curl_setopt_array($ch, [
       CURLOPT_URL => $url_,
