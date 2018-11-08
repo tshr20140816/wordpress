@@ -20,7 +20,11 @@ error_log(print_r($list_tmp, TRUE));
 
 for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   $tmp = explode(',', $list_tmp[$i]);
-  error_log(date('Y-m-d', strtotime(trim($tmp[1], '"'))));
+  $timestamp = strtotime(trim($tmp[1], '"'));
+  if (date('Ymd') >= date('Ymd', $timestamp)) {
+    continue;
+  }
+  error_log(print_r($tmp, TRUE));  
 }
 
 ?>
