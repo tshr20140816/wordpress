@@ -2,6 +2,8 @@
 
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
+$mu = new MyUtils();
+
 $api_key = getenv('API_KEY');
 $url = 'https://api.heroku.com/account';
 
