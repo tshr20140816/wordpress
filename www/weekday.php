@@ -18,12 +18,12 @@ $list_context_id = $mu->get_contents();
 
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=duedate,context&access_token=' . $access_token
   . '&after=' . strtotime('-2 day');
-$res = $mu->get_contents('$url);
+$res = $mu->get_contents($url);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
-error_log(print_r($tasks, TRUE));
-//error_log($pid . ' TASK COUNT : ' . count($tasks));
+// error_log(print_r($tasks, TRUE));
+error_log($pid . ' TASK COUNT : ' . count($tasks));
 
 $list_edit_task = [];
 $edit_task_template = '{"id":"__ID__","context":"__CONTEXT__"}';
