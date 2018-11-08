@@ -1,58 +1,24 @@
 <?php
 
+include(dirname(__FILE__) . '/../classes/MyUtils.php');
+
 $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi}");
 
+$mu = new MyUtils();
+
 // Access Token
-
-$connection_info = parse_url(getenv('DATABASE_URL'));
-$pdo = new PDO(
-  "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
-  $connection_info['user'],
-  $connection_info['pass']);
-
-$sql = <<< __HEREDOC__
-SELECT M1.access_token
-      ,M1.refresh_token
-      ,M1.expires_in
-      ,M1.create_time
-      ,M1.update_time
-      ,CASE WHEN LOCALTIMESTAMP < M1.update_time + interval '90 minutes' THEN 0 ELSE 1 END refresh_flag
-  FROM m_authorization M1;
-__HEREDOC__;
-
-$access_token = NULL;
-foreach ($pdo->query($sql) as $row) {
-  $access_token = $row['access_token'];
-  $refresh_token = $row['refresh_token'];
-  $refresh_flag = $row['refresh_flag'];
-}
-
-if ($access_token == NULL) {
-  error_log("${pid} ACCESS TOKEN NONE");
-  exit();
-}
+$access_token = $mu->get_access_token();
 
 // Get Folders
-
-$res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
-$folders = json_decode($res, TRUE);
-
-$label_folder_id = 0;
-for ($i = 0; $i < count($folders); $i++) {
-  if ($folders[$i]['name'] == 'LABEL') {
-    $label_folder_id = $folders[$i]['id'];
-    error_log($pid . ' LABEL FOLDER ID : ' . $label_folder_id);
-    break;
-  }
-}
+$label_folder_id = $mu->get_folder_id('LABEL');
 
 // Get Tasks
 
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=folder,duedate&access_token=' . $access_token
   . '&after=' . strtotime('-2 day');
-$res = get_contents($url, NULL);
+$res = $mu->get_contents($url);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
@@ -107,7 +73,7 @@ if (count($list_additional_label) > 0) {
   $tmp = implode(',', $list_additional_label);
   $post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
 
-  $res = get_contents(
+  $res = $mu->get_contents(
     'https://api.toodledo.com/3/tasks/add.php',
     [CURLOPT_POST => TRUE,
      CURLOPT_POSTFIELDS => http_build_query($post_data),
@@ -118,30 +84,10 @@ if (count($list_additional_label) > 0) {
 
 error_log("${pid} FINISH");
 
-$res = get_contents(
+$res = $mu->get_contents(
   'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/weekday.php',
   [CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
   ]);
 
 exit();
-
-function get_contents($url_, $options_) {
-  $ch = curl_init();
-  curl_setopt_array($ch, [
-    CURLOPT_URL => $url_,
-    CURLOPT_USERAGENT => getenv('USER_AGENT'),
-    CURLOPT_RETURNTRANSFER => TRUE,
-    CURLOPT_ENCODING => '',
-    CURLOPT_FOLLOWLOCATION => 1,
-    CURLOPT_MAXREDIRS => 3,
-    CURLOPT_SSL_FALSESTART => TRUE,
-    ]);
-  if (is_null($options_) == FALSE) {
-    curl_setopt_array($ch, $options_);
-  }
-  $res = curl_exec($ch);
-  curl_close($ch);
-  
-  return $res;
-}
 ?>
