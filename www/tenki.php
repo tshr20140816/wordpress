@@ -27,7 +27,7 @@ $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon
   . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
   . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-$res = get_contents($url, NULL);
+$res = $mu->get_contents($url);
 $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
 $tmp = explode("\n", $res);
@@ -50,7 +50,7 @@ $yyyy = (int)date('Y');
 for ($j = 0; $j < 2; $j++) {
   $post_data = ['from_year' => $yyyy];
 
-  $res = get_contents(
+  $res = $mu->get_contents(
     'http://www.calc-site.com/calendars/solar_year',
     [CURLOPT_POST => TRUE,
      CURLOPT_POSTFIELDS => http_build_query($post_data),
@@ -90,7 +90,7 @@ for ($j = 0; $j < $loop_count; $j++) {
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
 
-  $res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL);
+  $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html');
 
   $tmp = explode('<table ', $res);
   $tmp = explode('</table>', $tmp[1]);
@@ -127,7 +127,7 @@ for ($j = 0; $j < $loop_count; $j++) {
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
 
-  $res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', NULL);
+  $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html');
 
   $tmp = explode('<table ', $res);
   $tmp = explode('</table>', $tmp[1]);
@@ -152,7 +152,7 @@ error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
 
 // Weather Information
 
-$res = get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/', NULL);
+$res = $mu->get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
 
 $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
 
@@ -218,7 +218,9 @@ if (count($list_weather) == 0) {
 
 // Get Tasks
 
-$res = get_contents('https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag', NULL);
+$url = 'https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag'
+  . '&after=' . strtotime('-2 day');
+$res = $mu->get_contents($url);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
@@ -238,18 +240,7 @@ for ($i = 0; $i < count($tasks); $i++) {
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
 // Get Folders
-
-$res = get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token, NULL);
-$folders = json_decode($res, TRUE);
-
-$label_folder_id = 0;
-for ($i = 0; $i < count($folders); $i++) {
-  if ($folders[$i]['name'] == 'LABEL') {
-    $label_folder_id = $folders[$i]['id'];
-    error_log("${pid} LABEL FOLDER ID : ${label_folder_id}");
-    break;
-  }
-}
+$label_folder_id = $mu->get_folder_id('LABEL');
 
 // Add Tasks
 
@@ -259,7 +250,7 @@ $post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
 
 // error_log(http_build_query($post_data));
 
-$res = get_contents(
+$res = $mu->get_contents(
   'https://api.toodledo.com/3/tasks/add.php',
   [CURLOPT_POST => TRUE,
    CURLOPT_POSTFIELDS => http_build_query($post_data),
@@ -273,7 +264,7 @@ error_log("${pid} DELETE TARGET TASK COUNT : " . count($list_delete_task));
 
 if (count($list_delete_task) > 0) {
   $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];  
-  $res = get_contents(
+  $res = $mu->get_contents(
     'https://api.toodledo.com/3/tasks/delete.php',
     [CURLOPT_POST => TRUE,
      CURLOPT_POSTFIELDS => http_build_query($post_data),
@@ -283,31 +274,10 @@ if (count($list_delete_task) > 0) {
 
 error_log("${pid} FINISH");
 
-$res = get_contents(
+$res = $mu->get_contents(
   'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/add_label.php',
   [CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
   ]);
 
 exit();
-
-function get_contents($url_, $options_) {
-  $ch = curl_init();
-  curl_setopt_array($ch, [
-    CURLOPT_URL => $url_,
-    CURLOPT_USERAGENT => getenv('USER_AGENT'),
-    CURLOPT_RETURNTRANSFER => TRUE,
-    CURLOPT_ENCODING => '',
-    CURLOPT_FOLLOWLOCATION => 1,
-    CURLOPT_MAXREDIRS => 3,
-    CURLOPT_SSL_FALSESTART => TRUE,
-    ]);
-  if (is_null($options_) == FALSE) {
-    curl_setopt_array($ch, $options_);
-  }
-  $res = curl_exec($ch);
-  curl_close($ch);
-  
-  return $res;
-}
-
 ?>
