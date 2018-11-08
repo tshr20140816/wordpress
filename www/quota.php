@@ -40,7 +40,7 @@ $tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60)
 
 $access_token = $mu->get_access_token();
 
-$tmp = '[{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . ' QUOTA ' . $tmp
+$tmp = '[{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . ' quota : ' . $tmp
   . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018). '"}]';
 $post_data = ['access_token' => $access_token, 'tasks' => $tmp];
 
@@ -52,6 +52,11 @@ $res = $mu->get_contents(
 error_log("${pid} add.php RESPONSE : ${res}");
 
 error_log("${pid} FINISH");
+
+$res = $mu->get_contents(
+  'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/soccer.php',
+  [CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
+  ]);
 
 exit();
 ?>
