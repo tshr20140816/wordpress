@@ -12,7 +12,7 @@ $mu = new MyUtils();
 $access_token = $mu->get_access_token();
 
 // Get Contexts
-$list_context_id = $mu->get_contents();
+$list_context_id = $mu->get_contexts();
 
 // Get Tasks
 
