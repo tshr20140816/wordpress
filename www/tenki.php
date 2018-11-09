@@ -221,10 +221,11 @@ if (count($list_weather) == 0) {
 $url = 'https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag'
   . '&after=' . strtotime('-2 day');
 $res = $mu->get_contents($url);
-// error_log($res);
 
 $tasks = json_decode($res, TRUE);
-// error_log(print_r($tasks, TRUE));
+
+file_put_contents('/tmp/tasks_tenki', serialize($tasks));
+
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
