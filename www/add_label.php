@@ -14,6 +14,9 @@ $access_token = $mu->get_access_token();
 // Get Folders
 $label_folder_id = $mu->get_folder_id('LABEL');
 
+// Get Contexts
+$list_context_id = $mu->get_contexts();
+
 // Get Tasks
 
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=folder,duedate&access_token=' . $access_token;
@@ -58,9 +61,9 @@ for ($i = 0; $i < count($list_non_label); $i++) {
       . date('m/d', $list_non_label[$i])
       . ' ##### '
       . $yyyy;
-    // error_log($tmp);
     $list_additional_label[] = '{"title":"' . $tmp
       . '","duedate":"' . $list_non_label[$i]
+      . '","context":"' . $list_context_id[date('w', $list_non_label[$i])]
       . '","tag":"ADDITIONAL","folder":"' . $label_folder_id . '"}';
   }
 }
