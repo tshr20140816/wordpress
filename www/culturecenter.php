@@ -20,7 +20,7 @@ $private_folder_id = $mu->get_folder_id('PRIVATE');
 // Get Tasks
 
 $tasks = [];
-$file_name = '/temp/tasks_tenki2';
+$file_name = '/tmp/tasks_tenki2';
 if (file_exists($file_name)) {
   $timestamp = filemtime($file_name);
   if ($timestamp > strtotime('-5 minutes')) {
