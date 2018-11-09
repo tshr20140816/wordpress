@@ -58,7 +58,7 @@ if (count($list_soccer) == 0) {
 // Get Tasks
 
 $tasks = [];
-$file_name = '/temp/tasks_tenki2';
+$file_name = '/tmp/tasks_tenki2';
 if (file_exists($file_name)) {
   $timestamp = filemtime($file_name);
   if ($timestamp > strtotime('-5 minutes')) {
