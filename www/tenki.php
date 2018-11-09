@@ -218,7 +218,7 @@ if (count($list_weather) == 0) {
 
 // Get Tasks
 
-$url = 'https://api.toodledo.com/3/tasks/get.php?access_token=' . $access_token . '&comp=0&fields=tag'
+$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context&access_token=' . $access_token
   . '&after=' . strtotime('-2 day');
 $res = $mu->get_contents($url);
 
