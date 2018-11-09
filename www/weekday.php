@@ -16,14 +16,22 @@ $list_context_id = $mu->get_contexts();
 
 // Get Tasks
 
-$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=duedate,context&access_token=' . $access_token
-  . '&after=' . strtotime('-2 day');
-$res = $mu->get_contents($url);
-// error_log($res);
+$tasks = [];
+$file_name = '/tmp/tasks_tenki';
+if (file_exists($file_name)) {
+  $timestamp = filemtime($file_name);
+  if ($timestamp > strtotime('-5 minutes')) {
+    $tasks = unserialize(file_get_contents($file_name));
+    error_log($pid . ' CACHE HIT TASKS');
+  }
+}
 
-$tasks = json_decode($res, TRUE);
-// error_log(print_r($tasks, TRUE));
-error_log($pid . ' TASK COUNT : ' . count($tasks));
+if (count($tasks) == 0) {
+  $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=duedate,context&access_token=' . $access_token
+    . '&after=' . strtotime('-2 day');
+  $res = $mu->get_contents($url);
+  $tasks = json_decode($res, TRUE);
+}
 
 $list_edit_task = [];
 $edit_task_template = '{"id":"__ID__","context":"__CONTEXT__"}';
