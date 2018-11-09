@@ -55,7 +55,6 @@ $m = date('n');
 $list_library = [];
 for ($j = 0; $j < 2; $j++) {
   $url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=' . $y . '&mon=' . $m;
-  error_log($pid . ' $url : ' . $url);
   
   $res = $mu->get_contents($url);
   $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
