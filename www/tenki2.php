@@ -118,7 +118,6 @@ error_log($pid . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE
 $list_base = [];
 for ($i = 0; $i < 12; $i++) {
   $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
-  error_log($pid . ' $url : ' . $url);
   $res = $mu->get_contents($url);
   error_log($pid . ' ' . $res);
   foreach (explode("\n", $res) as $one_line) {
