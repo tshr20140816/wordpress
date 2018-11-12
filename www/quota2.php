@@ -52,7 +52,7 @@ if (file_exists($file_name)) {
 }
 
 if (count($tasks) == 0) {
-  $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=duedate&access_token=' . $access_token
+  $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag&access_token=' . $access_token
     . '&after=' . strtotime('-2 day');
   $res = $mu->get_contents($url);
   $tasks = json_decode($res, TRUE);
