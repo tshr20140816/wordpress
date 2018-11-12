@@ -37,14 +37,31 @@ $dyno_quota = (int)$data['account_quota'];
 error_log($pid . ' $dyno_used : ' . $dyno_used);
 error_log($pid . ' $dyno_quota : ' . $dyno_quota);
 
-$tmp = $dyno_quota - $dyno_used;
-$tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
-
 // Access Token
 $access_token = $mu->get_access_token();
 
+// Get Tasks
+$tasks = [];
+$file_name = '/tmp/tasks_tenki';
+if (file_exists($file_name)) {
+  $timestamp = filemtime($file_name);
+  if ($timestamp > strtotime('-5 minutes')) {
+    $tasks = unserialize(file_get_contents($file_name));
+    error_log($pid . ' CACHE HIT TASKS');
+  }
+}
+
+if (count($tasks) == 0) {
+  $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=duedate&access_token=' . $access_token
+    . '&after=' . strtotime('-2 day');
+  $res = $mu->get_contents($url);
+  $tasks = json_decode($res, TRUE);
+}
+
 // Add Tasks
 
+$tmp = $dyno_quota - $dyno_used;
+$tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
 $tmp = '[{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . ' quota : ' . $tmp
   . '","tag":"QUOTA","duedate":"' . mktime(0, 0, 0, 1, 1, 2018). '"}]';
 $post_data = ['access_token' => $access_token, 'tasks' => $tmp];
