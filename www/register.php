@@ -1,29 +1,36 @@
 <?php
 
+include(dirname(__FILE__) . '/../classes/MyUtils.php');
+
+$pid = getmypid();
+$requesturi = $_SERVER['REQUEST_URI'];
+error_log("${pid} START ${requesturi}");
+
 if (!isset($_GET['code']) || !isset($_GET['state'])) {
   $url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . uniqid() . '&scope=basic%20tasks%20notes%20write';
   header('Location: ' . $url, TRUE, 301);
+  error_log("${pid} FINISH HTTP STATUS 301");
   exit();
 }
+
+$mu = new MyUtils();
 
 $code = $_GET['code'];
 $state = $_GET['state'];
 
-error_log($code);
-error_log($state);
+error_log("${pid} $code : ${code}");
+error_log("${pid} $state : ${state}");
 
 $post_data = ['grant_type' => 'authorization_code', 'code' => $code];
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://api.toodledo.com/3/account/token.php'); 
-curl_setopt($ch, CURLOPT_USERPWD, getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-curl_setopt($ch, CURLOPT_POST, TRUE);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
-$res = curl_exec($ch);
-curl_close($ch);
+$res = $mu->get_contents(
+  'https://api.toodledo.com/3/account/token.php',
+  [CURLOPT_USERPWD => getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'),
+   CURLOPT_POST => TRUE,
+   CURLOPT_POSTFIELDS => http_build_query($post_data),
+  ]);
 
-error_log($res);
+error_log("${pid} $res : ${res}");
 
 $params = json_decode($res, TRUE);
 
@@ -36,7 +43,7 @@ $pdo = new PDO(
 $sql = 'TRUNCATE TABLE m_authorization;';
 
 $rc = $pdo->exec($sql);
-error_log('TRUNCATE RESULT : ' . $rc);
+error_log("${pid} TRUNCATE RESULT : ${rc}");
 
 $sql = <<< __HEREDOC__
 INSERT INTO m_authorization
@@ -59,7 +66,9 @@ $rc = $statement->execute(
    ':b_refresh_token' => $params['refresh_token'],
    ':b_scope' => $params['scope'],
   ]);
-error_log('INSERT RESULT : ' . $rc);
+error_log("${pid} INSERT RESULT : ${rc}");
 
 $pdo = null;
+
+error_log("${pid} FINISH");
 ?>
