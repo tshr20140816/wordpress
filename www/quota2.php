@@ -8,6 +8,8 @@ error_log("${pid} START ${requesturi}");
 
 $mu = new MyUtils();
 
+// Get quota
+
 $api_key = getenv('API_KEY');
 $url = 'https://api.heroku.com/account';
 
@@ -38,7 +40,10 @@ error_log($pid . ' $dyno_quota : ' . $dyno_quota);
 $tmp = $dyno_quota - $dyno_used;
 $tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
 
+// Access Token
 $access_token = $mu->get_access_token();
+
+// Add Tasks
 
 $tmp = '[{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . ' quota : ' . $tmp
   . '","tag":"QUOTA","duedate":"' . mktime(0, 0, 0, 1, 1, 2018). '"}]';
