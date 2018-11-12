@@ -41,6 +41,7 @@ error_log($pid . ' $dyno_quota : ' . $dyno_quota);
 $access_token = $mu->get_access_token();
 
 // Get Tasks
+
 $tasks = [];
 $file_name = '/tmp/tasks_tenki';
 if (file_exists($file_name)) {
@@ -58,6 +59,16 @@ if (count($tasks) == 0) {
   $tasks = json_decode($res, TRUE);
 }
 
+$list_delete_task = [];
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
+    if ($tasks[$i]['tag'] == 'QUOTA') {
+      // $list_delete_task[] = $tasks[$i]['id'];
+      break;
+    }
+  }
+}
+
 // Add Tasks
 
 $tmp = $dyno_quota - $dyno_used;
@@ -72,6 +83,20 @@ $res = $mu->get_contents(
    CURLOPT_POSTFIELDS => http_build_query($post_data),
   ]);
 error_log("${pid} add.php RESPONSE : ${res}");
+
+// Delete Tasks
+
+error_log("${pid} DELETE TARGET TASK COUNT : " . count($list_delete_task));
+
+if (count($list_delete_task) > 0) {
+  $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];  
+  $res = $mu->get_contents(
+    'https://api.toodledo.com/3/tasks/delete.php',
+    [CURLOPT_POST => TRUE,
+     CURLOPT_POSTFIELDS => http_build_query($post_data),
+    ]);
+  error_log("${pid} delete.php RESPONSE : ${res}");
+}
 
 error_log("${pid} FINISH");
 
