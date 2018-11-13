@@ -138,7 +138,7 @@ for ($i = 0; $i < 12; $i++) {
 }
 error_log($pid . ' $list_base : ' . print_r($list_base, TRUE));
 
-$list_weather = [];
+$list_add_task = [];
 $update_marker = ' _' . date('ymd') . '_';
 // To Small Size
 $subscript = '₀₁₂₃₄₅₆₇₈₉';
@@ -146,7 +146,6 @@ for ($i = 0; $i < 10; $i++) {
   $update_marker = str_replace($i, mb_substr($subscript, $i, 1), $update_marker);
 }
 for ($i = 0; $i < 70; $i++) {
-  // $timestamp = strtotime('+' . ($i + 10) . ' days');
   $timestamp = strtotime(date('Y-m-d') . ' +' . ($i + 10) . ' days');
   $dt = date('n/j', $timestamp);
   error_log($pid . ' $dt : ' . $dt);
@@ -171,14 +170,14 @@ for ($i = 0; $i < 70; $i++) {
   if (array_key_exists($timestamp, $list_sunrise_sunset)) {
     $tmp .= ' ' . $list_sunrise_sunset[$timestamp];
   }
-  $list_weather[date('Ymd', $timestamp)] = '{"title":"' . $tmp
+  $list_add_task[date('Ymd', $timestamp)] = '{"title":"' . $tmp
     . '","duedate":"' . $timestamp
     . '","tag":"WEATHER2","context":' . $list_context_id[date('w', $timestamp)]
     . ',"folder":' . $label_folder_id . '}';
 }
-error_log($pid . ' $list_weather : ' . print_r($list_weather, TRUE));
+error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
 
-if (count($list_weather) == 0) {
+if (count($list_add_task) == 0) {
   error_log($pid . ' WEATHER DATA NONE');
   exit();
 }
@@ -202,7 +201,7 @@ for ($i = 0; $i < count($tasks); $i++) {
     if ($tasks[$i]['tag'] == 'WEATHER2') {
       $list_delete_task[] = $tasks[$i]['id'];
     } else if ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
-      if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_weather)) {
+      if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_add_task)) {
         $list_delete_task[] = $tasks[$i]['id'];
       }
     }
@@ -212,8 +211,8 @@ error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
 // Add Tasks
 
-$list_weather = str_replace('__FOLDER_ID__', $label_folder_id, $list_weather);
-$mu->add_tasks($list_weather);
+$list_add_task = str_replace('__FOLDER_ID__', $label_folder_id, $list_add_task);
+$rc = $mu->add_tasks($list_add_task);
 
 // Delete Tasks
 $mu->delete_tasks($list_delete_task);
