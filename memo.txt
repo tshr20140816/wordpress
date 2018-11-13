@@ -1,2 +1,3 @@
 tenki → add_label → weekday
-tenki2 → culturecenter → soccer
+daily tenki2 → culturecenter → soccer
+monthly holiday.php
