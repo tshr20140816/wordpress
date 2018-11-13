@@ -26,7 +26,7 @@ $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 $list_tmp = explode("\n", $res);
 // error_log(print_r($list_tmp, TRUE));
 
-$list_soccer = [];
+$list_add_task = [];
 $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"SOCCER","folder":"'
   . $folder_id_private . '"}';
 for ($i = 1; $i < count($list_tmp) - 1; $i++) {
@@ -46,12 +46,12 @@ for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   $tmp1 = str_replace('__TITLE__', $tmp1, $add_task_template);
   $tmp1 = str_replace('__DUEDATE__', $timestamp, $tmp1);
   $tmp1 = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp1);
-  $list_soccer[] = $tmp1;
+  $list_add_task[] = $tmp1;
 }
-error_log($pid . ' $list_soccer : ' . print_r($list_soccer, TRUE));
+error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
 
-if (count($list_soccer) == 0) {
-  error_log($pid . ' $list_soccer count : 0');
+if (count($list_add_task) == 0) {
+  error_log($pid . ' $list_add_task count : 0');
   exit();
 }
 
@@ -84,19 +84,7 @@ for ($i = 0; $i < count($tasks); $i++) {
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
 // Add Tasks
-
-$tmp = implode(',', $list_soccer);
-$post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
-
-// error_log(http_build_query($post_data));
-
-$res = $mu->get_contents(
-  'https://api.toodledo.com/3/tasks/add.php',
-  [CURLOPT_POST => TRUE,
-   CURLOPT_POSTFIELDS => http_build_query($post_data),
-  ]);
-
-error_log($pid . ' add.php RESPONSE : ' . $res);
+$rc = $mu->add_tasks($list_add_task);
 
 // Delete Tasks
 $mu->delete_tasks($list_delete_task);
