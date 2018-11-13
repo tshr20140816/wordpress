@@ -213,7 +213,7 @@ for ($i = 0; $i < 10; $i++) {
 
 $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
-$list_weather = [];
+$list_add_task = [];
 for ($i = 0; $i < 10; $i++) {
   // ex) ##### 日曜日 01/13 ##### ☂/☀ 60% 25/18 _₁₀₁₀_
   $timestamp = strtotime("${dt} +${i} day");
@@ -247,18 +247,18 @@ for ($i = 0; $i < 10; $i++) {
 
   error_log("${pid} ${tmp3}");
 
-  $list_weather[] = '{"title":"' . $tmp3
+  $list_add_task[] = '{"title":"' . $tmp3
     . '","duedate":"' . $timestamp
     . '","context":"' . $list_context_id[date('w', $timestamp)]
     . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
 }
 
-if (count($list_weather) == 0) {
+if (count($list_add_task) == 0) {
   error_log("${pid} WEATHER DATA NONE");
   exit();
 }
 
-$list_weather[] = $quota_task;
+$list_add_task[] = $quota_task;
 
 // Get Tasks
 
@@ -289,8 +289,8 @@ $label_folder_id = $mu->get_folder_id('LABEL');
 
 // Add Tasks
 
-$list_weather = str_replace('__FOLDER_ID__', $label_folder_id, $list_weather);
-$mu->add_tasks($list_weather);
+$list_add_task = str_replace('__FOLDER_ID__', $label_folder_id, $list_add_task);
+$mu->add_tasks($list_add_task);
 
 // Delete Tasks
 $mu->delete_tasks($list_delete_task);
