@@ -163,8 +163,10 @@ __HEREDOC__;
     
     error_log(getmypid() . ' ADD TARGET TASK COUNT : ' . count($list_add_task_));
     
+    $list_res = [];
+    
     if (count($list_add_task_) == 0) {
-      return;
+      return $list_res;
     }
     
     $tmp = array_chunk($list_add_task_, 50);
@@ -176,7 +178,10 @@ __HEREDOC__;
          CURLOPT_POSTFIELDS => http_build_query($post_data),
         ]);
       error_log(getmypid() . ' add.php RESPONSE : ' . $res);
+      $list_res[] = $res;
     }
+    
+    return $list_res;
   }
   
   function delete_tasks($list_delete_task_) {
