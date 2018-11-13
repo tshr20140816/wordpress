@@ -163,17 +163,19 @@ __HEREDOC__;
     
     error_log(getmypid() . ' DELETE TARGET TASK COUNT : ' . count($list_delete_task_));
     
-    if (count($list_delete_task_) > 0) {
-      $tmp = array_chunk($list_delete_task_, 50);
-      for ($i = 0; $i < count($tmp); $i++) {
-        $post_data = ['access_token' => $this->$access_token, 'tasks' => '[' . implode(',', $tmp[$i]) . ']'];
-        $res = $this->get_contents(
-          'https://api.toodledo.com/3/tasks/delete.php',
-          [CURLOPT_POST => TRUE,
-           CURLOPT_POSTFIELDS => http_build_query($post_data),
-          ]);
-        error_log(getmypid() . ' delete.php RESPONSE : ' . $res);
-      }
+    if (count($list_delete_task_) == 0) {
+      return;
+    }
+    
+    $tmp = array_chunk($list_delete_task_, 50);
+    for ($i = 0; $i < count($tmp); $i++) {
+      $post_data = ['access_token' => $this->$access_token, 'tasks' => '[' . implode(',', $tmp[$i]) . ']'];
+      $res = $this->get_contents(
+        'https://api.toodledo.com/3/tasks/delete.php',
+        [CURLOPT_POST => TRUE,
+         CURLOPT_POSTFIELDS => http_build_query($post_data),
+        ]);
+      error_log(getmypid() . ' delete.php RESPONSE : ' . $res);
     }
   }
   
