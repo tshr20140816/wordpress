@@ -17,14 +17,12 @@ $label_folder_id = $mu->get_folder_id('LABEL');
 // Get Contexts
 $list_context_id = $mu->get_contexts();
 
-// Get Tasks
+// Get Tasks (all non complete tasks)
 
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=folder,duedate&access_token=' . $access_token;
 $res = $mu->get_contents($url);
-// error_log($res);
 
 $tasks = json_decode($res, TRUE);
-// error_log(print_r($tasks, TRUE));
 
 $list_label_task = [];
 $list_schedule_task = [];
