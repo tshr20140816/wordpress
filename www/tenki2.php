@@ -227,21 +227,7 @@ $res = $mu->get_contents(
 error_log($pid . ' add.php RESPONSE : ' . $res);
 
 // Delete Tasks
-
-error_log($pid . ' DELETE TARGET TASK COUNT : ' . count($list_delete_task));
-
-if (count($list_delete_task) > 0) {
-  $tmp = array_chunk($list_delete_task, 50);
-  for ($i = 0; $i < count($tmp); $i++) {
-    $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $tmp[$i]) . ']'];  
-    $res = $mu->get_contents(
-      'https://api.toodledo.com/3/tasks/delete.php',
-      [CURLOPT_POST => TRUE,
-       CURLOPT_POSTFIELDS => http_build_query($post_data),
-      ]);
-    error_log($pid . ' delete.php RESPONSE : ' . $res);
-  }
-}
+$mu->delete_tasks($list_delete_task);
 
 error_log("${pid} FINISH");
 
