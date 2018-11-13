@@ -215,7 +215,6 @@ $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
 $list_add_task = [];
 for ($i = 0; $i < 10; $i++) {
-  // ex) ##### 日曜日 01/13 ##### ☂/☀ 60% 25/18 _₁₀₁₀_
   $timestamp = strtotime("${dt} +${i} day");
   $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i + 1]))));
   $tmp2 = $list[0];
