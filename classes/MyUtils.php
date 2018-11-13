@@ -159,6 +159,26 @@ __HEREDOC__;
     return $list_context_id;
   }
   
+  function add_tasks($list_add_task_) {
+    
+    error_log(getmypid() . ' ADD TARGET TASK COUNT : ' . count($list_add_task_));
+    
+    if (count($list_add_task_) == 0) {
+      return;
+    }
+    
+    $tmp = array_chunk($list_add_task_, 50);
+    for ($i = 0; $i < count($tmp); $i++) {
+      $post_data = ['access_token' => $this->$access_token, 'tasks' => '[' . implode(',', $tmp[$i]) . ']'];
+      $res = $this->get_contents(
+        'https://api.toodledo.com/3/tasks/add.php',
+        [CURLOPT_POST => TRUE,
+         CURLOPT_POSTFIELDS => http_build_query($post_data),
+        ]);
+      error_log(getmypid() . ' add.php RESPONSE : ' . $res);
+    }
+  }
+  
   function delete_tasks($list_delete_task_) {
     
     error_log(getmypid() . ' DELETE TARGET TASK COUNT : ' . count($list_delete_task_));
