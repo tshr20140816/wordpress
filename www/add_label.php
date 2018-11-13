@@ -42,7 +42,7 @@ $list_non_label = array_unique(array_diff($list_schedule_task, $list_label_task)
 sort($list_non_label);
 error_log($pid . ' $list_non_label : ' . print_r($list_non_label, TRUE));
 
-$list_additional_label = [];
+$list_add_task = [];
 $list_yobi = array('日', '月', '火', '水', '木', '金', '土');
 $subscript = '₀₁₂₃₄₅₆₇₈₉';
 $timestamp = strtotime('+20 day');
@@ -61,28 +61,16 @@ for ($i = 0; $i < count($list_non_label); $i++) {
       . date('m/d', $list_non_label[$i])
       . ' ### '
       . $yyyy;
-    $list_additional_label[] = '{"title":"' . $tmp
+    $list_add_task[] = '{"title":"' . $tmp
       . '","duedate":"' . $list_non_label[$i]
       . '","context":"' . $list_context_id[date('w', $list_non_label[$i])]
       . '","tag":"ADDITIONAL","folder":"' . $label_folder_id . '"}';
   }
 }
-error_log($pid . ' $list_additional_label : ' . print_r($list_additional_label, TRUE));
+error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
 
-if (count($list_additional_label) > 0) {
-  $list_additional_label = array_slice($list_additional_label, 0, 50);
-
-  $tmp = implode(',', $list_additional_label);
-  $post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
-
-  $res = $mu->get_contents(
-    'https://api.toodledo.com/3/tasks/add.php',
-    [CURLOPT_POST => TRUE,
-     CURLOPT_POSTFIELDS => http_build_query($post_data),
-    ]);
-
-  error_log($pid . ' add.php RESPONSE : ' . $res);
-}
+// Add Tasks
+$mu->add_tasks($list_add_task);
 
 error_log("${pid} FINISH");
 
