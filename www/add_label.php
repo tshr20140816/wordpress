@@ -56,10 +56,10 @@ for ($i = 0; $i < count($list_non_label); $i++) {
       $yyyy = str_replace($j, mb_substr($subscript, $j, 1), $yyyy);
     }
     
-    $tmp = '##### '
+    $tmp = '### '
       . $list_yobi[date('w', $list_non_label[$i])] . '曜日 '
       . date('m/d', $list_non_label[$i])
-      . ' ##### '
+      . ' ### '
       . $yyyy;
     $list_additional_label[] = '{"title":"' . $tmp
       . '","duedate":"' . $list_non_label[$i]
