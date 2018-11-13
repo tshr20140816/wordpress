@@ -55,13 +55,13 @@ for ($j = 0; $j < 2; $j++) {
     [CURLOPT_POST => TRUE,
      CURLOPT_POSTFIELDS => http_build_query($post_data),
     ]);
-  
+
   $tmp = explode('<th>二十四節気</th>', $res);
   $tmp = explode('</table>', $tmp[1]);
-  
+
   $tmp = explode('<tr>', $tmp[0]);
   array_shift($tmp);
-  
+
   for ($i = 0; $i < count($tmp); $i++) {
     $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
     // error_log(print_r($matches, TRUE));
@@ -150,6 +150,43 @@ for ($i = 0; $i < 10; $i++) {
 }
 error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
 
+// quota
+
+$api_key = getenv('API_KEY');
+$url = 'https://api.heroku.com/account';
+
+$res = $mu->get_contents(
+  $url,
+  [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
+                          "Authorization: Bearer ${api_key}",
+                         ]]);
+
+$data = json_decode($res, TRUE);
+
+$url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
+
+$res = $mu->get_contents(
+  $url,
+  [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3.account-quotas',
+                          "Authorization: Bearer ${api_key}",
+                         ]]);
+
+$data = json_decode($res, TRUE);
+
+$dyno_used = (int)$data['quota_used'];
+$dyno_quota = (int)$data['account_quota'];
+
+error_log($pid . ' $dyno_used : ' . $dyno_used);
+error_log($pid . ' $dyno_quota : ' . $dyno_quota);
+
+$tmp = $dyno_quota - $dyno_used;
+$tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
+
+$quota_task = '{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . ' quota : ' . $tmp
+  . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
+  . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
+  . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
+
 // Weather Information
 
 $res = $mu->get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
@@ -189,7 +226,7 @@ for ($i = 0; $i < 10; $i++) {
     . ' ##### '
     . $tmp2 . ' ' . $list[2] . ' ' . $list[1]
     . $update_marker;
-  
+
   if (array_key_exists($timestamp, $list_holiday)) {
     $tmp3 = str_replace(' #####', ' ★' . $list_holiday[$timestamp] . '★ #####', $tmp3);
   }
@@ -202,7 +239,7 @@ for ($i = 0; $i < 10; $i++) {
   if (array_key_exists($timestamp, $list_moon_age)) {
     $tmp3 .= ' ' . $list_moon_age[$timestamp];
   }
-  
+
   error_log("${pid} ${tmp3}");
 
   $list_weather[] = '{"title":"' . $tmp3
@@ -215,6 +252,8 @@ if (count($list_weather) == 0) {
   error_log("${pid} WEATHER DATA NONE");
   exit();
 }
+
+$list_weather[] = $quota_task;
 
 // Get Tasks
 
@@ -264,7 +303,7 @@ error_log("${pid} add.php RESPONSE : ${res}");
 error_log("${pid} DELETE TARGET TASK COUNT : " . count($list_delete_task));
 
 if (count($list_delete_task) > 0) {
-  $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];  
+  $post_data = ['access_token' => $access_token, 'tasks' => '[' . implode(',', $list_delete_task) . ']'];
   $res = $mu->get_contents(
     'https://api.toodledo.com/3/tasks/delete.php',
     [CURLOPT_POST => TRUE,
