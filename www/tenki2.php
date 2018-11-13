@@ -212,19 +212,8 @@ error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
 // Add Tasks
 
-$tmp = implode(',', $list_weather);
-$tmp = str_replace('__FOLDER_ID__', $label_folder_id, $tmp);
-$post_data = ['access_token' => $access_token, 'tasks' => '[' . $tmp . ']'];
-
-// error_log(http_build_query($post_data));
-
-$res = $mu->get_contents(
-  'https://api.toodledo.com/3/tasks/add.php',
-  [CURLOPT_POST => TRUE,
-   CURLOPT_POSTFIELDS => http_build_query($post_data),
-  ]);
-
-error_log($pid . ' add.php RESPONSE : ' . $res);
+$list_weather = str_replace('__FOLDER_ID__', $label_folder_id, $list_weather);
+$mu->add_tasks($list_weather);
 
 // Delete Tasks
 $mu->delete_tasks($list_delete_task);
