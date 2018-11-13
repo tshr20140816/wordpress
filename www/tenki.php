@@ -268,6 +268,7 @@ $res = $mu->get_contents($url);
 
 $tasks = json_decode($res, TRUE);
 
+// for cache
 file_put_contents('/tmp/tasks_tenki', serialize($tasks));
 
 $list_delete_task = [];
@@ -275,10 +276,6 @@ for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'WEATHER') {
       $list_delete_task[] = $tasks[$i]['id'];
-      // error_log("${pid} DELETE TARGET TASK ID : " . $tasks[$i]['id']);
-      if (count($list_delete_task) == 50) {
-        break;
-      }
     }
   }
 }
