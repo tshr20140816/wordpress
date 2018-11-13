@@ -285,7 +285,7 @@ $label_folder_id = $mu->get_folder_id('LABEL');
 
 // Add Tasks
 $list_add_task = str_replace('__FOLDER_ID__', $label_folder_id, $list_add_task);
-$mu->add_tasks($list_add_task);
+$rc = $mu->add_tasks($list_add_task);
 
 // Delete Tasks
 $mu->delete_tasks($list_delete_task);
