@@ -1,2 +1,2 @@
 tenki → add_label → weekday
-tenki2 → culturecenter → quota → soccer
+tenki2 → culturecenter → soccer
