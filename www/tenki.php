@@ -225,15 +225,15 @@ for ($i = 0; $i < 10; $i++) {
   $tmp2 = str_replace('のち', '/', $tmp2);
   $tmp2 = str_replace('時々', '|', $tmp2);
   $tmp2 = str_replace('一時', '|', $tmp2);
-  $tmp3 = '##### '
+  $tmp3 = '### '
     . LIST_YOBI[date('w', $timestamp)] . '曜日 '
     . date('m/d', $timestamp)
-    . ' ##### '
+    . ' ### '
     . $tmp2 . ' ' . $list[2] . ' ' . $list[1]
     . $update_marker;
 
   if (array_key_exists($timestamp, $list_holiday)) {
-    $tmp3 = str_replace(' #####', ' ★' . $list_holiday[$timestamp] . '★ #####', $tmp3);
+    $tmp3 = str_replace(' ###', ' ★' . $list_holiday[$timestamp] . '★ ###', $tmp3);
   }
   if (array_key_exists($timestamp, $list_24sekki)) {
     $tmp3 .= $list_24sekki[$timestamp];
