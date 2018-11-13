@@ -92,12 +92,14 @@ __HEREDOC__;
   }
   
   function get_folder_id($folder_name_) {
+    
     $file_name = '/tmp/' . $folder_name_;
     if (file_exists($file_name)) {
       $target_folder_id = file_get_contents($file_name);
       error_log(getmypid() . " (CACHE HIT) ${folder_name_} FOLDER ID : ${target_folder_id}");
       return $target_folder_id;
     }
+    
     $res = $this->get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $this->$access_token);
     $folders = json_decode($res, TRUE);
 
@@ -114,12 +116,14 @@ __HEREDOC__;
   }
   
   function get_contexts() {
+    
     $file_name = '/tmp/contexts';
     if (file_exists($file_name)) {
       $list_context_id = unserialize(file_get_contents($file_name));
       error_log(getmypid() . ' (CACHE HIT) $list_context_id : ' . print_r($list_context_id, TRUE));
       return $list_context_id;
     }
+    
     $res = $this->get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $this->$access_token);
     $contexts = json_decode($res, TRUE);
     $list_context_id = [];
@@ -153,6 +157,24 @@ __HEREDOC__;
     file_put_contents($file_name, serialize($list_context_id));
     
     return $list_context_id;
+  }
+  
+  function delete_tasks($list_delete_task_) {
+    
+    error_log(getmypid() . ' DELETE TARGET TASK COUNT : ' . count($list_delete_task_));
+    
+    if (count($list_delete_task_) > 0) {
+      $tmp = array_chunk($list_delete_task_, 50);
+      for ($i = 0; $i < count($tmp); $i++) {
+        $post_data = ['access_token' => $this->$access_token, 'tasks' => '[' . implode(',', $tmp[$i]) . ']'];
+        $res = $this->get_contents(
+          'https://api.toodledo.com/3/tasks/delete.php',
+          [CURLOPT_POST => TRUE,
+           CURLOPT_POSTFIELDS => http_build_query($post_data),
+          ]);
+        error_log(getmypid() . ' delete.php RESPONSE : ' . $res);
+      }
+    }
   }
   
   function get_contents($url_, $options_ = NULL) {
