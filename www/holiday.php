@@ -130,7 +130,7 @@ for ($i = 1; $i < count($list_tmp) - 1; $i++) {
   for ($j = 0; $j < 10; $j++) {
     $yyyy = str_replace($j, mb_substr($subscript, $j, 1), $yyyy);
   }
-  $tmp = '##### ' . $tmp[5] . ' ' . $tmp[1] . '/' . $tmp[2] . ' ★' . $tmp[7] . '★ ##### ' . $yyyy;
+  $tmp = '### ' . $tmp[5] . ' ' . $tmp[1] . '/' . $tmp[2] . ' ★' . $tmp[7] . '★ ### ' . $yyyy;
   error_log($pid . ' HOLIDAY LABEL : ' . $tmp);
   error_log($pid . ' TARGET TIMESTAMP : ' . $timestamp);
   $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
