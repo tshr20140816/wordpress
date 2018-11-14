@@ -216,12 +216,10 @@ __HEREDOC__;
       CURLOPT_MAXREDIRS => 3,
       CURLOPT_SSL_FALSESTART => TRUE,
     ];
-    /*
     if (is_null($options_) == FALSE) {
-      $options += $options_;
+      $tmp = array_merge($options, $options_);
+      error_log(getmypid() . ' $tmp : ' . print_r($tmp, TRUE));
     }
-    */
-    error_log(getmypid() . ' $options : ' . print_r($options, TRUE));
     for ($i = 0; $i < 3; $i++) {
       $ch = curl_init();
       curl_setopt_array($ch, $options);
