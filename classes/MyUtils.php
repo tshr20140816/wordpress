@@ -219,6 +219,7 @@ __HEREDOC__;
     if (is_null($options_) == FALSE) {
       $options += $options_;
     }
+    error_log(getmypid() . ' $options : ' . print_r($options, TRUE));
     for ($i = 0; $i < 3; $i++) {
       $ch = curl_init();
       curl_setopt_array($ch, $options);
