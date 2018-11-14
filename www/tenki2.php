@@ -226,7 +226,6 @@ function get_24sekki($mu_) {
   return $list_24sekki;
 }
 
-
 function get_sun($mu_) {
   // Sun 今月含み4ヶ月分
 
