@@ -226,7 +226,10 @@ __HEREDOC__;
       $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
       error_log(getmypid() . ' HTTP STATUS CODE : ' . $http_code);
       curl_close($ch);
-      if ($http_code != '503') {
+      if ($http_code == '200') {
+        break;
+      } else if ($http_code != '503') {
+        error_log(getmypid() . ' $res : ' . $res);
         break;
       } else {
         sleep(3);
