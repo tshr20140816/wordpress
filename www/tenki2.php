@@ -18,6 +18,7 @@ $list_context_id = $mu->get_contexts();
 
 // Get Folders
 $label_folder_id = $mu->get_folder_id('LABEL');
+$folder_id_private = $mu->get_folder_id('PRIVATE');
 
 // holiday 今月含み4ヶ月分
 $list_holiday = get_holiday($mu);  
@@ -145,7 +146,6 @@ for ($i = 0; $i < count($tasks); $i++) {
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
 // Add Tasks
-$list_add_task = str_replace('__FOLDER_ID__', $label_folder_id, $list_add_task);
 $rc = $mu->add_tasks($list_add_task);
 
 // Delete Tasks
