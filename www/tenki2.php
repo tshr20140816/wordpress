@@ -182,6 +182,21 @@ if (count($list_add_task) == 0) {
   exit();
 }
 
+// heroku-buildpack-php
+
+$file_name_current = '/tmp/current_version';
+$file_name_latest = '/tmp/latest_version';
+
+if (file_exists($file_name_current) && file_exists($file_name_latest)) {
+  $current_version = file_get_contents($file_name_current);
+  $latest_version = file_get_contents($file_name_latest);
+  if ($current_version != $latest_version) {
+    $list_add_task[date('Ymd')] = '{"title":"heroku-buildpack-php : update ' . $latest_version
+      . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
+      . '","context":' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))] . '}';
+  }
+}
+
 // Get Tasks
 
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,folder,duedate&access_token=' . $access_token
