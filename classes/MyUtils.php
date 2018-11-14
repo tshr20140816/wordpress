@@ -216,9 +216,18 @@ __HEREDOC__;
       CURLOPT_MAXREDIRS => 3,
       CURLOPT_SSL_FALSESTART => TRUE,
     ];
+    $options2 = [
+      CURLOPT_URL => $url_,
+      CURLOPT_USERAGENT => getenv('USER_AGENT'),
+      CURLOPT_RETURNTRANSFER => TRUE,
+      CURLOPT_ENCODING => '',
+      CURLOPT_FOLLOWLOCATION => 1,
+      CURLOPT_MAXREDIRS => 3,
+      CURLOPT_SSL_FALSESTART => TRUE,
+    ];
     if (is_null($options_) == FALSE) {
-      $tmp = $options + $options_;
-      error_log(getmypid() . ' $tmp : ' . print_r($tmp, TRUE));
+      $options2 += $options_;
+      error_log(getmypid() . ' $options2 : ' . print_r($options2, TRUE));
     }
     for ($i = 0; $i < 3; $i++) {
       $ch = curl_init();
