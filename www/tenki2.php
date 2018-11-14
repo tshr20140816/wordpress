@@ -28,37 +28,7 @@ $list_24sekki = get_24sekki($mu);
 error_log($pid . ' $list_24sekki : ' . print_r($list_24sekki, TRUE));
 
 // Sun 今月含み4ヶ月分
-
-$list_sunrise_sunset = [];
-
-for ($j = 0; $j < 4; $j++) {
-  $timestamp = strtotime(date('Y-m-01') . " +${j} month");
-  $yyyy = date('Y', $timestamp);
-  $mm = date('m', $timestamp);
-  error_log($pid . ' $yyyy : ' . $yyyy);
-  error_log($pid . ' $mm : ' . $mm);
-  $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html');
-  
-  $tmp = explode('<table ', $res);
-  $tmp = explode('</table>', $tmp[1]);
-  $tmp = explode('</tr>', $tmp[0]);
-  array_shift($tmp);
-  array_pop($tmp);
-
-  $dt = date('Y-m-01', $timestamp);
-
-  for ($i = 0; $i < count($tmp); $i++) {
-    $timestamp = strtotime("${dt} +${i} day"); // UTC
-    $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
-    // error_log(trim($matches[1]));
-    $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
-  }
-}
-// To Small Size
-$subscript = '₀₁₂₃₄₅₆₇₈₉';
-for ($i = 0; $i < 10; $i++) {
-  $list_sunrise_sunset = str_replace($i, mb_substr($subscript, $i, 1), $list_sunrise_sunset);
-}
+$list_sunrise_sunset = get_sun($mu);
 error_log($pid . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
 
 // Weather Information 今日の10日後から70日分
@@ -67,7 +37,7 @@ $list_base = [];
 for ($i = 0; $i < 12; $i++) {
   $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
   $res = $mu->get_contents($url);
-  error_log($pid . ' ' . $res);
+  // error_log($pid . ' ' . $res);
   foreach (explode("\n", $res) as $one_line) {
     if (strpos($one_line, '<title>_') !== FALSE) {
       // error_log($one_line);
@@ -254,5 +224,43 @@ function get_24sekki($mu_) {
   }
 
   return $list_24sekki;
+}
+
+
+function get_sun($mu_) {
+  // Sun 今月含み4ヶ月分
+
+  $list_sunrise_sunset = [];
+
+  for ($j = 0; $j < 4; $j++) {
+    $timestamp = strtotime(date('Y-m-01') . " +${j} month");
+    $yyyy = date('Y', $timestamp);
+    $mm = date('m', $timestamp);
+    error_log($pid . ' $yyyy : ' . $yyyy);
+    error_log($pid . ' $mm : ' . $mm);
+    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html');
+
+    $tmp = explode('<table ', $res);
+    $tmp = explode('</table>', $tmp[1]);
+    $tmp = explode('</tr>', $tmp[0]);
+    array_shift($tmp);
+    array_pop($tmp);
+
+    $dt = date('Y-m-01', $timestamp);
+
+    for ($i = 0; $i < count($tmp); $i++) {
+      $timestamp = strtotime("${dt} +${i} day"); // UTC
+      $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
+      // error_log(trim($matches[1]));
+      $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
+    }
+  }
+  // To Small Size
+  $subscript = '₀₁₂₃₄₅₆₇₈₉';
+  for ($i = 0; $i < 10; $i++) {
+    $list_sunrise_sunset = str_replace($i, mb_substr($subscript, $i, 1), $list_sunrise_sunset);
+  }
+
+  return $list_sunrise_sunset;
 }
 ?>
