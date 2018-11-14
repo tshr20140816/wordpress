@@ -207,22 +207,32 @@ __HEREDOC__;
   function get_contents($url_, $options_ = NULL) {
     error_log(getmypid() . ' URL : ' . $url_);
     
-    $ch = curl_init();
-    curl_setopt_array($ch, [
-      CURLOPT_URL => $url_,
-      CURLOPT_USERAGENT => getenv('USER_AGENT'),
-      CURLOPT_RETURNTRANSFER => TRUE,
-      CURLOPT_ENCODING => '',
-      CURLOPT_FOLLOWLOCATION => 1,
-      CURLOPT_MAXREDIRS => 3,
-      CURLOPT_SSL_FALSESTART => TRUE,
-      ]);
-    if (is_null($options_) == FALSE) {
-      curl_setopt_array($ch, $options_);
+    for ($i = 0; $i < 3; $i++) {
+      $ch = curl_init();
+      curl_setopt_array($ch, [
+        CURLOPT_URL => $url_,
+        CURLOPT_USERAGENT => getenv('USER_AGENT'),
+        CURLOPT_RETURNTRANSFER => TRUE,
+        CURLOPT_ENCODING => '',
+        CURLOPT_FOLLOWLOCATION => 1,
+        CURLOPT_MAXREDIRS => 3,
+        CURLOPT_SSL_FALSESTART => TRUE,
+        ]);
+      if (is_null($options_) == FALSE) {
+        curl_setopt_array($ch, $options_);
+      }
+      $res = curl_exec($ch);
+      $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+      error_log(getmypid() . ' HTTP STATUS CODE : ' . $http_code);
+      curl_close($ch);
+      if ($http_code != '503') {
+        break;
+      } else {
+        sleep(3);
+        error_log(getmypid() . ' RETRY URL : ' . $url_);
+      }
     }
-    $res = curl_exec($ch);
-    curl_close($ch);
-  
+
     return $res;
   }
 }
