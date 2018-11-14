@@ -66,7 +66,7 @@ for ($i = 0; $i < 10; $i++) {
 for ($i = 0; $i < 70; $i++) {
   $timestamp = strtotime(date('Y-m-d') . ' +' . ($i + 10) . ' days');
   $dt = date('n/j', $timestamp);
-  error_log($pid . ' $dt : ' . $dt);
+  // error_log($pid . ' $dt : ' . $dt);
   if (array_key_exists($dt, $list_base)) {
     $tmp = $list_base[$dt];
   } else {
