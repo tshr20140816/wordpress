@@ -203,6 +203,14 @@ __HEREDOC__;
     }
   }
   
+  function to_small_size($target_) {
+    $subscript = '₀₁₂₃₄₅₆₇₈₉';
+    for ($i = 0; $i < 10; $i++) {
+      $target_ = str_replace($i, mb_substr($subscript, $i, 1), $target_);
+    }
+    return $target_;
+  }
+  
   function get_contents($url_, $options_ = NULL) {
     error_log(getmypid() . ' URL : ' . $url_);
     
