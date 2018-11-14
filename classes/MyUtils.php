@@ -217,7 +217,7 @@ __HEREDOC__;
       CURLOPT_SSL_FALSESTART => TRUE,
     ];
     if (is_null($options_) == FALSE) {
-      $tmp = array_merge($options, $options_);
+      $tmp = $options + $options_;
       error_log(getmypid() . ' $tmp : ' . print_r($tmp, TRUE));
     }
     for ($i = 0; $i < 3; $i++) {
