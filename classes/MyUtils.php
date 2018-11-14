@@ -216,25 +216,18 @@ __HEREDOC__;
       CURLOPT_MAXREDIRS => 3,
       CURLOPT_SSL_FALSESTART => TRUE,
     ];
-    $options2 = [
-      CURLOPT_URL => $url_,
-      CURLOPT_USERAGENT => getenv('USER_AGENT'),
-      CURLOPT_RETURNTRANSFER => TRUE,
-      CURLOPT_ENCODING => '',
-      CURLOPT_FOLLOWLOCATION => 1,
-      CURLOPT_MAXREDIRS => 3,
-      CURLOPT_SSL_FALSESTART => TRUE,
-    ];
     if (is_null($options_) == FALSE) {
-      $options2 += $options_;
-      error_log(getmypid() . ' $options2 : ' . print_r($options2, TRUE));
+      $options += $options_;
+      error_log(getmypid() . ' $options : ' . print_r($options, TRUE));
     }
     for ($i = 0; $i < 3; $i++) {
       $ch = curl_init();
       curl_setopt_array($ch, $options);
+      /*
       if (is_null($options_) == FALSE) {
         curl_setopt_array($ch, $options_);
       }
+      */
       $res = curl_exec($ch);
       $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
       error_log(getmypid() . ' HTTP STATUS CODE : ' . $http_code);
