@@ -233,6 +233,7 @@ __HEREDOC__;
         error_log(getmypid() . ' $res : ' . $res);
         break;
       } else {
+        error_log(getmypid() . ' $res : ' . $res);
         sleep(3);
         error_log(getmypid() . ' RETRY URL : ' . $url_);
       }
