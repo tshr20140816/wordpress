@@ -253,4 +253,44 @@ function get_sun($mu_) {
 
   return $list_sunrise_sunset;
 }
+
+function get_task_soccer($mu_) {
+  
+  // Get Folders
+  $folder_id_private = $mu_->get_folder_id('PRIVATE');
+  
+  // Get Contexts
+  $list_context_id = $mu_->get_contexts();
+  
+  $res = $mu_->get_contents(getenv('SOCCER_TEAM_CSV_FILE'));
+  $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
+
+  $list_tmp = explode("\n", $res);
+
+  $list_add_task = [];
+  $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"SOCCER","folder":"'
+    . $folder_id_private . '"}';
+  for ($i = 1; $i < count($list_tmp) - 1; $i++) {
+    $tmp = explode(',', $list_tmp[$i]);
+    $timestamp = strtotime(trim($tmp[1], '"'));
+    if (date('Ymd') >= date('Ymd', $timestamp)) {
+      continue;
+    }
+
+    $tmp1 = trim($tmp[2], '"');
+    $rc = preg_match('/\d+:\d+:\d\d/', $tmp1);
+    if ($rc == 1) {
+      $tmp1 = substr($tmp1, 0, strlen($tmp1) - 3);
+    }
+    $tmp1 = substr(trim($tmp[1], '"'), 5) . ' ' . $tmp1 . ' ' . trim($tmp[0], '"') . ' ' . trim($tmp[6], '"');
+
+    $tmp1 = str_replace('__TITLE__', $tmp1, $add_task_template);
+    $tmp1 = str_replace('__DUEDATE__', $timestamp, $tmp1);
+    $tmp1 = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp1);
+    $list_add_task[] = $tmp1;
+  }
+  error_log(getmypid() . ' TASKS SOCCER : ' . print_r($list_add_task, TRUE));
+  
+  return $list_add_task;
+}
 ?>
