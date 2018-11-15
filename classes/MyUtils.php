@@ -205,6 +205,12 @@ __HEREDOC__;
   
   function get_weather_guest_area() {
     
+    $connection_info = parse_url(getenv('DATABASE_URL'));
+    $pdo = new PDO(
+      "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
+      $connection_info['user'],
+      $connection_info['pass']);
+    
     $sql = <<< __HEREDOC__
 SELECT T1.location_number
       ,T1.point_name
@@ -213,7 +219,7 @@ SELECT T1.location_number
 __HEREDOC__;
     
     $list_weather_guest_area = [];
-    foreach ($this->$_pdo->query($sql) as $row) {
+    foreach ($pdo->query($sql) as $row) {
       $location_number = $row['location_number'];
       $point_name = $row['point_name'];
       $yyyymmdd = (int)$row['yyyymmdd'];
@@ -222,6 +228,7 @@ __HEREDOC__;
       }
     }
     error_log(getmypid() . ' $list_weather_guest_area : ' . print_r($list_weather_guest_area, TRUE));
+    $pdo = null;
 
     return $list_weather_guest_area;
   }
