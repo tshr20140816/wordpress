@@ -296,6 +296,10 @@ function get_task_soccer($mu_) {
     $tmp1 = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp1);
     $list_add_task[] = $tmp1;
   }
+  $count_task = count($list_add_task);
+  $list_add_task[] = '{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . '  Soccer Task Add : ' . $count_task
+    . '","context":"' . $list_context_id[1]
+    . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018) . '"}';
   error_log(getmypid() . ' TASKS SOCCER : ' . print_r($list_add_task, TRUE));
   
   return $list_add_task;
@@ -350,6 +354,10 @@ function get_task_culturecenter($mu_) {
       $m++;
     }
   }
+  $count_task = count($list_add_task);
+  $list_add_task[] = '{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . '  Culture Center Task Add : ' . $count_task
+    . '","context":"' . $list_context_id[1]
+    . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018) . '"}';
   error_log(getmypid() . ' TASKS CULTURECENTER : ' . print_r($list_add_task, TRUE));
 
   return $list_add_task;
