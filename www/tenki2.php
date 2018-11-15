@@ -18,7 +18,6 @@ $list_context_id = $mu->get_contexts();
 
 // Get Folders
 $folder_id_label = $mu->get_folder_id('LABEL');
-$folder_id_private = $mu->get_folder_id('PRIVATE');
 
 // holiday 今月含み4ヶ月分
 $list_holiday = get_holiday($mu);  
