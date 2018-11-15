@@ -203,6 +203,29 @@ __HEREDOC__;
     }
   }
   
+  function get_weather_guest_area($mu_) {
+    
+    $sql = <<< __HEREDOC__
+SELECT T1.location_number
+      ,T1.point_name
+      ,T1.yyyymmdd
+  FROM m_tenki T1
+__HEREDOC__;
+    
+    $list_weather_guest_area = [];
+    foreach ($this->$_pdo->query($sql) as $row) {
+      $location_number = $row['location_number'];
+      $point_name = $row['point_name'];
+      $yyyymmdd = (int)$row['yyyymmdd'];
+      if ($yyyymmdd >= (int)date('Ymd') && $yyyymmdd) {
+        $list_weather_guest_area[] = $location_number . ',' . $point_name . ',' . $yyyymmdd;
+      }
+    }
+    error_log(getmypid() . ' $list_weather_guest_area : ' . print_r($list_weather_guest_area, TRUE));
+
+    return $list_weather_guest_area;
+  }
+  
   function to_small_size($target_) {
     $subscript = '₀₁₂₃₄₅₆₇₈₉';
     for ($i = 0; $i < 10; $i++) {
