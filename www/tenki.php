@@ -247,14 +247,8 @@ $list_add_task[] = $quota_task;
 
 // Weather Information (Guest)
 
-try {
-  // location_number,point_name,yyyymmdd;
-  $list_weather_guest_area = $mu->get_weather_guest_area();
-  error_log(print_r($list_weather_guest_area));
-} catch (Exception $e) {
-  error_log($e->getMessage());
-}
-/*
+$list_weather_guest_area = $mu->get_weather_guest_area();
+
 for ($i = 0; $i < count($list_weather_guest_area); $i++) {
   $tmp = explode(',', $list_weather_guest_area[$i]);
   $location_number = $tmp[0];
@@ -277,7 +271,6 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
     }
   }
 }
-*/
 
 // Get Tasks
 
