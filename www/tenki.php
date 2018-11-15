@@ -7,7 +7,6 @@ $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi}");
 
 const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
-const SMALL_DIGIT = '₀₁₂₃₄₅₆₇₈₉';
 
 $mu = new MyUtils();
 
