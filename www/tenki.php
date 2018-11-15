@@ -108,9 +108,7 @@ for ($j = 0; $j < $loop_count; $j++) {
     $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
   }
 }
-for ($i = 0; $i < 10; $i++) {
-  $list_sunrise_sunset = str_replace($i, mb_substr(SMALL_DIGIT, $i, 1), $list_sunrise_sunset);
-}
+$list_sunrise_sunset = $mu->to_small_size($list_sunrise_sunset);
 error_log($pid . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
 
 // Moon age
@@ -144,9 +142,7 @@ for ($j = 0; $j < $loop_count; $j++) {
     $list_moon_age[$timestamp] = '☽' . trim($matches[1]);
   }
 }
-for ($i = 0; $i < 10; $i++) {
-  $list_moon_age = str_replace($i, mb_substr(SMALL_DIGIT, $i, 1), $list_moon_age);
-}
+$list_moon_age = $mu->to_small_size($list_moon_age);
 error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
 
 // quota
@@ -181,12 +177,7 @@ error_log($pid . ' $dyno_quota : ' . $dyno_quota);
 $tmp = $dyno_quota - $dyno_used;
 $tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
 
-$update_marker = ' _' . date('Ymd His', strtotime('+ 9 hours')) . '_';
-
-// To Small Size
-for ($i = 0; $i < 10; $i++) {
-  $update_marker = str_replace($i, mb_substr(SMALL_DIGIT, $i, 1), $update_marker);
-}
+$update_marker = $mu->to_small_size(' _' . date('Ymd His', strtotime('+ 9 hours')) . '_');
 
 $quota_task = '{"title":"quota : ' . $tmp . $update_marker
   . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
@@ -204,12 +195,8 @@ error_log($pid . ' $matches[1] : ' . $matches[1]);
 error_log($pid . ' $matches[2] : ' . $matches[2]);
 
 $dt = $matches[1]; // yyyy-mm-dd
-$update_marker = ' _' . substr($matches[1], 8) . $matches[2] . '_'; // __DDHH__
 
-// To Small Size
-for ($i = 0; $i < 10; $i++) {
-  $update_marker = str_replace($i, mb_substr(SMALL_DIGIT, $i, 1), $update_marker);
-}
+$update_marker = $mu->to_small_size(' _' . substr($matches[1], 8) . $matches[2] . '_'); // __DDHH__
 
 $tmp = explode(getenv('POINT_NAME'), $res);
 $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
