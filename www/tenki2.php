@@ -127,7 +127,7 @@ $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   // error_log($pid . ' ' . $i . ' ' . print_r($tasks[$i], TRUE));
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'WEATHER2') {
+    if ($tasks[$i]['tag'] == 'WEATHER2' || $tasks[$i]['tag'] == 'SOCCER') {
       $list_delete_task[] = $tasks[$i]['id'];
     } else if ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
       if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_add_task)) {
@@ -138,9 +138,8 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
-$list_add_task2 = $list_add_task;
-$list_add_task2 += get_task_soccer($mu);
-error_log($pid . ' $list_add_task2 : ' . print_r($list_add_task2, TRUE));
+// Soccer Tasks
+$list_add_task += get_task_soccer($mu);
 
 // Add Tasks
 $rc = $mu->add_tasks($list_add_task);
