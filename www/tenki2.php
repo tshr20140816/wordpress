@@ -17,7 +17,7 @@ $access_token = $mu->get_access_token();
 $list_context_id = $mu->get_contexts();
 
 // Get Folders
-$label_folder_id = $mu->get_folder_id('LABEL');
+$folder_id_label = $mu->get_folder_id('LABEL');
 $folder_id_private = $mu->get_folder_id('PRIVATE');
 
 // holiday 今月含み4ヶ月分
@@ -38,10 +38,8 @@ $list_base = [];
 for ($i = 0; $i < 12; $i++) {
   $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
   $res = $mu->get_contents($url);
-  // error_log($pid . ' ' . $res);
   foreach (explode("\n", $res) as $one_line) {
     if (strpos($one_line, '<title>_') !== FALSE) {
-      // error_log($one_line);
       $tmp = explode('_', $one_line);
       $tmp1 = explode(' ', $tmp[2]);
       $tmp2 = explode('/', $tmp1[1]);
@@ -58,12 +56,8 @@ for ($i = 0; $i < 12; $i++) {
 error_log($pid . ' $list_base : ' . print_r($list_base, TRUE));
 
 $list_add_task = [];
-$update_marker = ' _' . date('ymd') . '_';
 // To Small Size
-$subscript = '₀₁₂₃₄₅₆₇₈₉';
-for ($i = 0; $i < 10; $i++) {
-  $update_marker = str_replace($i, mb_substr($subscript, $i, 1), $update_marker);
-}
+$update_marker = $mu->to_small_size(' _' . date('ymd') . '_');
 for ($i = 0; $i < 70; $i++) {
   $timestamp = strtotime(date('Y-m-d') . ' +' . ($i + 10) . ' days');
   $dt = date('n/j', $timestamp);
@@ -92,7 +86,7 @@ for ($i = 0; $i < 70; $i++) {
   $list_add_task[date('Ymd', $timestamp)] = '{"title":"' . $tmp
     . '","duedate":"' . $timestamp
     . '","tag":"WEATHER2","context":' . $list_context_id[date('w', $timestamp)]
-    . ',"folder":' . $label_folder_id . '}';
+    . ',"folder":' . $folder_id_label . '}';
 }
 error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
 
@@ -255,10 +249,7 @@ function get_sun($mu_) {
     }
   }
   // To Small Size
-  $subscript = '₀₁₂₃₄₅₆₇₈₉';
-  for ($i = 0; $i < 10; $i++) {
-    $list_sunrise_sunset = str_replace($i, mb_substr($subscript, $i, 1), $list_sunrise_sunset);
-  }
+  $list_sunrise_sunset = $mu_->to_small_size($list_sunrise_sunset);
 
   return $list_sunrise_sunset;
 }
