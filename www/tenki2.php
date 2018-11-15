@@ -127,7 +127,7 @@ $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   // error_log($pid . ' ' . $i . ' ' . print_r($tasks[$i], TRUE));
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'WEATHER2' || $tasks[$i]['tag'] == 'SOCCER') {
+    if ($tasks[$i]['tag'] == 'WEATHER2' || $tasks[$i]['tag'] == 'SOCCER' || $tasks[$i]['tag'] == 'CULTURECENTER') {
       $list_delete_task[] = $tasks[$i]['id'];
     } else if ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
       if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_add_task)) {
@@ -141,6 +141,9 @@ error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 // Soccer Tasks
 $list_add_task += get_task_soccer($mu);
 
+// Culture Center Tasks
+$list_add_task += get_task_culturecenter($mu);
+
 // Add Tasks
 $rc = $mu->add_tasks($list_add_task);
 
@@ -149,10 +152,12 @@ $mu->delete_tasks($list_delete_task);
 
 error_log("${pid} FINISH");
 
+/*
 $res = $mu->get_contents(
   'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/culturecenter.php',
   [CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
   ]);
+*/
 
 exit();
 
@@ -293,6 +298,60 @@ function get_task_soccer($mu_) {
   }
   error_log(getmypid() . ' TASKS SOCCER : ' . print_r($list_add_task, TRUE));
   
+  return $list_add_task;
+}
+
+function get_task_culturecenter($mu_) {
+
+  // Get Folders
+  $folder_id_private = $mu_->get_folder_id('PRIVATE');
+  
+  // Get Contexts
+  $list_context_id = $mu_->get_contexts();
+  
+  $y = date('Y');
+  $m = date('n');
+
+  $list_add_task = [];
+  for ($j = 0; $j < 2; $j++) {
+    $url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=' . $y . '&mon=' . $m;
+    
+    $res = $mu_->get_contents($url);
+    $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
+
+    $tmp = explode('<col span=1 align=right>', $res);
+    $tmp = explode('</table>', $tmp[1]);
+
+    $rc = preg_match_all('/<tr .+?<b>(.+?)<.*?<td(.*?)<\/td><\/tr>/s', $tmp[0], $matches, PREG_SET_ORDER);
+
+    for ($i = 0; $i < count($matches); $i++) {
+      $timestamp = mktime(0, 0, 0, $m, $matches[$i][1], $y);
+      if (date('Ymd') > date('Ymd', $timestamp)) {
+        continue;
+      }
+      $tmp = $matches[$i][2];
+      $tmp = preg_replace('/<font .+?>.+?>/', '', $tmp);
+      $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
+      $tmp = trim($tmp, " \t\n\r\0\t>");
+      $tmp = str_replace('　', '', $tmp);
+      $tmp = trim(str_replace('<br>', ' ', $tmp));
+      if (strlen($tmp) == 0) {
+        continue;
+      }
+      $list_add_task[] = '{"title":"' . date('m/d', $timestamp) . ' 文セ ★ ' . $tmp
+        . '","duedate":"' . $timestamp
+      . '","context":"' . $list_context_id[date('w', $timestamp)]
+      . '","tag":"CULTURECENTER","folder":"' . $folder_id_private . '"}';
+    }
+    if ($m == 12) {
+      $yyyy++;
+      $m = 1;
+    } else {
+      $m++;
+    }
+  }
+  error_log(getmypid() . ' TASKS CULTURECENTER : ' . print_r($list_add_task, TRUE));
+
   return $list_add_task;
 }
 ?>
