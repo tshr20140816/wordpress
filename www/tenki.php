@@ -264,7 +264,7 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
     for ($j = 0; $j < 10; $i++) {
       $timestamp = strtotime("${dt} +${j} day");
       if (date('Ymd', $timestamp) == $yyyymmdd) {
-        $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp1[$i + 1]))));
+        $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
         $tmp2 = date('m/d', $timestamp) . ' ' . $point_name . ' ' . $list[0];
         error_log($tmp2);
       }
