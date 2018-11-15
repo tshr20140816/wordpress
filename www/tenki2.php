@@ -121,7 +121,7 @@ $res = $mu->get_contents($url);
 $tasks = json_decode($res, TRUE);
 // error_log($pid . ' $tasks : ' . print_r($tasks, TRUE));
 
-file_put_contents('/tmp/tasks_tenki2', serialize($tasks));
+// file_put_contents('/tmp/tasks_tenki2', serialize($tasks));
 
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
