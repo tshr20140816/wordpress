@@ -247,6 +247,7 @@ $list_add_task[] = $quota_task;
 
 // Weather Information (Guest)
 
+/*
 // location_number,point_name,yyyymmdd;
 $list_weather_guest_area = $mu->get_weather_guest_area();
 
@@ -272,6 +273,7 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
     }
   }
 }
+*/
 
 // Get Tasks
 
