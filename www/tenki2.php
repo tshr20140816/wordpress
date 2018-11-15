@@ -152,13 +152,6 @@ $mu->delete_tasks($list_delete_task);
 
 error_log("${pid} FINISH");
 
-/*
-$res = $mu->get_contents(
-  'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/culturecenter.php',
-  [CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
-  ]);
-*/
-
 exit();
 
 function get_holiday($mu_) {
