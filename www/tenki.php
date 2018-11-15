@@ -250,7 +250,9 @@ $list_add_task[] = $quota_task;
 $list_weather_guest_area = $mu->get_weather_guest_area();
 
 $update_marker = $mu->to_small_size(' _' . date('Ymd') . '_');
+$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER","folder":"__FOLDER_ID__"}';
 for ($i = 0; $i < count($list_weather_guest_area); $i++) {
+  $is_add_flag = FALSE;
   $tmp = explode(',', $list_weather_guest_area[$i]);
   $location_number = $tmp[0];
   $point_name = $tmp[1];
@@ -266,9 +268,21 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
       if (date('Ymd', $timestamp) == $yyyymmdd) {
         $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
         $tmp2 = date('m/d', $timestamp) . " ${point_name} ${list[0]} ${list[2]} ${list[1]} ${update_marker}";
-        error_log($tmp2);
+        $tmp2 = str_replace('__TITLE__', $tmp2, $add_task_template);
+        $tmp2 = str_replace('__DUEDATE__', $timestamp, $tmp2);
+        $tmp2 = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp2);
+        $list_add_task[] = $tmp2;
+        $is_add_flag = TRUE;
       }
     }
+  }
+  if ($is_add_flag === FALSE) {
+    $timestamp = strtotime($yyyymmdd);
+    $tmp = date('m/d', $timestamp) . " ${point_name} 天気予報未取得" . $update_marker;
+    $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
+    $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
+    $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
+    $list_add_task[] = $tmp;
   }
 }
 
