@@ -203,7 +203,7 @@ __HEREDOC__;
     }
   }
   
-  function get_weather_guest_area($mu_) {
+  function get_weather_guest_area() {
     
     $sql = <<< __HEREDOC__
 SELECT T1.location_number
