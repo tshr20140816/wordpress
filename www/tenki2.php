@@ -138,6 +138,10 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
+$list_add_task2 = $list_add_task;
+$list_add_task2 += get_task_soccer($mu);
+error_log($pid . ' $list_add_task2 : ' . print_r($list_add_task2, TRUE));
+
 // Add Tasks
 $rc = $mu->add_tasks($list_add_task);
 
