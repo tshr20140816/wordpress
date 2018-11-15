@@ -2,19 +2,14 @@
 
 class MyUtils
 {
-  private $_pdo;
   private $_access_token;
-  
-  function __construct() {    
+    
+  function get_pdo() {
     $connection_info = parse_url(getenv('DATABASE_URL'));
-    $this->$_pdo = new PDO(
+    return new PDO(
       "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
       $connection_info['user'],
       $connection_info['pass']);
-  }
-  
-  function __destruct() {
-    $this->$_pdo = NULL;
   }
   
   function get_access_token() {
@@ -41,8 +36,10 @@ SELECT M1.access_token
   FROM m_authorization M1;
 __HEREDOC__;
     
+    $pdo = $this->get_pdo();
+    
     $access_token = NULL;
-    foreach ($this->$_pdo->query($sql) as $row) {
+    foreach ($pdo->query($sql) as $row) {
       $access_token = $row['access_token'];
       $refresh_token = $row['refresh_token'];
       $refresh_flag = $row['refresh_flag'];
@@ -74,19 +71,20 @@ UPDATE m_authorization
       ,update_time = LOCALTIMESTAMP;
 __HEREDOC__;
   
-      $statement = $this->$_pdo->prepare($sql);
+      $statement = $pdo->prepare($sql);
       $rc = $statement->execute([':b_access_token' => $params['access_token'],
                                  ':b_refresh_token' => $params['refresh_token']]);
       error_log(getmypid() . " UPDATE RESULT : ${rc}");
   
       $access_token = $params['access_token'];
     }
+    $pdo = null;
     
     error_log(getmypid() . ' $access_token : ' . $access_token);
     
     $this->$_access_token = $access_token;
     
-    file_put_contents($file_name, $access_token);
+    file_put_contents($file_name, $access_token); // For Cache
     
     return $access_token;
   }
@@ -204,13 +202,7 @@ __HEREDOC__;
   }
   
   function get_weather_guest_area() {
-    
-    $connection_info = parse_url(getenv('DATABASE_URL'));
-    $pdo = new PDO(
-      "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
-      $connection_info['user'],
-      $connection_info['pass']);
-    
+
     $sql = <<< __HEREDOC__
 SELECT T1.location_number
       ,T1.point_name
