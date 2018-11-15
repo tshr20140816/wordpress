@@ -261,7 +261,7 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
     
     $tmp = explode($point_name, $res);
     $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
-    for ($j = 0; $j < 10; $i++) {
+    for ($j = 0; $j < 10; $j++) {
       $timestamp = strtotime("${dt} +${j} day");
       if (date('Ymd', $timestamp) == $yyyymmdd) {
         $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
