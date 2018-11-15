@@ -210,6 +210,7 @@ SELECT T1.location_number
   FROM m_tenki T1
 __HEREDOC__;
     
+    $pdo = $this->get_pdo();
     $list_weather_guest_area = [];
     foreach ($pdo->query($sql) as $row) {
       $location_number = $row['location_number'];
