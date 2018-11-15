@@ -267,7 +267,7 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
       $timestamp = strtotime("${dt} +${j} day");
       if (date('Ymd', $timestamp) == $yyyymmdd) {
         $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
-        $tmp2 = date('m/d', $timestamp) . " ${point_name} ${list[0]} ${list[2]} ${list[1]} ${update_marker}";
+        $tmp2 = date('m/d', $timestamp) . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】 ${update_marker}";
         $tmp2 = str_replace('__TITLE__', $tmp2, $add_task_template);
         $tmp2 = str_replace('__DUEDATE__', $timestamp, $tmp2);
         $tmp2 = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp2);
@@ -278,7 +278,7 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
   }
   if ($is_add_flag === FALSE) {
     $timestamp = strtotime($yyyymmdd);
-    $tmp = date('m/d', $timestamp) . " ${point_name} 天気予報未取得" . $update_marker;
+    $tmp = date('m/d', $timestamp) . " 【${point_name} 天気予報未取得】" . $update_marker;
     $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
     $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
     $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
