@@ -249,6 +249,7 @@ $list_add_task[] = $quota_task;
 
 $list_weather_guest_area = $mu->get_weather_guest_area();
 
+$update_marker = $mu->to_small_size(' _' . date('Ymd') . '_');
 for ($i = 0; $i < count($list_weather_guest_area); $i++) {
   $tmp = explode(',', $list_weather_guest_area[$i]);
   $location_number = $tmp[0];
@@ -258,14 +259,13 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
     $res = $mu->get_contents('https://tenki.jp/week/' . $location_number . '/');
     $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
     $dt = $matches[1]; // yyyy-mm-dd
-    
     $tmp = explode($point_name, $res);
     $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
     for ($j = 0; $j < 10; $j++) {
       $timestamp = strtotime("${dt} +${j} day");
       if (date('Ymd', $timestamp) == $yyyymmdd) {
         $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
-        $tmp2 = date('m/d', $timestamp) . ' ' . $point_name . ' ' . $list[0] . ' ' . $list[2] . ' ' . $list[1];
+        $tmp2 = date('m/d', $timestamp) . " ${point_name} ${list[0]} ${list[2]} ${list[1]} ${update_marker}";
         error_log($tmp2);
       }
     }
