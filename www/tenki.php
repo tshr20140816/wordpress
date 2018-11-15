@@ -273,6 +273,7 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
         $tmp2 = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp2);
         $list_add_task[] = $tmp2;
         $is_add_flag = TRUE;
+        break;
       }
     }
   }
