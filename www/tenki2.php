@@ -144,6 +144,8 @@ $list_add_task += get_task_soccer($mu);
 // Culture Center Tasks
 $list_add_task += get_task_culturecenter($mu);
 
+error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
+
 // Add Tasks
 $rc = $mu->add_tasks($list_add_task);
 
