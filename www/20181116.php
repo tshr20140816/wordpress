@@ -13,5 +13,10 @@ $res = $mu->get_contents($url);
 $tmp = explode('<td class="time left">時</td>', $res);
 $tmp = explode('</table>', $tmp[1]);
 
-error_log($tmp[0]);
+// error_log($tmp[0]);
+
+$rc = preg_match_all('/<tr>(.+?)<\/tr>/s', $tmp[0], $matches, PREG_SET_ORDER);
+
+error_log(print_r($matches, TRUE));
+
 ?>
