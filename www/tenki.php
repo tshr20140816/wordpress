@@ -287,6 +287,34 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
   }
 }
 
+// Rainfall
+
+if (date('H') = '08') {
+  // 17:xx JST
+  $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
+    . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
+  
+  $res = $mu->get_contents($url);
+  
+  $data = json_decode($res, TRUE);
+  $data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
+  
+  $list = [];
+  for ($i = 0; $i < count($data); $i++) {
+    if ($data[$i]['Rainfall'] != '0') {
+      $list[] = substr($data[$i]['Date'], 8) . ' ' . $data[$i]['Rainfall'];
+    }
+  }
+  if (count($list) > 0) {
+    $tmp = date('H:m') . ' RAIN INFO : ' . implode(' ', $list);
+  } else {
+    $tmp = date('H:m') . ' NO RAIN';
+  }
+  $list_add_task[] = '{"title":"' . $tmp
+      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
+      . '","tag":"WEATHER3","folder":"__FOLDER_ID__"}';
+}
+
 // Get Tasks
 
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context&access_token=' . $access_token
