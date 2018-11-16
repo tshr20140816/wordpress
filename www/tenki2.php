@@ -139,10 +139,10 @@ for ($i = 0; $i < count($tasks); $i++) {
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
 // Soccer Tasks
-$list_add_task += get_task_soccer($mu);
-
+$list_add_task = array_merge($list_add_task, get_task_soccer($mu));
+  
 // Culture Center Tasks
-$list_add_task += get_task_culturecenter($mu);
+$list_add_task = array_merge($list_add_task, get_task_culturecenter($mu));
 
 error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
 
