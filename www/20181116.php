@@ -12,7 +12,7 @@ error_log($res);
 
 $tmp = explode("\n", $res);
 for ($i = 0; $i < count($tmp); $i++) {
-  error_log(strip_tags($tmp[$i]));
+  error_log(strip_tags($tmp[$i], '</td>'));
 }
 
 ?>
