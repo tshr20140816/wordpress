@@ -12,6 +12,11 @@ $res = $mu->get_contents($url);
 error_log($res);
 
 $data = json_decode($res, TRUE);
+$data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
 
-error_log(print_r($data['Feature'][0]['Property']['WeatherList']['Weather'], TRUE));
+error_log(print_r($data, TRUE));
+
+for ($i = 0; $i < count($data); $i++) {
+  error_log(print_r($data[$i], TRUE));
+}
 ?>
