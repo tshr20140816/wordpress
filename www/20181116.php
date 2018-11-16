@@ -13,5 +13,5 @@ error_log($res);
 
 $data = json_decode($res, TRUE);
 
-error_log(print_r($data['Feature'][0]['Property'], TRUE));
+error_log(print_r($data['Feature'][0]['Property']['WeatherList']['Weather'], TRUE));
 ?>
