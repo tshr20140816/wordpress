@@ -5,7 +5,7 @@ include(dirname(__FILE__) . '/../classes/MyUtils.php');
 $mu = new MyUtils();
 
 $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
-  . '&coordinates=132.455354,34.390566';
+  . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
 
 $res = $mu->get_contents($url);
 
