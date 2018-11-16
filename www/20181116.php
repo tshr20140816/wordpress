@@ -15,11 +15,10 @@ $tmp = explode('</table>', $tmp[1]);
 
 // error_log($tmp[0]);
 
-// $rc = preg_match_all('/<tr>(.*?)<td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td>(.+?)<\/tr>/s', $tmp[0], $matches, PREG_SET_ORDER);
-$rc = preg_match_all('/<tr>(.*?)<td(.*?)>(.+?)<\/td>(.*?)<td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)><td(.*?)>(.+?)<\/td>(.+?)<\/td>(.+?)<\/tr>/s', $tmp[0], $matches, PREG_SET_ORDER);
+$rc = preg_match_all('/<tr>(.*?)<td(.*?)>(.+?)<\/td>(.*?)<td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)>(.+?)<\/td><td(.*?)><td(.*?)>(.+?)<\/td>(.+?)<\/td>(.*?)<\/tr>/s', $tmp[0], $matches, PREG_SET_ORDER);
 
 error_log(print_r($matches, TRUE));
 
-// $hour = 
+//$hour = $matches
 
 ?>
