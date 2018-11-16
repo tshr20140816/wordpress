@@ -26,6 +26,9 @@ for ($i = 0; $i < count($matches); $i++) {
   $wind = $matches[$i][10] . $matches[$i][12];
   $humi = $matches[$i][16];
   $pres = $matches[$i][18];
+  if ($temp == '&nbsp;') {
+    continue;
+  }
   error_log("${hour} ${temp} ${rain} ${wind} ${humi} ${pres}");
 }
 
