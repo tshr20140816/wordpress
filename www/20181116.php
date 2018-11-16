@@ -16,7 +16,10 @@ $data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
 
 error_log(print_r($data, TRUE));
 
+$list = [];
 for ($i = 0; $i < count($data); $i++) {
-  error_log(print_r($data[$i], TRUE));
+  // error_log(print_r($data[$i], TRUE));
+  $list[] = $data[$i]['Date'] . ' ' . $data[$i]['Rainfall'];
 }
+error_log(print_r($list, TRUE));
 ?>
