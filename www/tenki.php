@@ -144,45 +144,6 @@ for ($j = 0; $j < $loop_count; $j++) {
 $list_moon_age = $mu->to_small_size($list_moon_age);
 error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
 
-// quota
-
-$api_key = getenv('API_KEY');
-$url = 'https://api.heroku.com/account';
-
-$res = $mu->get_contents(
-  $url,
-  [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
-                          "Authorization: Bearer ${api_key}",
-                         ]]);
-
-$data = json_decode($res, TRUE);
-
-$url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
-
-$res = $mu->get_contents(
-  $url,
-  [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3.account-quotas',
-                          "Authorization: Bearer ${api_key}",
-                         ]]);
-
-$data = json_decode($res, TRUE);
-
-$dyno_used = (int)$data['quota_used'];
-$dyno_quota = (int)$data['account_quota'];
-
-error_log($pid . ' $dyno_used : ' . $dyno_used);
-error_log($pid . ' $dyno_quota : ' . $dyno_quota);
-
-$tmp = $dyno_quota - $dyno_used;
-$tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
-
-$update_marker = $mu->to_small_size(' _' . date('Ymd His', strtotime('+ 9 hours')) . '_');
-
-$quota_task = '{"title":"quota : ' . $tmp . $update_marker
-  . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
-  . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
-  . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
-
 // Weather Information
 
 $res = $mu->get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
@@ -243,7 +204,44 @@ if (count($list_add_task) == 0) {
   exit();
 }
 
-$list_add_task[] = $quota_task;
+// quota
+
+$api_key = getenv('API_KEY');
+$url = 'https://api.heroku.com/account';
+
+$res = $mu->get_contents(
+  $url,
+  [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
+                          "Authorization: Bearer ${api_key}",
+                         ]]);
+
+$data = json_decode($res, TRUE);
+
+$url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
+
+$res = $mu->get_contents(
+  $url,
+  [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3.account-quotas',
+                          "Authorization: Bearer ${api_key}",
+                         ]]);
+
+$data = json_decode($res, TRUE);
+
+$dyno_used = (int)$data['quota_used'];
+$dyno_quota = (int)$data['account_quota'];
+
+error_log($pid . ' $dyno_used : ' . $dyno_used);
+error_log($pid . ' $dyno_quota : ' . $dyno_quota);
+
+$tmp = $dyno_quota - $dyno_used;
+$tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
+
+$update_marker = $mu->to_small_size(' _' . date('Ymd His', strtotime('+ 9 hours')) . '_');
+
+$list_add_task[] = '{"title":"quota : ' . $tmp . $update_marker
+  . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
+  . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
+  . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
 
 // Weather Information (Guest)
 
@@ -285,6 +283,38 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
     $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
     $list_add_task[] = $tmp;
   }
+}
+
+// amedas
+
+$res = $mu->get_contents('http://www.jma.go.jp/jp/amedas_h/today-' . getenv('AMEDAS') . '.html');
+
+$tmp = explode('<td class="time left">時</td>', $res);
+$tmp = explode('</table>', $tmp[1]);
+
+$rc = preg_match_all('/<tr>(.*?)<td(.*?)>(.+?)<\/td>(.*?)' . str_repeat('<td(.*?)>(.+?)<\/td>', 7) . '(.+?)<\/tr>/s'
+                     , $tmp[0], $matches, PREG_SET_ORDER);
+
+$title = '';
+for ($i = 0; $i < count($matches); $i++) {
+  $hour = $matches[$i][3];
+  $temp = $matches[$i][6];
+  $rain = $matches[$i][8];
+  $wind = $matches[$i][10] . $matches[$i][12];
+  $humi = $matches[$i][16];
+  $pres = $matches[$i][18];
+  if ($temp == '&nbsp;') {
+    continue;
+  }
+  error_log("${pid} ${hour}時 気温:${temp}℃ 降水量:${rain}mm 風:${wind}m/s 湿度:${humi}% 気圧:${pres}hPa");
+  $title = "${hour}時 気温:${temp}℃ 降水量:${rain}mm 風:${wind}m/s 湿度:${humi}% 気圧:${pres}hPa";
+}
+
+if ($title != '') {
+  $list_add_task[] = '{"title":"' . $title
+    . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
+    . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
+    . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
 }
 
 // Rainfall
