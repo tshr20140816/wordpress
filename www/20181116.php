@@ -19,6 +19,14 @@ $rc = preg_match_all('/<tr>(.*?)<td(.*?)>(.+?)<\/td>(.*?)<td(.*?)>(.+?)<\/td><td
 
 error_log(print_r($matches, TRUE));
 
-//$hour = $matches
+for ($i = 0; $i < count($matches); $i++) {
+  $hour = $matches[$i][3];
+  $temp = $matches[$i][6];
+  $rain = $matches[$i][8];
+  $wind = $matches[$i][10] . $matches[$i][12];
+  $humi = $matches[$i][16];
+  $pres = $matches[$i][18];
+  error_log("${hour} ${temp} ${rain} ${wind} ${humi} ${pres}");
+}
 
 ?>
