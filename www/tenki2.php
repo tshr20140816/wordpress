@@ -42,7 +42,8 @@ for ($i = 0; $i < 12; $i++) {
       $tmp = explode('_', $one_line);
       $tmp1 = explode(' ', $tmp[2]);
       $tmp2 = explode('/', $tmp1[1]);
-      if ((int)$tmp2[0] > 38) {
+      // 10月から4月までの閾値は30、その他は38
+      if ((int)$tmp2[0] > ((int)substr($tmp1[0], 0, 1) < 5 ? 30 : 38)) {
         // 華氏 → 摂氏
         $tmp2[0] = (int)(((int)$tmp2[0] - 32) * 5 / 9);
         $tmp2[1] = (int)(((int)$tmp2[1] - 32) * 5 / 9);
