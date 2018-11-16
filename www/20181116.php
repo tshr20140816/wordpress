@@ -22,4 +22,6 @@ for ($i = 0; $i < count($data); $i++) {
   $list[] = substr($data[$i]['Date'], 8) . ' ' . $data[$i]['Rainfall'];
 }
 error_log(print_r($list, TRUE));
+
+error_log(date('H'));
 ?>
