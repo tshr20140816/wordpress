@@ -306,8 +306,8 @@ for ($i = 0; $i < count($matches); $i++) {
   if ($temp == '&nbsp;') {
     continue;
   }
-  error_log("${pid} ${hour}時 気温:${temp}℃ 降水量:${rain}mm 風:${wind}m/s 湿度:${humi}% 気圧:${pres}hPa");
-  $title = "${hour}時 気温:${temp}℃ 降水量:${rain}mm 風:${wind}m/s 湿度:${humi}% 気圧:${pres}hPa";
+  error_log("${pid} ${hour}時 ${temp}℃ ${humi}% ${rain}mm ${wind}m/s ${pres}hPa");
+  $title = "${hour}時 ${temp}℃ ${humi}% ${rain}mm ${wind}m/s ${pres}hPa";
 }
 
 if ($title != '') {
