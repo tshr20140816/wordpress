@@ -29,7 +29,7 @@ for ($i = 0; $i < count($matches); $i++) {
   if ($temp == '&nbsp;') {
     continue;
   }
-  error_log("${hour}時 気温:${temp}度 降水量:${rain}mm 風:${wind}m/s 湿度:${humi} 気圧:${pres}hPa");
+  error_log("${hour}時 気温:${temp}度 降水量:${rain}mm 風:${wind}m/s 湿度:${humi}% 気圧:${pres}hPa");
 }
 
 ?>
