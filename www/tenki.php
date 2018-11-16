@@ -289,7 +289,7 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
 
 // Rainfall
 
-if (date('H') = '08') {
+if (date('H') == '08') {
   // 17:xx JST
   $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
     . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
