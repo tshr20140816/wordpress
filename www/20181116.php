@@ -13,5 +13,5 @@ error_log($res);
 
 $data = json_decode($res, TRUE);
 
-error_log($data);
+error_log(print_r($data, TRUE));
 ?>
