@@ -19,7 +19,7 @@ error_log(print_r($data, TRUE));
 $list = [];
 for ($i = 0; $i < count($data); $i++) {
   // error_log(print_r($data[$i], TRUE));
-  $list[] = $data[$i]['Date'] . ' ' . $data[$i]['Rainfall'];
+  $list[] = substr($data[$i]['Date'], 8) . ' ' . $data[$i]['Rainfall'];
 }
 error_log(print_r($list, TRUE));
 ?>
