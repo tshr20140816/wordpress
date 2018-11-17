@@ -217,6 +217,7 @@ $res = $mu->get_contents(
 
 $data = json_decode($res, TRUE);
 error_log($pid . ' $data : ' . print_r($data, TRUE));
+$account = explode('@', $data['email'])[0];
 $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
 
 $res = $mu->get_contents(
@@ -239,7 +240,7 @@ $tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60)
 
 $update_marker = $mu->to_small_size(' _' . date('Ymd His', strtotime('+ 9 hours')) . '_');
 
-$list_add_task[] = '{"title":"' . getenv('HEROKU_APP_NAME') . ' : ' . $tmp . $update_marker
+$list_add_task[] = '{"title":"' . $account . ' : ' . $tmp . $update_marker
   . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
   . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
   . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
