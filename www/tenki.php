@@ -216,7 +216,7 @@ $res = $mu->get_contents(
                          ]]);
 
 $data = json_decode($res, TRUE);
-
+error_log($pid . ' $data : ' . print_r($data, TRUE));
 $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
 
 $res = $mu->get_contents(
@@ -226,6 +226,7 @@ $res = $mu->get_contents(
                          ]]);
 
 $data = json_decode($res, TRUE);
+error_log($pid . ' $data : ' . print_r($data, TRUE));
 
 $dyno_used = (int)$data['quota_used'];
 $dyno_quota = (int)$data['account_quota'];
