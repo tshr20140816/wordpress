@@ -14,6 +14,8 @@ class MyUtils
   
   function get_access_token($force_refresh_ = FALSE) {
     
+    error_log(getmypid() . " get_access_token $force_refresh_ : ${force_refresh_}");
+    
     $file_name = '/tmp/access_token';
     
     if ($force_refresh_ === FALSE && file_exists($file_name)) {
