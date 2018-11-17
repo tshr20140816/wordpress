@@ -69,9 +69,9 @@ for ($i = 0; $i < count($data); $i++) {
   }
 }
 if (count($list) > 0) {
-  $tmp = date('H:m', strtotime('+9 hours')) . ' RAIN INFO : ' . implode(' ', $list);
+  $tmp = date('H:i', strtotime('+9 hours')) . ' RAIN INFO : ' . implode(' ', $list);
 } else {
-  $tmp = date('H:m', strtotime('+9 hours')) . ' NO RAIN';
+  $tmp = date('H:i', strtotime('+9 hours')) . ' NO RAIN';
 }
 $list_add_task[] = '{"title":"' . $tmp
     . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
