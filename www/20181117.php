@@ -7,7 +7,7 @@ $pdo = new PDO(
   $connection_info['user'],
   $connection_info['pass']);
 
-$pdo->query('UPDATE m_authorization SET access_token = 'dummy';');
+$pdo->query("UPDATE m_authorization SET access_token = 'dummy';");
 
 $pdo = NULL;
 
