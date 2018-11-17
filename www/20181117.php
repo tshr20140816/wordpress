@@ -49,8 +49,32 @@ if ($title != '') {
   $list_add_task[] = '{"title":"' . $title
     . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
     . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
-    . '","tag":"WEATHER4","folder":"' . $folder_id_label . '"}';
+    . '","tag":"WEATHER3","folder":"' . $folder_id_label . '"}';
 }
+
+
+$url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
+  . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
+$res = $mu->get_contents($url);
+
+$data = json_decode($res, TRUE);
+$data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
+
+$list = [];
+for ($i = 0; $i < count($data); $i++) {
+  if ($data[$i]['Rainfall'] != '0') {
+    $list[] = substr($data[$i]['Date'], 8) . ' ' . $data[$i]['Rainfall'];
+  }
+}
+if (count($list) > 0) {
+  $tmp = date('H:m') . ' RAIN INFO : ' . implode(' ', $list);
+} else {
+  $tmp = date('H:m') . ' NO RAIN';
+}
+$list_add_task[] = '{"title":"' . $tmp
+    . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
+    . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
+    . '","tag":"WEATHER3","folder":"' . $folder_id_label . '"}';
 
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context&access_token=' . $access_token
@@ -61,7 +85,7 @@ $tasks = json_decode($res, TRUE);
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'WEATHER4') {
+    if ($tasks[$i]['tag'] == 'WEATHER3') {
       $list_delete_task[] = $tasks[$i]['id'];
     }
   }
