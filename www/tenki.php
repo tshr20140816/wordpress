@@ -285,66 +285,6 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
   }
 }
 
-// amedas
-
-$res = $mu->get_contents('http://www.jma.go.jp/jp/amedas_h/today-' . getenv('AMEDAS') . '.html');
-
-$tmp = explode('<td class="time left">時</td>', $res);
-$tmp = explode('</table>', $tmp[1]);
-
-$rc = preg_match_all('/<tr>(.*?)<td(.*?)>(.+?)<\/td>(.*?)' . str_repeat('<td(.*?)>(.+?)<\/td>', 7) . '(.+?)<\/tr>/s'
-                     , $tmp[0], $matches, PREG_SET_ORDER);
-
-$title = '';
-for ($i = 0; $i < count($matches); $i++) {
-  $hour = $matches[$i][3];
-  $temp = $matches[$i][6];
-  $rain = $matches[$i][8];
-  $wind = $matches[$i][10] . $matches[$i][12];
-  $humi = $matches[$i][16];
-  $pres = $matches[$i][18];
-  if ($temp == '&nbsp;') {
-    continue;
-  }
-  error_log("${pid} ${hour}時 ${temp}℃ ${humi}% ${rain}mm ${wind}m/s ${pres}hPa");
-  $title = "${hour}時 ${temp}℃ ${humi}% ${rain}mm ${wind}m/s ${pres}hPa";
-}
-
-if ($title != '') {
-  $list_add_task[] = '{"title":"' . $title
-    . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
-    . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
-    . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
-}
-
-// Rainfall
-
-if (date('H') == '08') {
-  // 17:xx JST
-  $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
-    . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
-  
-  $res = $mu->get_contents($url);
-  
-  $data = json_decode($res, TRUE);
-  $data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
-  
-  $list = [];
-  for ($i = 0; $i < count($data); $i++) {
-    if ($data[$i]['Rainfall'] != '0') {
-      $list[] = substr($data[$i]['Date'], 8) . ' ' . $data[$i]['Rainfall'];
-    }
-  }
-  if (count($list) > 0) {
-    $tmp = date('H:m') . ' RAIN INFO : ' . implode(' ', $list);
-  } else {
-    $tmp = date('H:m') . ' NO RAIN';
-  }
-  $list_add_task[] = '{"title":"' . $tmp
-      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
-      . '","tag":"WEATHER3","folder":"__FOLDER_ID__"}';
-}
-
 // Get Tasks
 
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context&access_token=' . $access_token
