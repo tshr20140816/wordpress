@@ -59,6 +59,7 @@ $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid='
 $res = $mu->get_contents($url);
 
 $data = json_decode($res, TRUE);
+error_log($pid . ' $data : ' . print_r($data, TRUE));
 $data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
 
 $list = [];
