@@ -52,5 +52,27 @@ if ($title != '') {
     . '","tag":"WEATHER","folder":"' . $folder_id_label . '"}';
 }
 
+// Get Tasks
+$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context&access_token=' . $access_token
+  . '&after=' . strtotime('-1 day');
+$res = $mu->get_contents($url);
+$tasks = json_decode($res, TRUE);
+
+$list_delete_task = [];
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
+    if ($tasks[$i]['tag'] == 'WEATHER3') {
+      $list_delete_task[] = $tasks[$i]['id'];
+    }
+  }
+}
+error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
+
+// Add Tasks
+$rc = $mu->add_tasks($list_add_task);
+
+// Delete Tasks
+$mu->delete_tasks($list_delete_task);
+
 error_log("${pid} FINISH");
 ?>
