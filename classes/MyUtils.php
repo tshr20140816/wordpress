@@ -12,15 +12,11 @@ class MyUtils
       $connection_info['pass']);
   }
   
-  function get_access_token($force_refresh_ = FALSE) {
-    
-    $force_refresh_ = $force_refresh_ === TRUE ? TRUE : FALSE;
-    
-    error_log(getmypid() . ' get_access_token $force_refresh_ : ' . $force_refresh_);
+  function get_access_token() {
     
     $file_name = '/tmp/access_token';
     
-    if ($force_refresh_ === FALSE && file_exists($file_name)) {
+    if (file_exists($file_name)) {
       $timestamp = filemtime($file_name);
       if ($timestamp > strtotime('-15 minutes')) {
         $access_token = file_get_contents($file_name);
@@ -54,7 +50,16 @@ __HEREDOC__;
       exit();
     }
     
-    if ($refresh_flag == 1 || $force_refresh_ === TRUE) {
+    if ($refresh_flag == 0) {
+      $res = $this->get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $access_token);
+      if ($res == '{"errorCode":2,"errorDesc":"Unauthorized","errors":[{"status":"2","message":"Unauthorized"}]}') {
+        $refresh_flag = 1;
+      } else {
+        file_put_contents('/tmp/folders', serialize(json_decode($res, TRUE)));
+      }
+    }
+    
+    if ($refresh_flag == 1) {
       error_log(getmypid() . " refresh_token : ${refresh_token}");
       $post_data = ['grant_type' => 'refresh_token', 'refresh_token' => $refresh_token];
 
@@ -87,12 +92,10 @@ __HEREDOC__;
     error_log(getmypid() . ' $access_token : ' . $access_token);
     
     $this->$_access_token = $access_token;
+
+    file_put_contents($file_name, $access_token); // For Cache
     
-    $this->get_contexts($force_refresh_);
-    
-    file_put_contents($file_name, $this->$_access_token); // For Cache
-    
-    return $this->$_access_token;
+    return $access_token;
   }
   
   function get_folder_id($folder_name_) {
@@ -118,10 +121,10 @@ __HEREDOC__;
     return $target_folder_id;
   }
   
-  function get_contexts($force_refresh_ = FALSE) {
+  function get_contexts() {
     
     $file_name = '/tmp/contexts';
-    if ($force_refresh_ === FALSE && file_exists($file_name)) {
+    if (file_exists($file_name)) {
       $list_context_id = unserialize(file_get_contents($file_name));
       error_log(getmypid() . ' (CACHE HIT) $list_context_id : ' . print_r($list_context_id, TRUE));
       return $list_context_id;
@@ -269,14 +272,7 @@ __HEREDOC__;
       
       error_log(getmypid() . ' $res : ' . $res);
       
-      if ($http_code == '401') {
-        if ($res == '{"errorCode":2,"errorDesc":"Unauthorized","errors":[{"status":"2","message":"Unauthorized"}]}') {
-          $this->get_access_token(TRUE);
-          error_log(getmypid() . ' RETRY URL : ' . $url_);
-        } else {
-          break;
-        }
-      } else if ($http_code != '503') {
+      if ($http_code != '503') {
         break;
       } else {
         sleep(3);
