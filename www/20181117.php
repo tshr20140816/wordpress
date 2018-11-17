@@ -52,6 +52,7 @@ if ($title != '') {
     . '","tag":"WEATHER3","folder":"' . $folder_id_label . '"}';
 }
 
+// Rainfall
 
 $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
   . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
@@ -67,9 +68,9 @@ for ($i = 0; $i < count($data); $i++) {
   }
 }
 if (count($list) > 0) {
-  $tmp = date('H:m') . ' RAIN INFO : ' . implode(' ', $list);
+  $tmp = date('H:m', strtotime('+9 hours')) . ' RAIN INFO : ' . implode(' ', $list);
 } else {
-  $tmp = date('H:m') . ' NO RAIN';
+  $tmp = date('H:m', strtotime('+9 hours')) . ' NO RAIN';
 }
 $list_add_task[] = '{"title":"' . $tmp
     . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
