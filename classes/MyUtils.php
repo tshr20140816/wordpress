@@ -16,7 +16,7 @@ class MyUtils
     
     $force_refresh_ = $force_refresh_ === TRUE ? TRUE : FALSE;
     
-    error_log(getmypid() . ' get_access_token $force_refresh_ : ' . $force_refresh_");
+    error_log(getmypid() . ' get_access_token $force_refresh_ : ' . $force_refresh_);
     
     $file_name = '/tmp/access_token';
     
