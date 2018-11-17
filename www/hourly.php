@@ -22,6 +22,7 @@ $folder_id_label = $mu->get_folder_id('LABEL');
 $list_add_task = [];
 
 // amedas
+
 $res = $mu->get_contents('http://www.jma.go.jp/jp/amedas_h/today-' . getenv('AMEDAS') . '.html');
 
 $tmp = explode('<td class="time left">時</td>', $res);
