@@ -49,7 +49,7 @@ if ($title != '') {
   $list_add_task[] = '{"title":"' . $title
     . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
     . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
-    . '","tag":"WEATHER","folder":"' . $folder_id_label . '"}';
+    . '","tag":"WEATHER4","folder":"' . $folder_id_label . '"}';
 }
 
 // Get Tasks
@@ -61,7 +61,7 @@ $tasks = json_decode($res, TRUE);
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'WEATHER3') {
+    if ($tasks[$i]['tag'] == 'WEATHER4') {
       $list_delete_task[] = $tasks[$i]['id'];
     }
   }
