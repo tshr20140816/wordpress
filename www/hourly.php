@@ -80,7 +80,7 @@ $list_add_task[] = '{"title":"' . $tmp
     . '","tag":"WEATHER3","folder":"' . $folder_id_label . '"}';
 
 // Get Tasks
-$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context&access_token=' . $access_token
+$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token
   . '&after=' . strtotime('-1 day');
 $res = $mu->get_contents($url);
 $tasks = json_decode($res, TRUE);
