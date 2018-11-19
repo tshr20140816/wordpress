@@ -121,6 +121,9 @@ for ($i = 0; $i < count($tasks); $i++) {
 // Add Tasks
 $rc = $mu->add_tasks($list_add_task);
 
+// Edit Tasks
+$rc = $mu->add_tasks($list_edit_task);
+
 // Delete Tasks
 $mu->delete_tasks($list_delete_task);
 
