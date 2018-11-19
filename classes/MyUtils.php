@@ -190,6 +190,31 @@ __HEREDOC__;
     return $list_res;
   }
   
+  function edit_tasks($list_edit_task_) {
+    
+    error_log(getmypid() . ' EDIT TARGET TASK COUNT : ' . count($list_edit_task_));
+    
+    $list_res = [];
+    
+    if (count($list_edit_task_) == 0) {
+      return $list_res;
+    }
+    
+    $tmp = array_chunk($list_edit_task_, 50);
+    for ($i = 0; $i < count($tmp); $i++) {
+      $post_data = ['access_token' => $this->$access_token, 'tasks' => '[' . implode(',', $tmp[$i]) . ']'];
+      $res = $this->get_contents(
+        'https://api.toodledo.com/3/tasks/edit.php',
+        [CURLOPT_POST => TRUE,
+         CURLOPT_POSTFIELDS => http_build_query($post_data),
+        ]);
+      error_log(getmypid() . ' edit.php RESPONSE : ' . $res);
+      $list_res[] = $res;
+    }
+    
+    return $list_res;
+  }
+  
   function delete_tasks($list_delete_task_) {
     
     error_log(getmypid() . ' DELETE TARGET TASK COUNT : ' . count($list_delete_task_));
