@@ -101,20 +101,25 @@ error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 // WORK & Star の日付更新
 
 $list_edit_task = [];
-//$folder_id_work
+$edit_task_template = '{"id":"__ID__","title":"__TITLE__"}';
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
     if ($tasks[$i]['folder'] == $folder_id_work && $tasks[$i]['star'] == '1') {
+      $duedate = $tasks[$i]['duedate'];
+      $title = $tasks[$i]['title'];
+      if (substr($title, 0, 5) == date('m/d')) {
+        continue;
+      }
       error_log(print_r($tasks[$i], TRUE));
     }
   }
 }
 
 // Add Tasks
-//$rc = $mu->add_tasks($list_add_task);
+$rc = $mu->add_tasks($list_add_task);
 
 // Delete Tasks
-//$mu->delete_tasks($list_delete_task);
+$mu->delete_tasks($list_delete_task);
 
 
 error_log("${pid} FINISH");
