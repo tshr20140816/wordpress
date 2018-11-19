@@ -110,13 +110,13 @@ for ($i = 0; $i < count($tasks); $i++) {
       if (substr($title, 0, 5) == date('m/d', $duedate)) {
         continue;
       }
-      error_log(print_r($tasks[$i], TRUE));
       $tmp = str_replace('__ID__', $tasks[$i]['id'], $edit_task_template);
       $tmp = str_replace('__TITLE__', date('m/d', $duedate) . substr($title, 5), $tmp);
       $list_edit_task[] = $tmp;
     }
   }
 }
+error_log($pid . ' $list_edit_task : ' . print_r($list_edit_task, TRUE));
 
 // Add Tasks
 $rc = $mu->add_tasks($list_add_task);
