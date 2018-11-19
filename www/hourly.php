@@ -18,6 +18,7 @@ $list_context_id = $mu->get_contexts();
 
 // Get Folders
 $folder_id_label = $mu->get_folder_id('LABEL');
+$folder_id_work = $mu->get_folder_id('WORK');
 
 $list_add_task = [];
 
@@ -85,6 +86,8 @@ $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,conte
 $res = $mu->get_contents($url);
 $tasks = json_decode($res, TRUE);
 
+// 削除タスク抽出
+
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
@@ -95,11 +98,24 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
+// WORK & Star の日付更新
+
+$list_edit_task = [];
+//$folder_id_work
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('id', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+    if ($tasks[$i]['folder'] == $folder_id_work && $tasks[$i]['star'] == '1') {
+      error_log($tasks[$i]);
+    }
+  }
+}
+
 // Add Tasks
-$rc = $mu->add_tasks($list_add_task);
+//$rc = $mu->add_tasks($list_add_task);
 
 // Delete Tasks
-$mu->delete_tasks($list_delete_task);
+//$mu->delete_tasks($list_delete_task);
+
 
 error_log("${pid} FINISH");
 ?>
