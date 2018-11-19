@@ -107,10 +107,13 @@ for ($i = 0; $i < count($tasks); $i++) {
     if ($tasks[$i]['folder'] == $folder_id_work && $tasks[$i]['star'] == '1') {
       $duedate = $tasks[$i]['duedate'];
       $title = $tasks[$i]['title'];
-      if (substr($title, 0, 5) == date('m/d')) {
+      if (substr($title, 0, 5) == date('m/d', $duedate)) {
         continue;
       }
       error_log(print_r($tasks[$i], TRUE));
+      $tmp = str_replace('__ID__', $tasks[$i]['id'], $edit_task_template);
+      $tmp = str_replace('__TITLE__', date('m/d', $duedate) . substr($title, 5), $tmp);
+      $list_edit_task[] = $tmp;
     }
   }
 }
