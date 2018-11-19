@@ -105,7 +105,7 @@ $list_edit_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
     if ($tasks[$i]['folder'] == $folder_id_work && $tasks[$i]['star'] == '1') {
-      error_log($tasks[$i]);
+      error_log(print_r($tasks[$i], TRUE));
     }
   }
 }
