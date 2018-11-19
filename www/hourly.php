@@ -122,7 +122,7 @@ error_log($pid . ' $list_edit_task : ' . print_r($list_edit_task, TRUE));
 $rc = $mu->add_tasks($list_add_task);
 
 // Edit Tasks
-$rc = $mu->add_tasks($list_edit_task);
+$rc = $mu->edit_tasks($list_edit_task);
 
 // Delete Tasks
 $mu->delete_tasks($list_delete_task);
