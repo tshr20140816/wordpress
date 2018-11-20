@@ -21,7 +21,7 @@ $tmp = $tmp[1];
 
 //error_log($tmp);
 
-$rc = preg_match_all('/<tr.*?>' . str_repeat('.*?<td.*?>(.+?)<\/td>', 5) . '(.+?)<\/tr>/s', $tmp, $matches, PREG_SET_ORDER);
+$rc = preg_match_all('/<tr.*?>' . str_repeat('.*?<td.*?>(.+?)<\/td>', 5) . '.+?<\/tr>/s', $tmp, $matches, PREG_SET_ORDER);
 
 error_log(print_r($matches, TRUE));
 
