@@ -20,11 +20,11 @@ $list_context_id = $mu->get_contexts();
 $folder_id_label = $mu->get_folder_id('LABEL');
 
 // holiday 今月含み4ヶ月分
-$list_holiday = get_holiday($mu);  
+$list_holiday = get_holiday($mu);
 error_log($pid . ' $list_holiday : ' . print_r($list_holiday, TRUE));
 
 // 24sekki 今年と来年分
-$list_24sekki = get_24sekki($mu);  
+$list_24sekki = get_24sekki($mu);
 error_log($pid . ' $list_24sekki : ' . print_r($list_24sekki, TRUE));
 
 // Sun 今月含み4ヶ月分
@@ -147,7 +147,7 @@ $list_add_task = array_merge($list_add_task, get_task_highway($mu));
 
 // Soccer Tasks
 $list_add_task = array_merge($list_add_task, get_task_soccer($mu));
-  
+
 // Culture Center Tasks
 $list_add_task = array_merge($list_add_task, get_task_culturecenter($mu));
 
@@ -188,7 +188,7 @@ function get_holiday($mu_) {
     $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
     $list_holiday[$timestamp] = $tmp1[7];
   }
-  
+
   return $list_holiday;
 }
 
@@ -206,13 +206,13 @@ function get_24sekki($mu_) {
       [CURLOPT_POST => TRUE,
        CURLOPT_POSTFIELDS => http_build_query($post_data),
       ]);
-    
+
     $tmp = explode('<th>二十四節気</th>', $res);
     $tmp = explode('</table>', $tmp[1]);
-    
+
     $tmp = explode('<tr>', $tmp[0]);
     array_shift($tmp);
-    
+
     for ($i = 0; $i < count($tmp); $i++) {
       $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
       // error_log(print_r($matches, TRUE));
@@ -264,13 +264,13 @@ function get_sun($mu_) {
 }
 
 function get_task_soccer($mu_) {
-  
+
   // Get Folders
   $folder_id_private = $mu_->get_folder_id('PRIVATE');
-  
+
   // Get Contexts
   $list_context_id = $mu_->get_contexts();
-  
+
   $res = $mu_->get_contents(getenv('SOCCER_TEAM_CSV_FILE'));
   $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 
@@ -303,7 +303,7 @@ function get_task_soccer($mu_) {
     . '","context":"' . $list_context_id[mktime(0, 0, 0, 1, 4, 2018)]
     . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018) . '"}';
   error_log(getmypid() . ' TASKS SOCCER : ' . print_r($list_add_task, TRUE));
-  
+
   return $list_add_task;
 }
 
@@ -311,17 +311,17 @@ function get_task_culturecenter($mu_) {
 
   // Get Folders
   $folder_id_private = $mu_->get_folder_id('PRIVATE');
-  
+
   // Get Contexts
   $list_context_id = $mu_->get_contexts();
-  
+
   $y = date('Y');
   $m = date('n');
 
   $list_add_task = [];
   for ($j = 0; $j < 2; $j++) {
     $url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=' . $y . '&mon=' . $m;
-    
+
     $res = $mu_->get_contents($url);
     $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 
@@ -369,10 +369,10 @@ function get_task_highway($mu_) {
 
   // Get Folders
   $folder_id_private = $mu_->get_folder_id('PRIVATE');
-  
+
   // Get Contexts
   $list_context_id = $mu_->get_contexts();
-  
+
   $url = 'https://www.w-nexco.co.jp/traffic_info/construction/traffic.php?fdate='
     . date('Ymd', strtotime('+1 day'))
     . '&tdate='
@@ -382,13 +382,13 @@ function get_task_highway($mu_) {
     . '&road%5B%5D=1222&road%5B%5D=1231&road%5B%5D=234D&road%5B%5D=1232&road%5B%5D=1260';
 
   $res = $mu_->get_contents($url);
-  
+
   $tmp = explode('<!--工事日程順-->', $res);
   $tmp = explode('<table cellspacing="0" summary="" class="lb05">', $tmp[0]);
   $tmp = explode('<th>備考</th>', $tmp[1]);
-  
+
   $rc = preg_match_all('/<tr.*?>' . str_repeat('.*?<td.*?>(.+?)<\/td>', 5) . '.+?<\/tr>/s', $tmp[1], $matches, PREG_SET_ORDER);
-  
+
   $list_add_task = [];
   $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"HIGHWAY","folder":"'
     . $folder_id_private . '"}';
@@ -400,7 +400,7 @@ function get_task_highway($mu_) {
       $yyyy++;
     }
     $timestamp = mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy);
-  
+
     $tmp = $matches[$i];
     $tmp = date('m/d', $timestamp) . ' ★ ' . $tmp[4] . ' ' . $tmp[2] . ' ' . $tmp[3] . ' ' . $tmp[5] . ' ' . $tmp[1];
     $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
@@ -408,7 +408,7 @@ function get_task_highway($mu_) {
     $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
     $list_add_task[] = $tmp;
   }
-  
+
   error_log(getmypid() . ' TASKS HIGHWAY : ' . print_r($list_add_task, TRUE));
 
   return $list_add_task;
