@@ -19,4 +19,8 @@ $tmp = explode('<table cellspacing="0" summary="" class="lb05">', $tmp[0]);
 $tmp = $tmp[1];
 
 error_log($tmp);
+
+$rc = preg_match_all('/<tr.*?>(.+?)<\/tr>/', $tmp, $matches, PREG_SET_ORDER);
+
+error_log(print_r($matches, TRUE));
 ?>
