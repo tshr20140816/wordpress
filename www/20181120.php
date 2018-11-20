@@ -19,7 +19,7 @@ $tmp = explode('<table cellspacing="0" summary="" class="lb05">', $tmp[0]);
 $tmp = explode('<th>備考</th>', $tmp[1]);
 $tmp = $tmp[1];
 
-error_log($tmp);
+//error_log($tmp);
 
 $rc = preg_match_all('/<tr.*?>(.+?)<\/tr>/s', $tmp, $matches, PREG_SET_ORDER);
 
