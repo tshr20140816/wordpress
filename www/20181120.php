@@ -16,5 +16,7 @@ $res = $mu->get_contents($url);
 
 $tmp = explode('h3 class="accent lb10">', $res);
 
+array_shift($tmp);
+
 error_log(print_r($tmp, TRUE));
 ?>
