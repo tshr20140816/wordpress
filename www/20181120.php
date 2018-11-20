@@ -35,6 +35,9 @@ for ($i = 0; $i < count($matches); $i++) {
     $yyyy++;
   }
   $timestamp = mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy);
-  // error_log(date('Ymd', mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy)));
+  
+  // 4 2 3 5 1
+  $tmp = $matches[$i][4] . ' ' . $matches[$i][2] . ' ' . $matches[$i][3] . ' ' . $matches[$i][5] . ' ' . $matches[$i][1];
+  error_log($tmp);
 }
 ?>
