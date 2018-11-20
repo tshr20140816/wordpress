@@ -21,7 +21,7 @@ $tmp = $tmp[1];
 
 //error_log($tmp);
 
-$rc = preg_match_all('/<tr.*?><td.*?>(.+?)</td><td.*?>(.+?)</td><td.*?>(.+?)</td><td.*?>(.+?)</td><td.*?>(.+?)</td>(.+?)<\/tr>/s', $tmp, $matches, PREG_SET_ORDER);
+$rc = preg_match_all('/<tr.*?><td.*?>(.+?)<\/td><td.*?>(.+?)<\/td><td.*?>(.+?)<\/td><td.*?>(.+?)<\/td><td.*?>(.+?)<\/td>(.+?)<\/tr>/s', $tmp, $matches, PREG_SET_ORDER);
 
 error_log(print_r($matches, TRUE));
 
