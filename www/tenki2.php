@@ -142,6 +142,9 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
+// High Way Tasks
+$list_add_task = array_merge($list_add_task, get_task_highway($mu));
+
 // Soccer Tasks
 $list_add_task = array_merge($list_add_task, get_task_soccer($mu));
   
