@@ -128,7 +128,10 @@ $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   // error_log($pid . ' ' . $i . ' ' . print_r($tasks[$i], TRUE));
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'WEATHER2' || $tasks[$i]['tag'] == 'SOCCER' || $tasks[$i]['tag'] == 'CULTURECENTER') {
+    if ($tasks[$i]['tag'] == 'WEATHER2'
+        || $tasks[$i]['tag'] == 'SOCCER'
+        || $tasks[$i]['tag'] == 'CULTURECENTER'
+        || $tasks[$i]['tag'] == 'HIGHWAY') {
       $list_delete_task[] = $tasks[$i]['id'];
     } else if ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
       if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_add_task)) {
@@ -355,6 +358,55 @@ function get_task_culturecenter($mu_) {
     . '","context":"' . $list_context_id[mktime(0, 0, 0, 1, 4, 2018)]
     . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018) . '"}';
   error_log(getmypid() . ' TASKS CULTURECENTER : ' . print_r($list_add_task, TRUE));
+
+  return $list_add_task;
+}
+
+function get_task_highway($mu_) {
+
+  // Get Folders
+  $folder_id_private = $mu_->get_folder_id('PRIVATE');
+  
+  // Get Contexts
+  $list_context_id = $mu_->get_contexts();
+  
+  $url = 'https://www.w-nexco.co.jp/traffic_info/construction/traffic.php?fdate='
+    . date('Ymd', strtotime('+1 day'))
+    . '&tdate='
+    . date('Ymd', strtotime('+14 day'))
+    . '&ak=1&ac=1&kisei%5B%5D=901&dirc%5B%5D=1&dirc%5B%5D=2&order=2&ronarrow=1'
+    . '&road%5B%5D=1011&road%5B%5D=1912&road%5B%5D=1020&road%5B%5D=225A&road%5B%5D=1201'
+    . '&road%5B%5D=1222&road%5B%5D=1231&road%5B%5D=234D&road%5B%5D=1232&road%5B%5D=1260';
+
+  $res = $mu->get_contents($url);
+  
+  $tmp = explode('<!--工事日程順-->', $res);
+  $tmp = explode('<table cellspacing="0" summary="" class="lb05">', $tmp[0]);
+  $tmp = explode('<th>備考</th>', $tmp[1]);
+  
+  $rc = preg_match_all('/<tr.*?>' . str_repeat('.*?<td.*?>(.+?)<\/td>', 5) . '.+?<\/tr>/s', $tmp[1], $matches, PREG_SET_ORDER);
+  
+  $list_add_task = [];
+  $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"HIGHWAY","folder":"'
+    . $folder_id_private . '"}';
+  for ($i = 0; $i < count($matches); $i++) {
+    $yyyy = (int)date('Y');
+    $tmp = explode('日', $matches[$i][4]);
+    $tmp = explode('月', $tmp[0]);
+    if (date('m') == '12' && (int)$tmp[0] == 1) {
+      $yyyy++;
+    }
+    $timestamp = mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy);
+  
+    $tmp = $matches[$i];
+    $tmp = date('m/d', $timestamp) . ' ' . $tmp[4] . ' ' . $tmp[2] . ' ' . $tmp[3] . ' ' . $tmp[5] . ' ' . $tmp[1];
+    $tmp = str_replace('__TITLE__', $tmp1, $add_task_template);
+    $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
+    $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
+    $list_add_task[] = $tmp;
+  }
+  
+  error_log(getmypid() . ' TASKS HIGHWAY : ' . print_r($list_add_task, TRUE));
 
   return $list_add_task;
 }
