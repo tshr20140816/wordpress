@@ -12,6 +12,9 @@ $url = 'https://www.w-nexco.co.jp/traffic_info/construction/traffic.php?fdate='
 
 $res = $mu->get_contents($url);
 
-error_log($res);
+//<h3 class="accent lb10">
 
+$tmp = explode('h3 class="accent lb10">', $res);
+
+error_log(print_r($tmp, TRUE));
 ?>
