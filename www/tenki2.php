@@ -402,7 +402,7 @@ function get_task_highway($mu_) {
     $timestamp = mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy);
   
     $tmp = $matches[$i];
-    $tmp = date('m/d', $timestamp) . ' ' . $tmp[4] . ' ' . $tmp[2] . ' ' . $tmp[3] . ' ' . $tmp[5] . ' ' . $tmp[1];
+    $tmp = date('m/d', $timestamp) . ' ★ ' . $tmp[4] . ' ' . $tmp[2] . ' ' . $tmp[3] . ' ' . $tmp[5] . ' ' . $tmp[1];
     $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
     $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
     $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
