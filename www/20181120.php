@@ -2,6 +2,8 @@
 
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
+$mu = new MyUtils();
+
 $yyyy = '2018';
 $mm = '12';
 
