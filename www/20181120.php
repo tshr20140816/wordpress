@@ -20,7 +20,7 @@ $tmp = $tmp[1];
 
 error_log($tmp);
 
-$rc = preg_match_all('/<tr.*?>(.+?)<\/tr>/', $tmp, $matches, PREG_SET_ORDER);
+$rc = preg_match_all('/<tr.*?>(.+?)<\/tr>/s', $tmp, $matches, PREG_SET_ORDER);
 
 error_log(print_r($matches, TRUE));
 ?>
