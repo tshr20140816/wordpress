@@ -381,7 +381,7 @@ function get_task_highway($mu_) {
     . '&road%5B%5D=1011&road%5B%5D=1912&road%5B%5D=1020&road%5B%5D=225A&road%5B%5D=1201'
     . '&road%5B%5D=1222&road%5B%5D=1231&road%5B%5D=234D&road%5B%5D=1232&road%5B%5D=1260';
 
-  $res = $mu->get_contents($url);
+  $res = $mu_->get_contents($url);
   
   $tmp = explode('<!--工事日程順-->', $res);
   $tmp = explode('<table cellspacing="0" summary="" class="lb05">', $tmp[0]);
