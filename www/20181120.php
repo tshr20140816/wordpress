@@ -34,6 +34,6 @@ for ($i = 0; $i < count($matches); $i++) {
   if (date('m') == '12' && (int)$tmp[0] == 1) {
     $yyyy++;
   }
-  error_log(date('Ymd', mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy));
+  error_log(date('Ymd', mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy)));
 }
 ?>
