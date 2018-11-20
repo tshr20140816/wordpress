@@ -23,10 +23,10 @@ $tmp = $tmp[1];
 
 $rc = preg_match_all('/<tr.*?>' . str_repeat('.*?<td.*?>(.+?)<\/td>', 5) . '.+?<\/tr>/s', $tmp, $matches, PREG_SET_ORDER);
 
-// error_log(print_r($matches, TRUE));
+error_log(print_r($matches, TRUE));
 
 for ($i = 0; $i < count($matches); $i++) {
-  //$tmp = $matches[$i];
+
   $tmp = explode('日', $matches[$i][4]);
   $tmp = explode('月', $tmp[0]);
   //error_log(print_r($tmp, TRUE));
@@ -34,6 +34,7 @@ for ($i = 0; $i < count($matches); $i++) {
   if (date('m') == '12' && (int)$tmp[0] == 1) {
     $yyyy++;
   }
-  error_log(date('Ymd', mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy)));
+  $timestamp = mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy);
+  // error_log(date('Ymd', mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy)));
 }
 ?>
