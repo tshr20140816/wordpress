@@ -16,6 +16,8 @@ $res = $mu->get_contents(
    CURLOPT_POSTFIELDS => http_build_query($post_data),
   ]);
 
+$res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
+
 error_log($res);
 
 ?>
