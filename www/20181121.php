@@ -8,6 +8,7 @@ $post_data = ['year' => '2018',
               'month' => '11',
               'day' => '30',
               'id' => getenv('AREA_ID'),
+              'town' => getenv('AREA_ID'),
               'twil' => '0'];
 
 $res = $mu->get_contents(
