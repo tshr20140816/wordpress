@@ -29,9 +29,7 @@ function get_task_highway($mu_) {
   array_pop($tmp);
   
   error_log(print_r($tmp, TRUE));
-  
-  return;
-  
+    
   $list_add_task = [];
   $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER2","folder":"'
     . $folder_id_label . '"}';
