@@ -28,7 +28,7 @@ function get_task_highway($mu_) {
   array_shift($tmp);
   array_pop($tmp);
   
-  error_log($res);
+  error_log(print_r($tmp, TRUE));
   
   return;
   
