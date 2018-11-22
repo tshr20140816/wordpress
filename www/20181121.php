@@ -21,7 +21,7 @@ array_pop($tmp);
 //error_log(print_r($tmp, TRUE));
 
 for ($i = 0; $i < count($tmp); $i++) {
-  $rc = preg_match('/<tr><td.*?>' . substr(' ' . date('j', $timestamp), -2) . '</td>/', $tmp[$i]);
+  $rc = preg_match('/<tr><td.*?>' . substr(' ' . date('j', $timestamp), -2) . '<\/td>/', $tmp[$i]);
   if ($rc == 1) {
     error_log($tmp[$i]);
     break;
