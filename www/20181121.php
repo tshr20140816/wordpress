@@ -18,12 +18,13 @@ $tmp = explode('</tr>', $tmp[0]);
 array_shift($tmp);
 array_pop($tmp);
 
-//error_log(print_r($tmp, TRUE));
-
 for ($i = 0; $i < count($tmp); $i++) {
   $rc = preg_match('/<tr><td.*?>' . substr(' ' . date('j', $timestamp), -2) . '<\/td>/', $tmp[$i]);
   if ($rc == 1) {
     error_log($tmp[$i]);
+    $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
+    error_log('日の出 : '  trim($matches[1]));
+    error_log('日の入 : '  trim($matches[2]));
     break;
   }
 }
