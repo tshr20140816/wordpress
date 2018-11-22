@@ -146,7 +146,7 @@ error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 $list_add_task = array_merge($list_add_task, get_task_sun($mu));
 
 // Moon Tasks
-$list_add_task = array_merge($list_add_task, get_task_sun($mu));
+$list_add_task = array_merge($list_add_task, get_task_moon($mu));
 
 // High Way Tasks
 $list_add_task = array_merge($list_add_task, get_task_highway($mu));
