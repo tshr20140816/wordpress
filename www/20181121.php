@@ -23,7 +23,7 @@ for ($i = 0; $i < count($tmp); $i++) {
   if ($rc == 1) {
     error_log($tmp[$i]);
     $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
-    error_log('日の出 : ' . trim($matches[1]));
+    error_log('日の出 : 0' . trim($matches[1]));
     error_log('日の入 : ' . trim($matches[2]));
     break;
   }
