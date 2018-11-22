@@ -4,28 +4,52 @@ include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $mu = new MyUtils();
 
-$timestamp = strtotime('+1 day');
-$yyyy = date('Y', $timestamp);
-$mm = date('m', $timestamp);
+get_task_highway($mu);
 
-$res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html');
+function get_task_highway($mu_) {
+  
+  // Get Folders
+  $folder_id_label = $mu_->get_folder_id('LABEL');
+  // Get Contexts
+  $list_context_id = $mu_->get_contexts();
+  
+  $timestamp = strtotime('+1 day');
+  $yyyy = date('Y', $timestamp);
+  $mm = date('m', $timestamp);
 
-$res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
+  $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html');
 
-$tmp = explode('<table ', $res);
-$tmp = explode('</table>', $tmp[1]);
-$tmp = explode('</tr>', $tmp[0]);
-array_shift($tmp);
-array_pop($tmp);
+  $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
-for ($i = 0; $i < count($tmp); $i++) {
-  $rc = preg_match('/<tr><td.*?>' . substr(' ' . date('j', $timestamp), -2) . '<\/td>/', $tmp[$i]);
-  if ($rc == 1) {
-    error_log($tmp[$i]);
-    $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
-    error_log('日の出 : 0' . trim($matches[1]));
-    error_log('日の入 : ' . trim($matches[2]));
-    break;
+  $tmp = explode('<table ', $res);
+  $tmp = explode('</table>', $tmp[1]);
+  $tmp = explode('</tr>', $tmp[0]);
+  array_shift($tmp);
+  array_pop($tmp);
+  
+  $list_add_task = [];
+  $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER2","folder":"'
+    . $folder_id_label . '"}';
+  for ($i = 0; $i < count($tmp); $i++) {
+    $rc = preg_match('/<tr><td.*?>' . substr(' ' . date('j', $timestamp), -2) . '<\/td>/', $tmp[$i]);
+    if ($rc == 1) {
+      $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
+      
+      $tmp = date('m/d', $timestamp) . ' 0' . trim($matches[1] . ' 日の出');
+      $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
+      $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
+      $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
+      $list_add_task[] = $tmp;
+      
+      $tmp = date('m/d', $timestamp) . ' ' . trim($matches[2] . ' 日の入り');
+      $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
+      $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
+      $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
+      $list_add_task[] = $tmp;
+      break;
+    }
   }
+  error_log(getmypid() . ' SUN : ' . print_r($list_add_task, TRUE));
+  return $list_add_task;
 }
 ?>
