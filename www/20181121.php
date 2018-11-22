@@ -38,13 +38,13 @@ function get_task_moon($mu_) {
       $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
       error_log(print_r($matches, TRUE));
 
-      $tmp = date('m/d', $timestamp) . ' 0' . trim($matches[1]) . ' 月の出';
+      $tmp = date('m/d', $timestamp) . ' ' . substr('0' . trim($matches[1]), -5) . ' 月の出';
       $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
       $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
       $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
       $list_add_task[] = $tmp;
       
-      $tmp = date('m/d', $timestamp) . ' ' . trim($matches[2]) . ' 月の入り';
+      $tmp = date('m/d', $timestamp) . ' ' . substr('0' . trim($matches[2]), -5) . ' 月の入り';
       $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
       $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
       $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
