@@ -4,16 +4,15 @@ include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $mu = new MyUtils();
 
-get_task_highway($mu);
+get_task_moon($mu);
 
-function get_task_highway($mu_) {
-  
-  /*
+function get_task_moon($mu_) {
+
   // Get Folders
   $folder_id_label = $mu_->get_folder_id('LABEL');
   // Get Contexts
   $list_context_id = $mu_->get_contexts();
-  */
+
   $timestamp = strtotime('+1 day');
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
@@ -38,23 +37,23 @@ function get_task_highway($mu_) {
     if ($rc == 1) {
       $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
       error_log(print_r($matches, TRUE));
-      /*
-      $tmp = date('m/d', $timestamp) . ' 0' . trim($matches[1] . ' 日の出');
+
+      $tmp = date('m/d', $timestamp) . ' 0' . trim($matches[1]) . ' 月の出';
       $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
       $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
       $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
       $list_add_task[] = $tmp;
       
-      $tmp = date('m/d', $timestamp) . ' ' . trim($matches[2] . ' 日の入り');
+      $tmp = date('m/d', $timestamp) . ' ' . trim($matches[2]) . ' 月の入り';
       $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
       $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
       $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
       $list_add_task[] = $tmp;
-      */
+
       break;
     }
   }
-  // error_log(getmypid() . ' SUN : ' . print_r($list_add_task, TRUE));
-  // return $list_add_task;
+  error_log(getmypid() . ' MOON : ' . print_r($list_add_task, TRUE));
+  return $list_add_task;
 }
 ?>
