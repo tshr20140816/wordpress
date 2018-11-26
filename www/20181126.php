@@ -18,7 +18,7 @@ for ($i = 0; $i < count($headers); $i++) {
   error_log(trim(strip_tags($headers[$i])));
 }
 
-$rc = preg_match_all('/<tr>.*?<td.*?>(.+?)<\/td>.*?' . str_repeat('<td.*?>(.+?)<\/td>', 8) . '.+?<\/tr>/s'
+$rc = preg_match_all('/<tr>.*?<td.*?>(.+?)<\/td>.*?' . str_repeat('<td.*?>(.+?)<\/td>', count($headers)) . '.+?<\/tr>/s'
                      , $tmp[0], $matches, PREG_SET_ORDER);
                      
 error_log(print_r($matches, TRUE));
