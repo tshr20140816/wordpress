@@ -15,9 +15,11 @@ $tmp1 = explode('</tr>', $tmp[0]);
 
 error_log($tmp1[0]);
 
-$rc = mb_substr_count($tmp1[0], '</td>');
+//$rc = mb_substr_count($tmp1[0], '</td>');
+//error_log($rc);
 
-error_log($rc);
+$tmp1 = explode('</td>', $tmp1[0]);
+error_log(print_r($tmp1, TRUE));
 
 /*
 $rc = preg_match_all('/<tr>(.*?)<td(.*?)>(.+?)<\/td>(.*?)' . str_repeat('<td(.*?)>(.+?)<\/td>', 8) . '(.+?)<\/tr>/s'
