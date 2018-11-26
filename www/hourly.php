@@ -38,8 +38,8 @@ for ($i = 0; $i < count($matches); $i++) {
   $temp = $matches[$i][6];
   $rain = $matches[$i][8];
   $wind = $matches[$i][10] . $matches[$i][12];
-  $humi = $matches[$i][16];
-  $pres = $matches[$i][18];
+  $humi = $matches[$i][18];
+  $pres = $matches[$i][20];
   if ($temp == '&nbsp;') {
     continue;
   }
