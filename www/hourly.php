@@ -34,7 +34,6 @@ $headers = explode('</td>', $tmp1[0]);
 error_log($pid . ' $headers : ' . print_r($headers, TRUE));
 
 for ($i = 0; $i < count($headers); $i++) {
-  error_log(trim(strip_tags($headers[$i])));
   switch (trim(strip_tags($headers[$i]))) {
     case '気温':
       $index_temp = $i + 2;
