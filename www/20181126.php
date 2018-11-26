@@ -39,7 +39,7 @@ array_shift($matches);
 
 error_log(print_r($matches, TRUE));
 
-$title
+$title = '';
 for ($i = 0; $i < count($matches); $i++) {
   $hour = $matches[$i][0];
   $temp = $matches[$i][$index_temp];
