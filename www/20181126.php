@@ -20,7 +20,9 @@ for ($i = 0; $i < count($headers); $i++) {
 
 $rc = preg_match_all('/<tr>.*?<td.*?>(.+?)<\/td>.*?' . str_repeat('<td.*?>(.+?)<\/td>', count($headers) - 1) . '.+?<\/tr>/s'
                      , $tmp[0], $matches, PREG_SET_ORDER);
-                     
+
+array_shift($matches);
+
 error_log(print_r($matches, TRUE));
 
 ?>
