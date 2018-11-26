@@ -22,7 +22,7 @@ $headers = explode('</td>', $tmp1[0]);
 error_log(print_r($headers, TRUE));
 
 for ($i = 0; $i < count($headers); $i++) {
-  error_log(strip_tags($headers[$i]));
+  error_log(trim(strip_tags($headers[$i])));
 }
 
 /*
