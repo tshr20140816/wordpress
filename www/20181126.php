@@ -41,7 +41,7 @@ error_log(print_r($matches, TRUE));
 
 $title = '';
 for ($i = 0; $i < count($matches); $i++) {
-  $hour = $matches[$i][0];
+  $hour = $matches[$i][1];
   $temp = $matches[$i][$index_temp];
   $rain = $matches[$i][$index_rain];
   $wind = $matches[$i][$index_wind] . $matches[$i][$index_wind_speed];
