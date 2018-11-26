@@ -18,17 +18,17 @@ for ($i = 0; $i < count($headers); $i++) {
   error_log(trim(strip_tags($headers[$i])));
   switch (trim(strip_tags($headers[$i]))) {
     case '気温':
-      $index_temp = $i + 1;
+      $index_temp = $i + 2;
     case '降水量':
-      $index_rain = $i + 1;
+      $index_rain = $i + 2;
     case '風向':
-      $index_wind = $i + 1;
+      $index_wind = $i + 2;
     case '風速':
-      $index_wind_speed = $i + 1;
+      $index_wind_speed = $i + 2;
     case '湿度':
-      $index_humi = $i + 1;
+      $index_humi = $i + 2;
     case '気圧':
-      $index_pres = $i + 1;
+      $index_pres = $i + 2;
   }
 }
 
