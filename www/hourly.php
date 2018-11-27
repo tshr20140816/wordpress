@@ -150,7 +150,7 @@ function get_task_rainfall($mu_) {
   $list_add_task = [];
     
   $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
-  . '&lon=' . getenv('LONGITUDE') . '&=lat=' . getenv('LATITUDE');
+  . '&lon=' . getenv('LONGITUDE') . '&lat=' . getenv('LATITUDE');
   $res = $mu_->get_contents($url);
   $data = json_decode($res, TRUE);
   error_log(getmypid() . ' $data : ' . print_r($data, TRUE));
