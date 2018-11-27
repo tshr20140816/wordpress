@@ -13,99 +13,15 @@ $mu = new MyUtils();
 // Access Token
 $access_token = $mu->get_access_token();
 
-// Get Contexts
-$list_context_id = $mu->get_contexts();
-
 // Get Folders
-$folder_id_label = $mu->get_folder_id('LABEL');
 $folder_id_work = $mu->get_folder_id('WORK');
 
 $list_add_task = [];
 
 // amedas
-
-/*
-$res = $mu->get_contents('http://www.jma.go.jp/jp/amedas_h/today-' . getenv('AMEDAS') . '.html');
-
-$tmp = explode('">時刻</td>', $res);
-$tmp = explode('</table>', $tmp[1]);
-
-$tmp1 = explode('</tr>', $tmp[0]);
-$headers = explode('</td>', $tmp1[0]);
-error_log($pid . ' $headers : ' . print_r($headers, TRUE));
-
-for ($i = 0; $i < count($headers); $i++) {
-  switch (trim(strip_tags($headers[$i]))) {
-    case '気温':
-      $index_temp = $i + 2;
-    case '降水量':
-      $index_rain = $i + 2;
-    case '風向':
-      $index_wind = $i + 2;
-    case '風速':
-      $index_wind_speed = $i + 2;
-    case '湿度':
-      $index_humi = $i + 2;
-    case '気圧':
-      $index_pres = $i + 2;
-  }
-}
-
-$rc = preg_match_all('/<tr>.*?<td.*?>(.+?)<\/td>.*?' . str_repeat('<td.*?>(.+?)<\/td>', count($headers) - 1) . '.+?<\/tr>/s'
-                     , $tmp[0], $matches, PREG_SET_ORDER);
-array_shift($matches);
-
-$title = '';
-for ($i = 0; $i < count($matches); $i++) {
-  $hour = $matches[$i][1];
-  $temp = $matches[$i][$index_temp];
-  $rain = $matches[$i][$index_rain];
-  $wind = $matches[$i][$index_wind] . $matches[$i][$index_wind_speed];
-  $humi = $matches[$i][$index_humi];
-  $pres = $matches[$i][$index_pres];
-  if ($temp == '&nbsp;') {
-    continue;
-  }
-  error_log("${pid} ${hour}時 ${temp}℃ ${humi}% ${rain}mm ${wind}m/s ${pres}hPa");
-  $title = "${hour}時 ${temp}℃ ${humi}% ${rain}mm ${wind}m/s ${pres}hPa";
-}
-
-if ($title != '') {
-  $list_add_task[] = '{"title":"' . $title
-    . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
-    . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
-    . '","tag":"WEATHER3","folder":"' . $folder_id_label . '"}';
-}
-*/
 $list_add_task = array_merge($list_add_task, get_task_amedas($mu));
   
 // Rainfall
-
-/*
-$url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
-  . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
-$res = $mu->get_contents($url);
-
-$data = json_decode($res, TRUE);
-error_log($pid . ' $data : ' . print_r($data, TRUE));
-$data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
-
-$list = [];
-for ($i = 0; $i < count($data); $i++) {
-  if ($data[$i]['Rainfall'] != '0') {
-    $list[] = substr($data[$i]['Date'], 8) . ' ' . $data[$i]['Rainfall'];
-  }
-}
-if (count($list) > 0) {
-  $tmp = date('H:i', strtotime('+9 hours')) . ' RAIN INFO : ' . implode(' ', $list);
-} else {
-  $tmp = date('H:i', strtotime('+9 hours')) . ' NO RAIN';
-}
-$list_add_task[] = '{"title":"' . $tmp
-    . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
-    . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
-    . '","tag":"WEATHER3","folder":"' . $folder_id_label . '"}';
-*/
 $list_add_task = array_merge($list_add_task, get_task_rainfall($mu));
 
 // Get Tasks
