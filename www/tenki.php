@@ -206,6 +206,7 @@ if (count($list_add_task) == 0) {
 
 // quota
 
+/*
 $api_key = getenv('API_KEY');
 $url = 'https://api.heroku.com/account';
 
@@ -244,6 +245,9 @@ $list_add_task[] = '{"title":"' . $account . ' : ' . $tmp . $update_marker
   . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
   . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
   . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
+*/
+$list_add_task = [];
+$list_add_task = array_merge($list_add_task, get_task_quota($mu));
 
 // Weather Information (Guest)
 
