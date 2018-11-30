@@ -18,8 +18,8 @@ $mu = new MyUtils();
 $code = $_GET['code'];
 $state = $_GET['state'];
 
-error_log("${pid} $code : ${code}");
-error_log("${pid} $state : ${state}");
+error_log($pid . ' ' . $code . ' : ${code}');
+error_log($pid . ' ' . $state . ' : ${state}');
 
 $post_data = ['grant_type' => 'authorization_code', 'code' => $code];
 
@@ -30,7 +30,7 @@ $res = $mu->get_contents(
    CURLOPT_POSTFIELDS => http_build_query($post_data),
   ]);
 
-error_log("${pid} $res : ${res}");
+error_log($pid . ' ' . $res . ' : ${res}');
 
 $params = json_decode($res, TRUE);
 
