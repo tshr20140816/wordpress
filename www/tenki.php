@@ -352,7 +352,7 @@ function get_task_quota($mu_) {
   $account = explode('@', $data['email'])[0];
   $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
 
-  $res = $mu->get_contents(
+  $res = $mu_->get_contents(
     $url,
     [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3.account-quotas',
                             "Authorization: Bearer ${api_key}",
