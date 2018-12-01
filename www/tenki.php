@@ -206,46 +206,6 @@ if (count($list_add_task) == 0) {
 
 // quota
 
-/*
-$api_key = getenv('API_KEY');
-$url = 'https://api.heroku.com/account';
-
-$res = $mu->get_contents(
-  $url,
-  [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
-                          "Authorization: Bearer ${api_key}",
-                         ]]);
-
-$data = json_decode($res, TRUE);
-error_log($pid . ' $data : ' . print_r($data, TRUE));
-$account = explode('@', $data['email'])[0];
-$url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
-
-$res = $mu->get_contents(
-  $url,
-  [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3.account-quotas',
-                          "Authorization: Bearer ${api_key}",
-                         ]]);
-
-$data = json_decode($res, TRUE);
-error_log($pid . ' $data : ' . print_r($data, TRUE));
-
-$dyno_used = (int)$data['quota_used'];
-$dyno_quota = (int)$data['account_quota'];
-
-error_log($pid . ' $dyno_used : ' . $dyno_used);
-error_log($pid . ' $dyno_quota : ' . $dyno_quota);
-
-$tmp = $dyno_quota - $dyno_used;
-$tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
-
-$update_marker = $mu->to_small_size(' _' . date('Ymd His', strtotime('+ 9 hours')) . '_');
-
-$list_add_task[] = '{"title":"' . $account . ' : ' . $tmp . $update_marker
-  . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
-  . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
-  . '","tag":"WEATHER","folder":"__FOLDER_ID__"}';
-*/
 $list_add_task = [];
 $list_add_task = array_merge($list_add_task, get_task_quota($mu));
 
