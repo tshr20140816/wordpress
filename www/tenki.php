@@ -291,6 +291,35 @@ $res = $mu->get_contents(
 
 exit();
 
+function get_holiday($mu_) {
+
+  $start_yyyy = date('Y');
+  $start_m = date('n');
+  $finish_yyyy = date('Y', strtotime('+1 month'));
+  $finish_m = date('n', strtotime('+1 month'));
+
+  $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m
+    . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
+    . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
+
+  $res = $mu_->get_contents($url);
+  $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
+
+  $tmp = explode("\n", $res);
+  array_shift($tmp);
+  array_pop($tmp);
+
+  $list_holiday = [];
+  for ($i = 0; $i < count($tmp); $i++) {
+    $tmp1 = explode(',', $tmp[$i]);
+    $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
+    $list_holiday[$timestamp] = $tmp1[7];
+  }
+  error_log(getmypid() . ' $list_holiday : ' . print_r($list_holiday, TRUE));
+
+  return $list_holiday;
+}
+
 function get_task_quota($mu_) {
   
   // Get Folders
