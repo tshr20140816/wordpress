@@ -24,6 +24,9 @@ $list_add_task = array_merge($list_add_task, get_task_amedas($mu));
 // Rainfall
 $list_add_task = array_merge($list_add_task, get_task_rainfall($mu));
 
+// Quota
+$list_add_task = array_merge($list_add_task, get_task_quota($mu));
+  
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token
   . '&after=' . strtotime('-1 day');
@@ -180,6 +183,56 @@ function get_task_rainfall($mu_) {
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
   
   error_log(getmypid() . ' TASKS RAINFALL : ' . print_r($list_add_task, TRUE));
+  return $list_add_task;
+}
+
+function get_task_quota($mu_) {
+  
+  // Get Folders
+  $folder_id_label = $mu_->get_folder_id('LABEL');
+  // Get Contexts
+  $list_context_id = $mu_->get_contexts();
+  
+  $api_key = getenv('API_KEY');
+  $url = 'https://api.heroku.com/account';
+
+  $res = $mu_->get_contents(
+    $url,
+    [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
+                            "Authorization: Bearer ${api_key}",
+                           ]]);
+
+  $data = json_decode($res, TRUE);
+  error_log(getmypid() . ' $data : ' . print_r($data, TRUE));
+  $account = explode('@', $data['email'])[0];
+  $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
+
+  $res = $mu_->get_contents(
+    $url,
+    [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3.account-quotas',
+                            "Authorization: Bearer ${api_key}",
+                           ]]);
+
+  $data = json_decode($res, TRUE);
+  error_log(getmypid() . ' $data : ' . print_r($data, TRUE));
+
+  $dyno_used = (int)$data['quota_used'];
+  $dyno_quota = (int)$data['account_quota'];
+
+  error_log(getmypid() . ' $dyno_used : ' . $dyno_used);
+  error_log(getmypid() . ' $dyno_quota : ' . $dyno_quota);
+
+  $tmp = $dyno_quota - $dyno_used;
+  $tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
+
+  $update_marker = $mu_->to_small_size(' _' . date('Ymd His', strtotime('+ 9 hours')) . '_');
+
+  $list_add_task[] = '{"title":"' . $account . ' : ' . $tmp . $update_marker
+    . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
+    . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
+    . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+  
+  error_log(getmypid() . ' TASKS QUOTA : ' . print_r($list_add_task, TRUE));
   return $list_add_task;
 }
 ?>
