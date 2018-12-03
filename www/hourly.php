@@ -166,7 +166,7 @@ function get_task_rainfall($mu_) {
   $list = [];
   for ($i = 0; $i < count($data); $i++) {
     if ($data[$i]['Rainfall'] != '0') {
-      $list[] = substr($data[$i]['Date'], 8) . ' ' . $data[$i]['Rainfall'];
+      $list[] = $mu_->to_small_size(substr($data[$i]['Date'], 8)) . ' ' . $data[$i]['Rainfall'];
     }
   }
   if (count($list) > 0) {
