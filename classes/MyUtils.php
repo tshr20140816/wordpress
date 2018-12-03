@@ -268,7 +268,26 @@ __HEREDOC__;
     return $target_;
   }
   
-  function get_contents($url_, $options_ = NULL) {
+  function get_contents($url_, $options_ = NULL, $is_cache_search = FALSE) {
+    
+    if ($is_cache_search !== TRUE) {
+      return this->get_contents_nocache($url_, $options_);
+    }
+
+    $sql = <<< __HEREDOC__
+SELECT T1.url
+      ,T1.content
+      ,T1.update_time
+  FROM t_webcache T1
+ WHERE T1,url = :b_url
+__HEREDOC__;
+    
+    $pdo = $this->get_pdo();
+    
+    return NULL;
+  }
+  
+  function get_contents_nocache($url_, $options_ = NULL) {
     error_log(getmypid() . ' URL : ' . $url_);
     
     $options = [
