@@ -35,7 +35,7 @@ $tasks = json_decode($res, TRUE);
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'WEATHER3') {
+    if ($tasks[$i]['tag'] == 'HOURLY') {
       $list_delete_task[] = $tasks[$i]['id'];
     }
   }
@@ -132,7 +132,7 @@ function get_task_amedas($mu_) {
     $list_add_task[] = '{"title":"' . $title
       . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
-      . '","tag":"WEATHER3","folder":"' . $folder_id_label . '"}';
+      . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
   }
   
   error_log(getmypid() . ' TASKS AMEDAS : ' . print_r($list_add_task, TRUE));
@@ -177,7 +177,7 @@ function get_task_rainfall($mu_) {
   $list_add_task[] = '{"title":"' . $tmp
       . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
-      . '","tag":"WEATHER3","folder":"' . $folder_id_label . '"}';
+      . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
   
   error_log(getmypid() . ' TASKS RAINFALL : ' . print_r($list_add_task, TRUE));
   return $list_add_task;
