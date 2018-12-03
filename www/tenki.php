@@ -204,8 +204,6 @@ if (count($list_add_task) == 0) {
   exit();
 }
 
-$list_add_task = [];
-
 // Weather Information (Guest)
 
 $list_weather_guest_area = $mu->get_weather_guest_area();
