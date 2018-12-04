@@ -365,15 +365,22 @@ __HEREDOC__;
         curl_setopt_array($ch, $options_);
       }
       $res = curl_exec($ch);
-      error_log(print_r(curl_getinfo($ch), TRUE));
+      $info = curl_getinfo($ch);
+      error_log(print_r($info, TRUE));
       $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
       error_log(getmypid() . ' HTTP STATUS CODE : ' . $http_code);
       $filetime = curl_getinfo($ch, CURLINFO_FILETIME);
       error_log(getmypid() . ' FILE TIME : ' . print_r($filetime, TRUE));      
+      
+      $header = substr($res, 0, $info['header_size']);
+      error_log(getmypid() . ' HTTP  HEADER : ' . $header);   
+      $res = substr($res, $info['header_size']);
+      
       curl_close($ch);
       if ($http_code == '200') {
         break;
       }
+      
       
       error_log(getmypid() . ' $res : ' . $res);
       
