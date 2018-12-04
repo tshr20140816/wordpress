@@ -27,7 +27,7 @@ $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon
   . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
   . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-$res = $mu->get_contents($url);
+$res = $mu->get_contents($url, NULL, TRUE);
 $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
 $tmp = explode("\n", $res);
@@ -90,7 +90,7 @@ for ($j = 0; $j < $loop_count; $j++) {
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
 
-  $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html');
+  $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
 
   $tmp = explode('<table ', $res);
   $tmp = explode('</table>', $tmp[1]);
@@ -124,7 +124,7 @@ for ($j = 0; $j < $loop_count; $j++) {
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
 
-  $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html');
+  $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
 
   $tmp = explode('<table ', $res);
   $tmp = explode('</table>', $tmp[1]);
@@ -297,7 +297,7 @@ function get_holiday($mu_) {
     . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
     . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-  $res = $mu_->get_contents($url);
+  $res = $mu_->get_contents($url, NULL, TRUE);
   $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
   $tmp = explode("\n", $res);
