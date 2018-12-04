@@ -292,7 +292,9 @@ __HEREDOC__;
     $statement->execute([':b_url_base64' => $url_base64]);
     $result = $statement->fetchAll();
     
-    if (count($result) === 0 || $result['refresh_flag'] == '1') {
+    error_log(print_r($result, TRUE));
+    
+    if (count($result) === 0 || $result[0]['refresh_flag'] == '1') {
       $res = $this->get_contents_nocache($url_, $options_);
       $content_compress_base64 = base64_encode(gzencode($res, 9));
       
@@ -323,7 +325,7 @@ __HEREDOC__;
       error_log(getmypid() . ' INSERT $rc : ' . $rc);
     } else {
       error_log(getmypid() . ' CACHE HIT url : ' . $url_);
-      $res = gzdecode(base64_decode($result['content_compress_base64']));
+      $res = gzdecode(base64_decode($result[0]['content_compress_base64']));
     }
     $pdo = NULL;
     return $res;
