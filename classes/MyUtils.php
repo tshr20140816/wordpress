@@ -290,15 +290,14 @@ __HEREDOC__;
     $statement->execute([':b_url' => $url_]);
     $result = $statement->fetch();
     
-    $content = $result['content'];
-    $refresh_flag = $result['refresh_flag'];
+    error_log($result);
+    
+    //$content = $result['content'];
+    //$refresh_flag = $result['refresh_flag'];
     
     $pdo = NULL;
     
-    // return this->get_contents_nocache($url_, $options_);
-    // return NULL;
-    $res = $this->get_contents_nocache($url_, $options_);
-    return $res;
+    return $this->get_contents_nocache($url_, $options_);
   }
   
   function get_contents_nocache($url_, $options_ = NULL) {
