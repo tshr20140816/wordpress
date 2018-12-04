@@ -310,6 +310,7 @@ __HEREDOC__;
       CURLOPT_FOLLOWLOCATION => 1,
       CURLOPT_MAXREDIRS => 3,
       CURLOPT_SSL_FALSESTART => TRUE,
+      CURLOPT_FILETIME => TRUE,
     ];
     
     for ($i = 0; $i < 3; $i++) {
