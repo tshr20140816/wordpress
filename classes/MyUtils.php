@@ -322,7 +322,7 @@ __HEREDOC__;
                                  ':b_content_compress_base64' => $content_compress_base64]);
       error_log(getmypid() . ' INSERT $rc : ' . $rc);
     } else {
-      error_log(getmypid() . ' CACHE HIT url : ' . $url_);
+      error_log(getmypid() . ' (CACHE HIT) url : ' . $url_);
       $res = gzdecode(base64_decode($result[0]['content_compress_base64']));
     }
     $pdo = NULL;
