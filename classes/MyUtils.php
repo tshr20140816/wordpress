@@ -300,7 +300,9 @@ __HEREDOC__;
     
     $res = $this->get_contents_nocache($url_, $options_);
    
-    error_log(getmypid() . ' $res compress base64 : ' . base64_encode(gzencode($res, 9)));
+    error_log(getmypid() . ' $res len : ' . strlen($res));
+    error_log(getmypid() . ' $res len compress : ' . strlen(gzencode($res, 9)));
+    error_log(getmypid() . ' $res len base64 compress : ' . strlen(base64_encode(gzencode($res, 9))));
     
     return $res;
   }
