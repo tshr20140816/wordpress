@@ -310,7 +310,6 @@ __HEREDOC__;
       CURLOPT_FOLLOWLOCATION => 1,
       CURLOPT_MAXREDIRS => 3,
       CURLOPT_SSL_FALSESTART => TRUE,
-      CURLOPT_FILETIME => TRUE,
     ];
     
     for ($i = 0; $i < 3; $i++) {
@@ -322,6 +321,51 @@ __HEREDOC__;
       $res = curl_exec($ch);
       $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
       error_log(getmypid() . ' HTTP STATUS CODE : ' . $http_code);
+      curl_close($ch);
+      if ($http_code == '200') {
+        break;
+      }
+      
+      error_log(getmypid() . ' $res : ' . $res);
+      
+      if ($http_code != '503') {
+        break;
+      } else {
+        sleep(3);
+        error_log(getmypid() . ' RETRY URL : ' . $url_);
+      }
+    }
+
+    return $res;
+  }
+  
+  function get_contents2($url_, $options_ = NULL) {
+    error_log(getmypid() . ' URL : ' . $url_);
+    
+    $options = [
+      CURLOPT_URL => $url_,
+      CURLOPT_USERAGENT => getenv('USER_AGENT'),
+      CURLOPT_RETURNTRANSFER => TRUE,
+      CURLOPT_ENCODING => '',
+      CURLOPT_FOLLOWLOCATION => 1,
+      CURLOPT_MAXREDIRS => 3,
+      CURLOPT_SSL_FALSESTART => TRUE,
+      CURLOPT_HEADER => TRUE,
+      CURLOPT_FILETIME => TRUE,
+    ];
+    
+    for ($i = 0; $i < 3; $i++) {
+      $ch = curl_init();
+      curl_setopt_array($ch, $options);
+      if (is_null($options_) == FALSE) {
+        curl_setopt_array($ch, $options_);
+      }
+      $res = curl_exec($ch);
+      error_log(print_r(curl_getinfo($ch), TRUE));
+      $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+      error_log(getmypid() . ' HTTP STATUS CODE : ' . $http_code);
+      $filetime = curl_getinfo($ch, CURLINFO_FILETIME);
+      error_log(getmypid() . ' FILE TIME : ' . print_r($filetime, TRUE));      
       curl_close($ch);
       if ($http_code == '200') {
         break;
