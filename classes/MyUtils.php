@@ -292,8 +292,6 @@ __HEREDOC__;
     $statement->execute([':b_url_base64' => $url_base64]);
     $result = $statement->fetchAll();
     
-    error_log(print_r($result, TRUE));
-    
     if (count($result) === 0 || $result[0]['refresh_flag'] == '1') {
       $res = $this->get_contents_nocache($url_, $options_);
       $content_compress_base64 = base64_encode(gzencode($res, 9));
@@ -357,57 +355,6 @@ __HEREDOC__;
       if ($http_code == '200') {
         break;
       }
-      
-      error_log(getmypid() . ' $res : ' . $res);
-      
-      if ($http_code != '503') {
-        break;
-      } else {
-        sleep(3);
-        error_log(getmypid() . ' RETRY URL : ' . $url_);
-      }
-    }
-
-    return $res;
-  }
-  
-  function get_contents2($url_, $options_ = NULL) {
-    error_log(getmypid() . ' URL : ' . $url_);
-    
-    $options = [
-      CURLOPT_URL => $url_,
-      CURLOPT_USERAGENT => getenv('USER_AGENT'),
-      CURLOPT_RETURNTRANSFER => TRUE,
-      CURLOPT_ENCODING => '',
-      CURLOPT_FOLLOWLOCATION => 1,
-      CURLOPT_MAXREDIRS => 3,
-      CURLOPT_SSL_FALSESTART => TRUE,
-      CURLOPT_HEADER => TRUE,
-      CURLOPT_FILETIME => TRUE,
-    ];
-    
-    for ($i = 0; $i < 3; $i++) {
-      $ch = curl_init();
-      curl_setopt_array($ch, $options);
-      if (is_null($options_) == FALSE) {
-        curl_setopt_array($ch, $options_);
-      }
-      $res = curl_exec($ch);
-      $info = curl_getinfo($ch);
-      error_log(print_r($info, TRUE));
-      $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-      error_log(getmypid() . ' HTTP STATUS CODE : ' . $http_code);
-      $filetime = curl_getinfo($ch, CURLINFO_FILETIME);
-      error_log(getmypid() . ' FILE TIME : ' . print_r($filetime, TRUE));      
-      
-      $header = substr($res, 0, $info['header_size']);
-      error_log(getmypid() . ' HTTP  HEADER : ' . $header);   
-      $res = substr($res, $info['header_size']);
-      
-      curl_close($ch);
-      if ($http_code == '200') {
-        break;
-      }      
       
       error_log(getmypid() . ' $res : ' . $res);
       
