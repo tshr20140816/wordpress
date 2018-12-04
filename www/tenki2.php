@@ -181,7 +181,7 @@ function get_holiday($mu_) {
     . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
     . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-  $res = $mu_->get_contents($url);
+  $res = $mu_->get_contents($url, NULL, TRUE);
   $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
   $tmp = explode("\n", $res);
@@ -246,7 +246,7 @@ function get_sun($mu_) {
     $mm = date('m', $timestamp);
     error_log($pid . ' $yyyy : ' . $yyyy);
     error_log($pid . ' $mm : ' . $mm);
-    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html');
+    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
 
     $tmp = explode('<table ', $res);
     $tmp = explode('</table>', $tmp[1]);
