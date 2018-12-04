@@ -273,6 +273,8 @@ __HEREDOC__;
     if ($is_cache_search !== TRUE) {
       return $this->get_contents_nocache($url_, $options_);
     }
+    
+    $url_base64 = base64_encode($url_);
 
     $sql = <<< __HEREDOC__
 SELECT T1.url_base64
@@ -287,23 +289,43 @@ __HEREDOC__;
     
     $statement = $pdo->prepare($sql);
     
-    $statement->execute([':b_url_base64' => $url_]);
+    $statement->execute([':b_url_base64' => $url_base64]);
     $result = $statement->fetchAll();
     
-    error_log(getmypid() . ' $url base64 : ' . base64_encode($url_));
-    error_log(getmypid() . ' $result : ' . print_r($result, TRUE));
-    
-    //$content = $result['content'];
-    //$refresh_flag = $result['refresh_flag'];
-    
+    if (count($result) === 0 || $result['refresh_flag'] == '1') {
+      $res = $this->get_contents_nocache($url_, $options_);
+      $content_compress_base64 = base64_encode(gzencode($res, 9));
+      
+      $sql = <<< __HEREDOC__
+DELETE
+  FROM t_webcache
+ WHERE url_base64 = :b_url_base64
+__HEREDOC__;
+      
+      if (count($result) != 0) {
+        $statement = $pdo->prepare($sql);
+        $rc = $statement->execute([':b_url_base64' => $url_base64]);
+        error_log(getmypid() . ' DELETE $rc : ' . $rc);
+      }
+
+      $sql = <<< __HEREDOC__
+INSERT INTO t_webcache
+( url_base64
+ ,content_compress_base64
+) VALUES (
+  :b_url_base64
+ ,:b_content_compress_base64
+)
+__HEREDOC__;
+      $statement = $pdo->prepare($sql);
+      $rc = $statement->execute([':b_url_base64' => $url_base64,
+                                 ':b_content_compress_base64' => $content_compress_base64]);
+      error_log(getmypid() . ' INSERT $rc : ' . $rc);
+    } else {
+      error_log(getmypid() . ' CACHE HIT url : ' . $url_);
+      $res = gzdecode(base64_decode($result['content']));
+    }
     $pdo = NULL;
-    
-    $res = $this->get_contents_nocache($url_, $options_);
-   
-    error_log(getmypid() . ' $res len : ' . strlen($res));
-    error_log(getmypid() . ' $res len compress : ' . strlen(gzencode($res, 9)));
-    error_log(getmypid() . ' $res len base64 compress : ' . strlen(base64_encode(gzencode($res, 9))));
-    
     return $res;
   }
   
