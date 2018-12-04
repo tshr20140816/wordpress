@@ -290,6 +290,7 @@ __HEREDOC__;
     $statement->execute([':b_url_base64' => $url_]);
     $result = $statement->fetchAll();
     
+    error_log(getmypid() . ' $url base64 : ' . base64_encode($url));
     error_log(getmypid() . ' $result : ' . print_r($result, TRUE));
     
     //$content = $result['content'];
@@ -297,7 +298,11 @@ __HEREDOC__;
     
     $pdo = NULL;
     
-    return $this->get_contents_nocache($url_, $options_);
+    $res = $this->get_contents_nocache($url_, $options_);
+   
+    error_log(getmypid() . ' $res compress base64 : ' . base64_encode(gzencode($res, 9)));
+    
+    return $res;
   }
   
   function get_contents_nocache($url_, $options_ = NULL) {
