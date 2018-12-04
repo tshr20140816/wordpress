@@ -288,9 +288,9 @@ __HEREDOC__;
     $statement = $pdo->prepare($sql);
     
     $statement->execute([':b_url_base64' => $url_]);
-    $result = $statement->fetch();
+    $result = $statement->fetchAll();
     
-    error_log($result);
+    error_log(getmypid() . ' $result : ' . print_r($result, TRUE));
     
     //$content = $result['content'];
     //$refresh_flag = $result['refresh_flag'];
