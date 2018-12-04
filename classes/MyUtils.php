@@ -271,7 +271,9 @@ __HEREDOC__;
   function get_contents($url_, $options_ = NULL, $is_cache_search = FALSE) {
     
     if ($is_cache_search !== TRUE) {
-      return this->get_contents_nocache($url_, $options_);
+      // return this->get_contents_nocache($url_, $options_);
+      $res = $this->get_contents_nocache($url_, $options_);
+      return $res;
     }
 
     $sql = <<< __HEREDOC__
