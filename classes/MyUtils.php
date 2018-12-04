@@ -299,7 +299,7 @@ __HEREDOC__;
     
     // return this->get_contents_nocache($url_, $options_);
     // return NULL;
-    $res = this->get_contents_nocache($url_, $options_);
+    $res = $this->get_contents_nocache($url_, $options_);
     return $res;
   }
   
