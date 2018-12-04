@@ -275,19 +275,19 @@ __HEREDOC__;
     }
 
     $sql = <<< __HEREDOC__
-SELECT T1.url
-      ,T1.content
+SELECT T1.url_base64
+      ,T1.content_compress_base64
       ,T1.update_time
       ,CASE WHEN LOCALTIMESTAMP < T1.update_time + interval '1 days' THEN 0 ELSE 1 END refresh_flag
   FROM t_webcache T1
- WHERE T1,url = :b_url
+ WHERE T1.url_base64 = :b_url_base64
 __HEREDOC__;
     
     $pdo = $this->get_pdo();
     
     $statement = $pdo->prepare($sql);
     
-    $statement->execute([':b_url' => $url_]);
+    $statement->execute([':b_url_base64' => $url_]);
     $result = $statement->fetch();
     
     error_log($result);
