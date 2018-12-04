@@ -361,11 +361,9 @@ __HEREDOC__;
     for ($i = 0; $i < 3; $i++) {
       $ch = curl_init();
       curl_setopt_array($ch, $options);
-      /*
       if (is_null($options_) == FALSE) {
         curl_setopt_array($ch, $options_);
       }
-      */
       $res = curl_exec($ch);
       $info = curl_getinfo($ch);
       error_log(print_r($info, TRUE));
@@ -381,8 +379,7 @@ __HEREDOC__;
       curl_close($ch);
       if ($http_code == '200') {
         break;
-      }
-      
+      }      
       
       error_log(getmypid() . ' $res : ' . $res);
       
