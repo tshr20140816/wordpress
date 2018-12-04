@@ -290,7 +290,7 @@ __HEREDOC__;
     $statement->execute([':b_url_base64' => $url_]);
     $result = $statement->fetchAll();
     
-    error_log(getmypid() . ' $url base64 : ' . base64_encode($url));
+    error_log(getmypid() . ' $url base64 : ' . base64_encode($url_));
     error_log(getmypid() . ' $result : ' . print_r($result, TRUE));
     
     //$content = $result['content'];
