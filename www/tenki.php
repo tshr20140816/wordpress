@@ -18,6 +18,7 @@ $list_context_id = $mu->get_contexts();
 
 // holiday
 
+/*
 $start_yyyy = date('Y');
 $start_m = date('n');
 $finish_yyyy = date('Y', strtotime('+1 month'));
@@ -40,6 +41,9 @@ for ($i = 0; $i < count($tmp); $i++) {
   $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
   $list_holiday[$timestamp] = $tmp1[7];
 }
+*/
+$list_holiday = get_holiday($mu);
+
 error_log($pid . ' $list_holiday : ' . print_r($list_holiday, TRUE));
 
 // 24sekki
