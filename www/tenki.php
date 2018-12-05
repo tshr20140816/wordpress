@@ -17,72 +17,10 @@ $access_token = $mu->get_access_token();
 $list_context_id = $mu->get_contexts();
 
 // holiday
-
-/*
-$start_yyyy = date('Y');
-$start_m = date('n');
-$finish_yyyy = date('Y', strtotime('+1 month'));
-$finish_m = date('n', strtotime('+1 month'));
-
-$url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m
-  . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
-  . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
-
-$res = $mu->get_contents($url, NULL, TRUE);
-$res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
-
-$tmp = explode("\n", $res);
-array_shift($tmp);
-array_pop($tmp);
-
-$list_holiday = [];
-for ($i = 0; $i < count($tmp); $i++) {
-  $tmp1 = explode(',', $tmp[$i]);
-  $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
-  $list_holiday[$timestamp] = $tmp1[7];
-}
-*/
 $list_holiday = get_holiday($mu);
 
-error_log($pid . ' $list_holiday : ' . print_r($list_holiday, TRUE));
-
 // 24sekki
-
-/*
-$list_24sekki = [];
-
-$yyyy = (int)date('Y');
-for ($j = 0; $j < 2; $j++) {
-  $post_data = ['from_year' => $yyyy];
-
-  $res = $mu->get_contents(
-    'http://www.calc-site.com/calendars/solar_year',
-    [CURLOPT_POST => TRUE,
-     CURLOPT_POSTFIELDS => http_build_query($post_data),
-    ]);
-
-  $tmp = explode('<th>二十四節気</th>', $res);
-  $tmp = explode('</table>', $tmp[1]);
-
-  $tmp = explode('<tr>', $tmp[0]);
-  array_shift($tmp);
-
-  for ($i = 0; $i < count($tmp); $i++) {
-    $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
-    // error_log(print_r($matches, TRUE));
-    $tmp1 = $matches[2];
-    $tmp1 = str_replace('月', '-', $tmp1);
-    $tmp1 = str_replace('日', '', $tmp1);
-    $tmp1 = $yyyy . '-' . $tmp1;
-    error_log($pid . ' ' . $tmp1 . ' ' . $matches[1]);
-    $list_24sekki[strtotime($tmp1)] = '【' . $matches[1] . '】';
-  }
-  $yyyy++;
-}
-*/
 $list_24sekki = get_24sekki($mu);
-
-error_log($pid . ' $list_24sekki : ' . print_r($list_24sekki, TRUE));
 
 // Sun rise set
 
