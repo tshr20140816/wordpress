@@ -326,11 +326,10 @@ function get_sun_rise_set($mu_) {
     for ($i = 0; $i < count($tmp); $i++) {
       $timestamp = strtotime("${dt} +${i} day"); // UTC
       $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
-      // error_log(trim($matches[1]));
       $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
     }
   }
-  $list_sunrise_sunset = $mu->to_small_size($list_sunrise_sunset);
+  $list_sunrise_sunset = $mu_->to_small_size($list_sunrise_sunset);
   error_log(getmypid() . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
 
   return $list_sunrise_sunset;
