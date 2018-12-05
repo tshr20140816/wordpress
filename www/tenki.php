@@ -48,6 +48,7 @@ error_log($pid . ' $list_holiday : ' . print_r($list_holiday, TRUE));
 
 // 24sekki
 
+/*
 $list_24sekki = [];
 
 $yyyy = (int)date('Y');
@@ -78,6 +79,9 @@ for ($j = 0; $j < 2; $j++) {
   }
   $yyyy++;
 }
+*/
+$list_24sekki = get_24sekki($mu);
+
 error_log($pid . ' $list_24sekki : ' . print_r($list_24sekki, TRUE));
 
 // Sun rise set
@@ -317,5 +321,40 @@ function get_holiday($mu_) {
   error_log(getmypid() . ' $list_holiday : ' . print_r($list_holiday, TRUE));
 
   return $list_holiday;
+}
+
+function get_24sekki($mu_) {
+  $list_24sekki = [];
+
+  $yyyy = (int)date('Y');
+  for ($j = 0; $j < 2; $j++) {
+    $post_data = ['from_year' => $yyyy];
+
+    $res = $mu_->get_contents(
+      'http://www.calc-site.com/calendars/solar_year',
+      [CURLOPT_POST => TRUE,
+       CURLOPT_POSTFIELDS => http_build_query($post_data),
+      ]);
+
+    $tmp = explode('<th>二十四節気</th>', $res);
+    $tmp = explode('</table>', $tmp[1]);
+
+    $tmp = explode('<tr>', $tmp[0]);
+    array_shift($tmp);
+
+    for ($i = 0; $i < count($tmp); $i++) {
+      $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
+      $tmp1 = $matches[2];
+      $tmp1 = str_replace('月', '-', $tmp1);
+      $tmp1 = str_replace('日', '', $tmp1);
+      $tmp1 = $yyyy . '-' . $tmp1;
+      error_log(getmypid() . ' ' . $tmp1 . ' ' . $matches[1]);
+      $list_24sekki[strtotime($tmp1)] = '【' . $matches[1] . '】';
+    }
+    $yyyy++;
+  }
+  error_log(getmypid() . ' $list_holiday : ' . print_r($list_24sekki, TRUE));
+  
+  return $list_24sekki;
 }
 ?>
