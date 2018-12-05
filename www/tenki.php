@@ -23,76 +23,10 @@ $list_holiday = get_holiday($mu);
 $list_24sekki = get_24sekki($mu);
 
 // Sun rise set
-
-/*
-$timestamp = time() + 9 * 60 * 60; // JST
-
-$loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
-
-$list_sunrise_sunset = [];
-for ($j = 0; $j < $loop_count; $j++) {
-  if ($j === 1) {
-    $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60; // JST
-  }
-  $yyyy = date('Y', $timestamp);
-  $mm = date('m', $timestamp);
-
-  $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
-
-  $tmp = explode('<table ', $res);
-  $tmp = explode('</table>', $tmp[1]);
-  $tmp = explode('</tr>', $tmp[0]);
-  array_shift($tmp);
-  array_pop($tmp);
-
-  $dt = date('Y-m-', $timestamp) . '01';
-
-  for ($i = 0; $i < count($tmp); $i++) {
-    $timestamp = strtotime("${dt} +${i} day"); // UTC
-    $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
-    // error_log(trim($matches[1]));
-    $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
-  }
-}
-$list_sunrise_sunset = $mu->to_small_size($list_sunrise_sunset);
-*/
 $list_sunrise_sunset = get_sun_rise_set($mu);
 
-error_log($pid . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
-
 // Moon age
-
-$timestamp = time() + 9 * 60 * 60; // JST
-
-$loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
-
-$list_moon_age = [];
-for ($j = 0; $j < $loop_count; $j++) {
-  if ($j === 1) {
-    $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60; // JST
-  }
-  $yyyy = date('Y', $timestamp);
-  $mm = date('m', $timestamp);
-
-  $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
-
-  $tmp = explode('<table ', $res);
-  $tmp = explode('</table>', $tmp[1]);
-  $tmp = explode('</tr>', $tmp[0]);
-  array_shift($tmp);
-  array_pop($tmp);
-
-  $dt = date('Y-m-', $timestamp) . '01';
-
-  for ($i = 0; $i < count($tmp); $i++) {
-    $timestamp = strtotime("${dt} +${i} day"); // UTC
-    $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
-    // error_log(trim($matches[1]));
-    $list_moon_age[$timestamp] = '☽' . trim($matches[1]);
-  }
-}
-$list_moon_age = $mu->to_small_size($list_moon_age);
-error_log($pid . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
+$list_moon_age = get_moon_age($mu);
 
 // Weather Information
 
@@ -335,4 +269,40 @@ function get_sun_rise_set($mu_) {
   return $list_sunrise_sunset;
 }
 
+function get_moon_age($mu_) {
+
+  $timestamp = time() + 9 * 60 * 60; // JST
+
+  $loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
+
+  $list_moon_age = [];
+  for ($j = 0; $j < $loop_count; $j++) {
+    if ($j === 1) {
+      $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60; // JST
+    }
+    $yyyy = date('Y', $timestamp);
+    $mm = date('m', $timestamp);
+
+    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
+
+    $tmp = explode('<table ', $res);
+    $tmp = explode('</table>', $tmp[1]);
+    $tmp = explode('</tr>', $tmp[0]);
+    array_shift($tmp);
+    array_pop($tmp);
+
+    $dt = date('Y-m-', $timestamp) . '01';
+
+    for ($i = 0; $i < count($tmp); $i++) {
+      $timestamp = strtotime("${dt} +${i} day"); // UTC
+      $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
+      // error_log(trim($matches[1]));
+      $list_moon_age[$timestamp] = '☽' . trim($matches[1]);
+    }
+  }
+  $list_moon_age = $mu_->to_small_size($list_moon_age);
+  error_log(getmypid() . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
+
+  return $list_moon_age;
+}
 ?>
