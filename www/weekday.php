@@ -2,6 +2,8 @@
 
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
+exit();
+
 $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi}");
