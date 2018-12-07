@@ -150,6 +150,8 @@ $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,conte
 $res = $mu->get_contents($url);
 $tasks = json_decode($res, TRUE);
 
+error_log($pid . ' TASKS COUNT : ' . count($tasks));
+
 // for cache
 // file_put_contents('/tmp/tasks_tenki', serialize($tasks));
 
