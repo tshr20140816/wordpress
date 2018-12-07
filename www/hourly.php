@@ -20,13 +20,13 @@ $list_add_task = [];
 
 // amedas
 $list_add_task = array_merge($list_add_task, get_task_amedas($mu));
-  
+
 // Rainfall
 $list_add_task = array_merge($list_add_task, get_task_rainfall($mu));
 
 // Quota
 $list_add_task = array_merge($list_add_task, get_task_quota($mu));
-  
+
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token
   . '&after=' . strtotime('-1 day');
@@ -77,15 +77,15 @@ $mu->delete_tasks($list_delete_task);
 error_log("${pid} FINISH");
 
 function get_task_amedas($mu_) {
-  
+
   // Get Folders
   $folder_id_label = $mu_->get_folder_id('LABEL');
-  
+
   // Get Contexts
   $list_context_id = $mu_->get_contexts();
-  
+
   $list_add_task = [];
-  
+
   $res = $mu_->get_contents('http://www.jma.go.jp/jp/amedas_h/today-' . getenv('AMEDAS') . '.html');
 
   $tmp = explode('">時刻</td>', $res);
@@ -137,27 +137,27 @@ function get_task_amedas($mu_) {
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
   }
-  
+
   error_log(getmypid() . ' TASKS AMEDAS : ' . print_r($list_add_task, TRUE));
   return $list_add_task;
 }
 
 function get_task_rainfall($mu_) {
-  
+
   // Get Folders
   $folder_id_label = $mu_->get_folder_id('LABEL');
-  
+
   // Get Contexts
   $list_context_id = $mu_->get_contexts();
-  
+
   $list_add_task = [];
-    
+
   $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
     . '&lon=' . getenv('LONGITUDE') . '&lat=' . getenv('LATITUDE');
   $res = $mu_->get_contents($url);
   $data = json_decode($res, TRUE);
   error_log(getmypid() . ' $data : ' . print_r($data, TRUE));
-  
+
   $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
     . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
   $res = $mu_->get_contents($url);
@@ -181,18 +181,18 @@ function get_task_rainfall($mu_) {
       . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
-  
+
   error_log(getmypid() . ' TASKS RAINFALL : ' . print_r($list_add_task, TRUE));
   return $list_add_task;
 }
 
 function get_task_quota($mu_) {
-  
+
   // Get Folders
   $folder_id_label = $mu_->get_folder_id('LABEL');
   // Get Contexts
   $list_context_id = $mu_->get_contexts();
-  
+
   $api_key = getenv('API_KEY');
   $url = 'https://api.heroku.com/account';
 
@@ -231,7 +231,7 @@ function get_task_quota($mu_) {
     . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
     . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
     . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
-  
+
   error_log(getmypid() . ' TASKS QUOTA : ' . print_r($list_add_task, TRUE));
   return $list_add_task;
 }
