@@ -143,6 +143,8 @@ $list_add_task = array_merge($list_add_task, get_task_rainfall($mu));
 // Quota
 $list_add_task = array_merge($list_add_task, get_task_quota($mu));
 
+error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
+
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token
   . '&after=' . strtotime('-2 day');
