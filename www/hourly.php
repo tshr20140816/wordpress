@@ -6,17 +6,130 @@ $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
-// const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
+const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
 
 $mu = new MyUtils();
+
+$hour_now = ((int)date('G') + 9) % 24; // JST
 
 // Access Token
 $access_token = $mu->get_access_token();
 
 // Get Folders
 $folder_id_work = $mu->get_folder_id('WORK');
+$folder_id_label = $mu->get_folder_id('LABEL');
 
 $list_add_task = [];
+
+if ($hour_now % 2 === 1) {
+
+  // holiday
+  $list_holiday = get_holiday($mu);
+
+  // 24sekki
+  $list_24sekki = get_24sekki($mu);
+
+  // Sun rise set
+  $list_sunrise_sunset = get_sun_rise_set($mu);
+
+  // Moon age
+  $list_moon_age = get_moon_age($mu);
+
+  // Weather Information
+
+  $res = $mu->get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
+
+  $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
+
+  error_log($pid . ' $matches[0] : ' . $matches[0]);
+  error_log($pid . ' $matches[1] : ' . $matches[1]);
+  error_log($pid . ' $matches[2] : ' . $matches[2]);
+
+  $dt = $matches[1]; // yyyy-mm-dd
+
+  $update_marker = $mu->to_small_size(' _' . substr($matches[1], 8) . $matches[2] . '_'); // __DDHH__
+
+  $tmp = explode(getenv('POINT_NAME'), $res);
+  $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
+
+  $template_add_task = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER","folder":"__FOLDER_ID__"';
+  $template_add_task = str_replace('__FOLDER_ID__', $folder_id_label, $template_add_task);
+  for ($i = 0; $i < 10; $i++) {
+    $timestamp = strtotime("${dt} +${i} day");
+    $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i + 1]))));
+    $tmp2 = $list[0];
+    $tmp2 = str_replace('晴', '☀', $tmp2);
+    $tmp2 = str_replace('曇', '☁', $tmp2);
+    $tmp2 = str_replace('雨', '☂', $tmp2);
+    $tmp2 = str_replace('のち', '/', $tmp2);
+    $tmp2 = str_replace('時々', '|', $tmp2);
+    $tmp2 = str_replace('一時', '|', $tmp2);
+    $tmp3 = '### '
+      . LIST_YOBI[date('w', $timestamp)] . '曜日 '
+      . date('m/d', $timestamp)
+      . ' ### '
+      . $tmp2 . ' ' . $list[2] . ' ' . $list[1]
+      . $update_marker;
+
+    if (array_key_exists($timestamp, $list_holiday)) {
+      $tmp3 = str_replace(' ###', ' ★' . $list_holiday[$timestamp] . '★ ###', $tmp3);
+    }
+    if (array_key_exists($timestamp, $list_24sekki)) {
+      $tmp3 .= $list_24sekki[$timestamp];
+    }
+    if (array_key_exists($timestamp, $list_sunrise_sunset)) {
+      $tmp3 .= ' ' . $list_sunrise_sunset[$timestamp];
+    }
+    if (array_key_exists($timestamp, $list_moon_age)) {
+      $tmp3 .= ' ' . $list_moon_age[$timestamp];
+    }
+
+    error_log("${pid} ${tmp3}");
+
+    $tmp4 = str_replace('__TITLE__', $tmp3, $template_add_task);
+    $tmp4 = str_replace('__DUEDATE__', $timestamp, $tmp4);
+    $tmp4 = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp4);
+
+    $list_add_task[] = $tmp4;
+  }
+
+  // Weather Information (Guest)
+
+  $list_weather_guest_area = $mu->get_weather_guest_area();
+
+  $update_marker = $mu->to_small_size(' _' . date('Ymd') . '_');
+  for ($i = 0; $i < count($list_weather_guest_area); $i++) {
+    $is_add_flag = FALSE;
+    $tmp = explode(',', $list_weather_guest_area[$i]);
+    $location_number = $tmp[0];
+    $point_name = $tmp[1];
+    $yyyymmdd = $tmp[2];
+    $timestamp = strtotime($yyyymmdd);
+    if ((int)$yyyymmdd < (int)date('Ymd', strtotime('+11 days'))) {
+      $res = $mu->get_contents('https://tenki.jp/week/' . $location_number . '/');
+      $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
+      $dt = $matches[1]; // yyyy-mm-dd
+      $tmp = explode($point_name, $res);
+      $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
+      for ($j = 0; $j < 10; $j++) {
+        $timestamp = strtotime("${dt} +${j} day");
+        if (date('Ymd', $timestamp) == $yyyymmdd) {
+          $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
+          $title = date('m/d', $timestamp) . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
+          $is_add_flag = TRUE;
+          break;
+        }
+      }
+    }
+    if ($is_add_flag === FALSE) {
+      $title = date('m/d', $timestamp) . " 【${point_name} 天気予報未取得】${update_marker}";
+    }
+    $tmp = str_replace('__TITLE__', $title, $template_add_task);
+    $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
+    $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
+    $list_add_task[] = $tmp;
+  }
+}
 
 // amedas
 $list_add_task = array_merge($list_add_task, get_task_amedas($mu));
@@ -29,16 +142,19 @@ $list_add_task = array_merge($list_add_task, get_task_quota($mu));
 
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token
-  . '&after=' . strtotime('-1 day');
+  . '&after=' . strtotime('-2 day');
 $res = $mu->get_contents($url);
 $tasks = json_decode($res, TRUE);
+
+// for cache
+file_put_contents('/tmp/tasks_tenki', serialize($tasks));
 
 // 削除タスク抽出
 
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'HOURLY') {
+    if ($tasks[$i]['tag'] == 'HOURLY' || ($hour_now % 2 === 1 && $tasks[$i]['tag'] == 'WEATHER')) {
       $list_delete_task[] = $tasks[$i]['id'];
     }
   }
@@ -48,7 +164,7 @@ error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 // WORK & Star の日付更新
 
 $list_edit_task = [];
-$edit_task_template = '{"id":"__ID__","title":"__TITLE__"}';
+$template_edit_task = '{"id":"__ID__","title":"__TITLE__"}';
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
     if ($tasks[$i]['folder'] == $folder_id_work && $tasks[$i]['star'] == '1') {
@@ -57,7 +173,7 @@ for ($i = 0; $i < count($tasks); $i++) {
       if (substr($title, 0, 5) == date('m/d', $duedate)) {
         continue;
       }
-      $tmp = str_replace('__ID__', $tasks[$i]['id'], $edit_task_template);
+      $tmp = str_replace('__ID__', $tasks[$i]['id'], $template_edit_task);
       $tmp = str_replace('__TITLE__', date('m/d', $duedate) . substr($title, 5), $tmp);
       $list_edit_task[] = $tmp;
     }
@@ -75,6 +191,14 @@ $rc = $mu->edit_tasks($list_edit_task);
 $mu->delete_tasks($list_delete_task);
 
 error_log("${pid} FINISH");
+
+if ($hour_now % 2 === 1) {
+  $res = $mu->get_contents(
+    'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/add_label.php',
+    [CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD')]);
+}
+
+exit();
 
 function get_task_amedas($mu_) {
 
@@ -234,5 +358,142 @@ function get_task_quota($mu_) {
 
   error_log(getmypid() . ' TASKS QUOTA : ' . print_r($list_add_task, TRUE));
   return $list_add_task;
+}
+
+function get_holiday($mu_) {
+
+  $start_yyyy = date('Y');
+  $start_m = date('n');
+  $finish_yyyy = date('Y', strtotime('+1 month'));
+  $finish_m = date('n', strtotime('+1 month'));
+
+  $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m
+    . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
+    . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
+
+  $res = $mu_->get_contents($url, NULL, TRUE);
+  $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
+
+  $tmp = explode("\n", $res);
+  array_shift($tmp);
+  array_pop($tmp);
+
+  $list_holiday = [];
+  for ($i = 0; $i < count($tmp); $i++) {
+    $tmp1 = explode(',', $tmp[$i]);
+    $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
+    $list_holiday[$timestamp] = $tmp1[7];
+  }
+  error_log(getmypid() . ' $list_holiday : ' . print_r($list_holiday, TRUE));
+
+  return $list_holiday;
+}
+
+function get_24sekki($mu_) {
+
+  $list_24sekki = [];
+
+  $yyyy = (int)date('Y');
+  for ($j = 0; $j < 2; $j++) {
+    $post_data = ['from_year' => $yyyy];
+
+    $res = $mu_->get_contents(
+      'http://www.calc-site.com/calendars/solar_year',
+      [CURLOPT_POST => TRUE,
+       CURLOPT_POSTFIELDS => http_build_query($post_data),
+      ]);
+
+    $tmp = explode('<th>二十四節気</th>', $res);
+    $tmp = explode('</table>', $tmp[1]);
+
+    $tmp = explode('<tr>', $tmp[0]);
+    array_shift($tmp);
+
+    for ($i = 0; $i < count($tmp); $i++) {
+      $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
+      $tmp1 = $matches[2];
+      $tmp1 = str_replace('月', '-', $tmp1);
+      $tmp1 = str_replace('日', '', $tmp1);
+      $tmp1 = $yyyy . '-' . $tmp1;
+      error_log(getmypid() . ' ' . $tmp1 . ' ' . $matches[1]);
+      $list_24sekki[strtotime($tmp1)] = '【' . $matches[1] . '】';
+    }
+    $yyyy++;
+  }
+  error_log(getmypid() . ' $list_holiday : ' . print_r($list_24sekki, TRUE));
+
+  return $list_24sekki;
+}
+
+function get_sun_rise_set($mu_) {
+
+  $timestamp = time() + 9 * 60 * 60; // JST
+  // 10日後が翌月になるときは2か月分取得
+  $loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
+
+  $list_sunrise_sunset = [];
+  for ($j = 0; $j < $loop_count; $j++) {
+    if ($j === 1) {
+      $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60; // JST
+    }
+    $yyyy = date('Y', $timestamp);
+    $mm = date('m', $timestamp);
+
+    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
+
+    $tmp = explode('<table ', $res);
+    $tmp = explode('</table>', $tmp[1]);
+    $tmp = explode('</tr>', $tmp[0]);
+    array_shift($tmp);
+    array_pop($tmp);
+
+    $dt = date('Y-m-', $timestamp) . '01';
+
+    for ($i = 0; $i < count($tmp); $i++) {
+      $timestamp = strtotime("${dt} +${i} day"); // UTC
+      $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
+      $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
+    }
+  }
+  $list_sunrise_sunset = $mu_->to_small_size($list_sunrise_sunset);
+  error_log(getmypid() . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
+
+  return $list_sunrise_sunset;
+}
+
+function get_moon_age($mu_) {
+
+  $timestamp = time() + 9 * 60 * 60; // JST
+  // 10日後が翌月になるときは2か月分取得
+  $loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
+
+  $list_moon_age = [];
+  for ($j = 0; $j < $loop_count; $j++) {
+    if ($j === 1) {
+      $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60; // JST
+    }
+    $yyyy = date('Y', $timestamp);
+    $mm = date('m', $timestamp);
+
+    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
+
+    $tmp = explode('<table ', $res);
+    $tmp = explode('</table>', $tmp[1]);
+    $tmp = explode('</tr>', $tmp[0]);
+    array_shift($tmp);
+    array_pop($tmp);
+
+    $dt = date('Y-m-', $timestamp) . '01';
+
+    for ($i = 0; $i < count($tmp); $i++) {
+      $timestamp = strtotime("${dt} +${i} day"); // UTC
+      $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
+      $list_moon_age[$timestamp] = '☽' . trim($matches[1]);
+    }
+  }
+  $list_moon_age = $mu_->to_small_size($list_moon_age);
+  error_log(getmypid() . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
+
+  return $list_moon_age;
 }
 ?>
