@@ -55,7 +55,7 @@ if ($hour_now % 2 === 1) {
   $tmp = explode(getenv('POINT_NAME'), $res);
   $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
 
-  $template_add_task = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER","folder":"__FOLDER_ID__"';
+  $template_add_task = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER","folder":"__FOLDER_ID__"}';
   $template_add_task = str_replace('__FOLDER_ID__', $folder_id_label, $template_add_task);
   for ($i = 0; $i < 10; $i++) {
     $timestamp = strtotime("${dt} +${i} day");
