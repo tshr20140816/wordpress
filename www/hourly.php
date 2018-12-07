@@ -1,5 +1,7 @@
 <?php
 
+// non duedate warning
+
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $pid = getmypid();
@@ -156,15 +158,24 @@ file_put_contents('/tmp/tasks_tenki', serialize($tasks));
 
 // 削除タスク抽出
 
+$is_exists_no_duedate_task = FALSE;
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'HOURLY' || ($hour_now % 2 === 1 && $tasks[$i]['tag'] == 'WEATHER')) {
       $list_delete_task[] = $tasks[$i]['id'];
+    } else if ($tasks[$i]['duedate'] == 0) {
+      $is_exists_no_duedate_task = TRUE;
     }
   }
 }
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
+
+if ($is_exists_no_duedate_task === TRUE) {
+  $list_add_task[] = '{"title":"NO DUEDATE TASK EXISTS","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
+      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
+      . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+}
 
 // WORK & Star の日付更新
 
@@ -185,6 +196,23 @@ for ($i = 0; $i < count($tasks); $i++) {
     }
   }
 }
+
+// duedate と context の不一致更新
+
+$template_edit_task = '{"id":"__ID__","context":"__CONTEXT__"}';
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('id', $tasks[$i])) {
+    $real_context_id = $list_context_id[date('w', $tasks[$i]['duedate'])];
+    $task_context_id = $tasks[$i]['context'];
+    if ($task_context_id == '0' || $task_context_id != $real_context_id) {
+      error_log($pid . ' $tasks[$i] : ' . print_r($tasks[$i], TRUE));
+      $tmp = str_replace('__ID__', $tasks[$i]['id'], $edit_task_template);
+      $tmp = str_replace('__CONTEXT__', $real_context_id, $tmp);
+      $list_edit_task[] = $tmp;
+    }
+  }
+}
+
 error_log($pid . ' $list_edit_task : ' . print_r($list_edit_task, TRUE));
 
 // Add Tasks
