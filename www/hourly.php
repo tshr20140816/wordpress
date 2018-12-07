@@ -164,7 +164,7 @@ error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 // WORK & Star の日付更新
 
 $list_edit_task = [];
-$template_edit_task = '{"id":"__ID__","title":"__TITLE__"}';
+$template_edit_task = '{"id":"__ID__","title":"__TITLE__","context":"__CONTEXT__"}';
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
     if ($tasks[$i]['folder'] == $folder_id_work && $tasks[$i]['star'] == '1') {
@@ -175,6 +175,7 @@ for ($i = 0; $i < count($tasks); $i++) {
       }
       $tmp = str_replace('__ID__', $tasks[$i]['id'], $template_edit_task);
       $tmp = str_replace('__TITLE__', date('m/d', $duedate) . substr($title, 5), $tmp);
+      $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $duedate)], $tmp);
       $list_edit_task[] = $tmp;
     }
   }
