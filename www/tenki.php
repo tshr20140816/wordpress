@@ -230,7 +230,7 @@ function get_24sekki($mu_) {
     $yyyy++;
   }
   error_log(getmypid() . ' $list_holiday : ' . print_r($list_24sekki, TRUE));
-  
+
   return $list_24sekki;
 }
 
