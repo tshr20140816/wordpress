@@ -145,8 +145,6 @@ $list_add_task = array_merge($list_add_task, get_task_rainfall($mu));
 // Quota
 $list_add_task = array_merge($list_add_task, get_task_quota($mu));
 
-error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
-
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token
   . '&after=' . strtotime('-2 day');
@@ -154,7 +152,39 @@ $res = $mu->get_contents($url);
 $tasks = json_decode($res, TRUE);
 
 // for cache
-file_put_contents('/tmp/tasks_tenki', serialize($tasks));
+// file_put_contents('/tmp/tasks_tenki', serialize($tasks));
+
+// 予定有りでラベル無しの日のラベル追加
+
+$list_label_task = [];
+$list_schedule_task = [];
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+    if ($tasks[$i]['folder'] == $folder_id_label) {
+      $list_label_task[] = $tasks[$i]['duedate'];
+    } else {
+      $list_schedule_task[] = $tasks[$i]['duedate'];
+    }
+  }
+}
+
+$list_non_label = array_unique(array_diff($list_schedule_task, $list_label_task));
+sort($list_non_label);
+error_log($pid . ' $list_non_label : ' . print_r($list_non_label, TRUE));
+
+$timestamp = strtotime('+20 day');
+for ($i = 0; $i < count($list_non_label); $i++) {
+  if ($list_non_label[$i] > $timestamp) {
+
+    $yyyy = $mu->to_small_size(date('Y', $list_non_label[$i]));
+
+    $tmp = '### ' . LIST_YOBI[date('w', $list_non_label[$i])] . '曜日 ' . date('m/d', $list_non_label[$i]) . ' ### ' . $yyyy;
+    $list_add_task[] = '{"title":"' . $tmp
+      . '","duedate":"' . $list_non_label[$i]
+      . '","context":"' . $list_context_id[date('w', $list_non_label[$i])]
+      . '","tag":"ADDITIONAL","folder":"' . $folder_id_label . '"}';
+  }
+}
 
 // 削除タスク抽出
 
@@ -171,11 +201,15 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
+// 日付(duedate)設定漏れ警告
+
 if ($is_exists_no_duedate_task === TRUE) {
   $list_add_task[] = '{"title":"NO DUEDATE TASK EXISTS","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 }
+
+error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
 
 // WORK & Star の日付更新
 
@@ -225,12 +259,6 @@ $rc = $mu->edit_tasks($list_edit_task);
 $mu->delete_tasks($list_delete_task);
 
 error_log("${pid} FINISH");
-
-if ($hour_now % 2 === 1) {
-  $res = $mu->get_contents(
-    'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/add_label.php',
-    [CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD')]);
-}
 
 exit();
 
