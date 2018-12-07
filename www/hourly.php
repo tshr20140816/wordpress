@@ -19,6 +19,9 @@ $access_token = $mu->get_access_token();
 $folder_id_work = $mu->get_folder_id('WORK');
 $folder_id_label = $mu->get_folder_id('LABEL');
 
+// Get Contexts
+$list_context_id = $mu->get_contexts();
+
 $list_add_task = [];
 
 if ($hour_now % 2 === 1) {
