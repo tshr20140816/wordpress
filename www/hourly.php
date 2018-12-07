@@ -239,7 +239,7 @@ for ($i = 0; $i < count($tasks); $i++) {
     $task_context_id = $tasks[$i]['context'];
     if ($task_context_id == '0' || $task_context_id != $real_context_id) {
       error_log($pid . ' $tasks[$i] : ' . print_r($tasks[$i], TRUE));
-      $tmp = str_replace('__ID__', $tasks[$i]['id'], $edit_task_template);
+      $tmp = str_replace('__ID__', $tasks[$i]['id'], $template_edit_task);
       $tmp = str_replace('__CONTEXT__', $real_context_id, $tmp);
       $list_edit_task[] = $tmp;
     }
