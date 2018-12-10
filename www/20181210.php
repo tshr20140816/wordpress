@@ -4,7 +4,7 @@ include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $mu = new MyUtils();
 
-$post_data = ['from_year' => 2020];
+$post_data = ['from_year' => 2020, 'dummy' => 'aaa'];
 error_log(http_build_query($post_data));
 
 exit();
