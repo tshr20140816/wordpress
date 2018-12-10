@@ -334,7 +334,11 @@ __HEREDOC__;
       error_log(getmypid() . ' INSERT $rc : ' . $rc);
       // error_log(getmypid() . ' execute errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
     } else {
-      error_log(getmypid() . ' (CACHE HIT) url : ' . $url_);
+      if (is_null($options_) == FALSE && array_key_exists(CURLOPT_POST, $options_) === TRUE) {
+        error_log(getmypid() . ' (CACHE HIT) url : ' . $url_ . '?' . $options_[CURLOPT_POSTFIELDS]);
+      } else {
+        error_log(getmypid() . ' (CACHE HIT) url : ' . $url_);
+      }
       $res = gzdecode(base64_decode($result[0]['content_compress_base64']));
     }
     $pdo = NULL;
