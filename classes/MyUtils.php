@@ -307,9 +307,10 @@ __HEREDOC__;
       
       if (count($result) != 0) {
         $statement = $pdo->prepare($sql);
+        error_log(getmypid() . ' prepare errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
         $rc = $statement->execute([':b_url_base64' => $url_base64]);
         error_log(getmypid() . ' DELETE $rc : ' . $rc);
-        error_log(getmypid() . ' errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
+        error_log(getmypid() . ' execute errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
       }
 
       $sql = <<< __HEREDOC__
@@ -322,10 +323,11 @@ INSERT INTO t_webcache
 );
 __HEREDOC__;
       $statement = $pdo->prepare($sql);
+      error_log(getmypid() . ' prepare errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
       $rc = $statement->execute([':b_url_base64' => $url_base64,
                                  ':b_content_compress_base64' => $content_compress_base64]);
       error_log(getmypid() . ' INSERT $rc : ' . $rc);
-      error_log(getmypid() . ' errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
+      error_log(getmypid() . ' execute errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
     } else {
       error_log(getmypid() . ' (CACHE HIT) url : ' . $url_);
       $res = gzdecode(base64_decode($result[0]['content_compress_base64']));
