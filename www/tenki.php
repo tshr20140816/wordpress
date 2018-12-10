@@ -213,7 +213,7 @@ function get_24sekki($mu_) {
       [CURLOPT_POST => TRUE,
        CURLOPT_POSTFIELDS => http_build_query($post_data),
       ],
-      FALSE);
+      TRUE);
 
     $tmp = explode('<th>二十四節気</th>', $res);
     $tmp = explode('</table>', $tmp[1]);
