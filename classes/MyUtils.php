@@ -339,6 +339,7 @@ __HEREDOC__;
   
   function get_contents_nocache($url_, $options_ = NULL) {
     error_log(getmypid() . ' URL : ' . $url_);
+    error_log(getmypid() . ' options : ' . print_r($options_, TRUE));
     
     $options = [
       CURLOPT_URL => $url_,
