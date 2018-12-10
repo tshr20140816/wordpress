@@ -1,7 +1,5 @@
 <?php
 
-// non duedate warning
-
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $pid = getmypid();
