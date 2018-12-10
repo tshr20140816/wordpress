@@ -292,6 +292,7 @@ __HEREDOC__;
     $statement->execute([':b_url_base64' => $url_base64]);
     $result = $statement->fetchAll();
     
+    error_log(getmypid() . ' $result : ' . print_r($result, TRUE));
     error_log(getmypid() . ' errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
     
     if (count($result) === 0 || $result[0]['refresh_flag'] == '1') {
