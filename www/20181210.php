@@ -49,7 +49,7 @@ __HEREDOC__;
 DELETE
   FROM t_webcache
  WHERE url_base64 = :b_url_base64
-    OR LOCALTIMESTAMP > T1.update_time + interval '5 days';
+    OR LOCALTIMESTAMP > update_time + interval '5 days';
 __HEREDOC__;
     
     if (count($result) != 0) {
