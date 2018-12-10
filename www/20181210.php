@@ -53,7 +53,8 @@ DELETE
 __HEREDOC__;
     
     if (count($result) != 0) {
-      error_log(getmypid() . ' sql : ' . $sql);
+      error_log(getmypid() . ' $sql : ' . $sql);
+      error_log(getmypid() . ' $url_base64 : ' . $url_base64);
       $statement = $pdo->prepare($sql);
       error_log(getmypid() . ' prepare errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
       $rc = $statement->execute([':b_url_base64' => $url_base64]);
@@ -70,7 +71,8 @@ INSERT INTO t_webcache
  ,:b_content_compress_base64
 );
 __HEREDOC__;
-    error_log(getmypid() . ' sql : ' . $sql);
+    error_log(getmypid() . ' $sql : ' . $sql);
+    error_log(getmypid() . ' $url_base64 : ' . $url_base64);
     $statement = $pdo->prepare($sql);
     error_log(getmypid() . ' prepare errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
     $rc = $statement->execute([':b_url_base64' => $url_base64,
