@@ -212,7 +212,8 @@ function get_24sekki($mu_) {
       'http://www.calc-site.com/calendars/solar_year',
       [CURLOPT_POST => TRUE,
        CURLOPT_POSTFIELDS => http_build_query($post_data),
-      ]);
+      ],
+      TRUE);
 
     $tmp = explode('<th>二十四節気</th>', $res);
     $tmp = explode('</table>', $tmp[1]);
