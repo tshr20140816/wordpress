@@ -1,10 +1,10 @@
 <?php
 
-$mu = new MyUtils();
-
 $res = get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/2018/s3512.html', NULL, TRUE);
 
 // error_log($res);
+
+exit();
 
 function get_pdo() {
   $connection_info = parse_url(getenv('DATABASE_URL'));
