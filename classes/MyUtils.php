@@ -241,7 +241,7 @@ __HEREDOC__;
 SELECT T1.location_number
       ,T1.point_name
       ,T1.yyyymmdd
-  FROM m_tenki T1
+  FROM m_tenki T1;
 __HEREDOC__;
     
     $pdo = $this->get_pdo();
@@ -282,7 +282,7 @@ SELECT T1.url_base64
       ,T1.update_time
       ,CASE WHEN LOCALTIMESTAMP < T1.update_time + interval '1 days' THEN 0 ELSE 1 END refresh_flag
   FROM t_webcache T1
- WHERE T1.url_base64 = :b_url_base64
+ WHERE T1.url_base64 = :b_url_base64;
 __HEREDOC__;
     
     $pdo = $this->get_pdo();
@@ -300,7 +300,7 @@ __HEREDOC__;
 DELETE
   FROM t_webcache
  WHERE url_base64 = :b_url_base64
-    OR LOCALTIMESTAMP > T1.update_time + interval '5 days'
+    OR LOCALTIMESTAMP > T1.update_time + interval '5 days';
 __HEREDOC__;
       
       if (count($result) != 0) {
@@ -316,7 +316,7 @@ INSERT INTO t_webcache
 ) VALUES (
   :b_url_base64
  ,:b_content_compress_base64
-)
+);
 __HEREDOC__;
       $statement = $pdo->prepare($sql);
       $rc = $statement->execute([':b_url_base64' => $url_base64,
