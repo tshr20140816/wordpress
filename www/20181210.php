@@ -42,7 +42,7 @@ __HEREDOC__;
   error_log(getmypid() . ' errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
   
   if (count($result) === 0 || $result[0]['refresh_flag'] == '1') {
-    $res = $this->get_contents_nocache($url_, $options_);
+    $res = get_contents_nocache($url_, $options_);
     $content_compress_base64 = base64_encode(gzencode($res, 9));
     
     $sql = <<< __HEREDOC__
