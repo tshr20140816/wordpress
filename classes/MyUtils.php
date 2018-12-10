@@ -274,7 +274,11 @@ __HEREDOC__;
       return $this->get_contents_nocache($url_, $options_);
     }
     
-    $url_base64 = base64_encode($url_);
+    if (is_null($options_) == FALSE && array_key_exists(CURLOPT_POST, $options_) === TRUE) {
+      $url_base64 = base64_encode($url_ . '?' . $options_[CURLOPT_POSTFIELDS]);
+    } else {
+      $url_base64 = base64_encode($url_);
+    }    
 
     $sql = <<< __HEREDOC__
 SELECT T1.url_base64
