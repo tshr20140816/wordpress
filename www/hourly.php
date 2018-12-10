@@ -341,7 +341,7 @@ function get_task_rainfall($mu_) {
 
   $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
     . '&lon=' . getenv('LONGITUDE') . '&lat=' . getenv('LATITUDE');
-  $res = $mu_->get_contents($url);
+  $res = $mu_->get_contents($url, NULL);
   $data = json_decode($res, TRUE);
   error_log(getmypid() . ' $data : ' . print_r($data, TRUE));
 
@@ -464,7 +464,8 @@ function get_24sekki($mu_) {
       'http://www.calc-site.com/calendars/solar_year',
       [CURLOPT_POST => TRUE,
        CURLOPT_POSTFIELDS => http_build_query($post_data),
-      ]);
+      ],
+      TRUE);
 
     $tmp = explode('<th>二十四節気</th>', $res);
     $tmp = explode('</table>', $tmp[1]);
