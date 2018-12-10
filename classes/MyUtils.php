@@ -292,6 +292,8 @@ __HEREDOC__;
     $statement->execute([':b_url_base64' => $url_base64]);
     $result = $statement->fetchAll();
     
+    error_log(getmypid() . ' errorInfo : ' . print_r($pdo->errorInfo()));
+    
     if (count($result) === 0 || $result[0]['refresh_flag'] == '1') {
       $res = $this->get_contents_nocache($url_, $options_);
       $content_compress_base64 = base64_encode(gzencode($res, 9));
@@ -307,6 +309,7 @@ __HEREDOC__;
         $statement = $pdo->prepare($sql);
         $rc = $statement->execute([':b_url_base64' => $url_base64]);
         error_log(getmypid() . ' DELETE $rc : ' . $rc);
+        error_log(getmypid() . ' errorInfo : ' . print_r($pdo->errorInfo()));
       }
 
       $sql = <<< __HEREDOC__
@@ -322,6 +325,7 @@ __HEREDOC__;
       $rc = $statement->execute([':b_url_base64' => $url_base64,
                                  ':b_content_compress_base64' => $content_compress_base64]);
       error_log(getmypid() . ' INSERT $rc : ' . $rc);
+      error_log(getmypid() . ' errorInfo : ' . print_r($pdo->errorInfo()));
     } else {
       error_log(getmypid() . ' (CACHE HIT) url : ' . $url_);
       $res = gzdecode(base64_decode($result[0]['content_compress_base64']));
