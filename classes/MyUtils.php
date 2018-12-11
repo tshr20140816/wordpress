@@ -347,7 +347,7 @@ __HEREDOC__;
 
   function get_contents_nocache($url_, $options_ = NULL) {
     error_log(getmypid() . ' CLASS : ' . __CLASS__);
-    error_log(getmypid() . ' METHOD : ' . __METHOD__);
+    error_log(getmypid() . " METHOD : __METHOD__");
     error_log(getmypid() . ' FUNCTION : ' . __FUNCTION__);
     error_log(getmypid() . ' URL : ' . $url_);
     error_log(getmypid() . ' options : ' . print_r($options_, TRUE));
