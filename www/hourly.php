@@ -410,7 +410,7 @@ function get_task_quota($mu_) {
   $tmp = $dyno_quota - $dyno_used;
   $tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
 
-  $update_marker = $mu_->to_small_size(' _' . date('Ymd His', strtotime('+ 9 hours')) . '_');
+  $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
 
   $list_add_task[] = '{"title":"' . $account . ' : ' . $tmp . $update_marker
     . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
