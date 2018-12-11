@@ -4,6 +4,7 @@ include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
+error_log("${pid} " . __METHOD__);
 error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
@@ -278,7 +279,7 @@ function get_task_amedas($mu_) {
 
   $tmp1 = explode('</tr>', $tmp[0]);
   $headers = explode('</td>', $tmp1[0]);
-  error_log($pid . ' $headers : ' . print_r($headers, TRUE));
+  error_log($pid . ' [' . __METHOD__ . '] $headers : ' . print_r($headers, TRUE));
 
   for ($i = 0; $i < count($headers); $i++) {
     switch (trim(strip_tags($headers[$i]))) {
@@ -323,7 +324,7 @@ function get_task_amedas($mu_) {
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
   }
 
-  error_log(getmypid() . ' TASKS AMEDAS : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS AMEDAS : ' . print_r($list_add_task, TRUE));
   return $list_add_task;
 }
 
@@ -341,14 +342,14 @@ function get_task_rainfall($mu_) {
     . '&lon=' . getenv('LONGITUDE') . '&lat=' . getenv('LATITUDE');
   $res = $mu_->get_contents($url, NULL, TRUE);
   $data = json_decode($res, TRUE);
-  error_log(getmypid() . ' $data : ' . print_r($data, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, TRUE));
 
   $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
     . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
   $res = $mu_->get_contents($url);
 
   $data = json_decode($res, TRUE);
-  error_log(getmypid() . ' $data : ' . print_r($data, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, TRUE));
   $data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
 
   $list = [];
@@ -367,7 +368,7 @@ function get_task_rainfall($mu_) {
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 
-  error_log(getmypid() . ' TASKS RAINFALL : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS RAINFALL : ' . print_r($list_add_task, TRUE));
   return $list_add_task;
 }
 
@@ -389,7 +390,7 @@ function get_task_quota($mu_) {
     TRUE);
 
   $data = json_decode($res, TRUE);
-  error_log(getmypid() . ' $data : ' . print_r($data, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, TRUE));
   $account = explode('@', $data['email'])[0];
   $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
 
@@ -400,13 +401,13 @@ function get_task_quota($mu_) {
                            ]]);
 
   $data = json_decode($res, TRUE);
-  error_log(getmypid() . ' $data : ' . print_r($data, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, TRUE));
 
   $dyno_used = (int)$data['quota_used'];
   $dyno_quota = (int)$data['account_quota'];
 
-  error_log(getmypid() . ' $dyno_used : ' . $dyno_used);
-  error_log(getmypid() . ' $dyno_quota : ' . $dyno_quota);
+  error_log(getmypid() . ' [' . __METHOD__ . '] $dyno_used : ' . $dyno_used);
+  error_log(getmypid() . ' [' . __METHOD__ . '] $dyno_quota : ' . $dyno_quota);
 
   $tmp = $dyno_quota - $dyno_used;
   $tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
@@ -418,7 +419,7 @@ function get_task_quota($mu_) {
     . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
     . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 
-  error_log(getmypid() . ' TASKS QUOTA : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS QUOTA : ' . print_r($list_add_task, TRUE));
   return $list_add_task;
 }
 
@@ -446,7 +447,7 @@ function get_holiday($mu_) {
     $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
     $list_holiday[$timestamp] = $tmp1[7];
   }
-  error_log(getmypid() . ' $list_holiday : ' . print_r($list_holiday, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_holiday, TRUE));
 
   return $list_holiday;
 }
@@ -478,12 +479,12 @@ function get_24sekki($mu_) {
       $tmp1 = str_replace('月', '-', $tmp1);
       $tmp1 = str_replace('日', '', $tmp1);
       $tmp1 = $yyyy . '-' . $tmp1;
-      error_log(getmypid() . ' ' . $tmp1 . ' ' . $matches[1]);
+      error_log(getmypid() . ' [' . __METHOD__ . "] ${tmp1} " . $matches[1]);
       $list_24sekki[strtotime($tmp1)] = '【' . $matches[1] . '】';
     }
     $yyyy++;
   }
-  error_log(getmypid() . ' $list_holiday : ' . print_r($list_24sekki, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_24sekki, TRUE));
 
   return $list_24sekki;
 }
@@ -519,7 +520,7 @@ function get_sun_rise_set($mu_) {
     }
   }
   $list_sunrise_sunset = $mu_->to_small_size($list_sunrise_sunset);
-  error_log(getmypid() . ' $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
 
   return $list_sunrise_sunset;
 }
@@ -555,7 +556,7 @@ function get_moon_age($mu_) {
     }
   }
   $list_moon_age = $mu_->to_small_size($list_moon_age);
-  error_log(getmypid() . ' $list_moon_age : ' . print_r($list_moon_age, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $list_moon_age : ' . print_r($list_moon_age, TRUE));
 
   return $list_moon_age;
 }
