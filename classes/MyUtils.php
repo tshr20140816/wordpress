@@ -383,6 +383,7 @@ __HEREDOC__;
       }
     }
 
+    error_log(getmypid() . ' LENGTH : ' . strlen($res));
     return $res;
   }
 }
