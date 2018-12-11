@@ -105,7 +105,7 @@ __HEREDOC__;
       $folders = unserialize(file_get_contents($file_name));
       error_log(getmypid() . ' (CACHE HIT) FOLDERS');
     } else {
-      $res = $this->get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $this->$access_token);
+      $res = $this->get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $this->$access_token, NULL, TRUE);
       $folders = json_decode($res, TRUE);
       file_put_contents($file_name, serialize($folders));
     }
@@ -130,7 +130,7 @@ __HEREDOC__;
       return $list_context_id;
     }
 
-    $res = $this->get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $this->$access_token);
+    $res = $this->get_contents('https://api.toodledo.com/3/contexts/get.php?access_token=' . $this->$access_token, NULL, TRUE);
     $contexts = json_decode($res, TRUE);
     $list_context_id = [];
     for ($i = 0; $i < count($contexts); $i++) {
