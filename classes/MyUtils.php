@@ -20,7 +20,7 @@ class MyUtils
       $timestamp = filemtime($file_name);
       if ($timestamp > strtotime('-15 minutes')) {
         $access_token = file_get_contents($file_name);
-        error_log(getmypid() . ' ' . __METHOD__ . ' (CACHE HIT) $access_token : ' . $access_token);
+        error_log(getmypid() . '[' . __METHOD__ . '](CACHE HIT) $access_token : ' . $access_token);
         $this->$_access_token = $access_token;
         return $access_token;
       }
@@ -46,7 +46,7 @@ __HEREDOC__;
     }
 
     if ($access_token == NULL) {
-      error_log(getmypid() . ' ' . __METHOD__ . ' ACCESS TOKEN NONE');
+      error_log(getmypid() . '[' . __METHOD__ . ']ACCESS TOKEN NONE');
       exit();
     }
 
@@ -60,7 +60,7 @@ __HEREDOC__;
     }
 
     if ($refresh_flag == 1) {
-      error_log(getmypid() . ' ' . __METHOD__ . " refresh_token : ${refresh_token}");
+      error_log(getmypid() . '[' . __METHOD__ . "]refresh_token : ${refresh_token}");
       $post_data = ['grant_type' => 'refresh_token', 'refresh_token' => $refresh_token];
 
       $res = $this->get_contents(
@@ -70,7 +70,7 @@ __HEREDOC__;
          CURLOPT_POSTFIELDS => http_build_query($post_data),
         ]);
 
-      error_log(getmypid() . ' ' . __METHOD__ . " token.php RESPONSE : ${res}");
+      error_log(getmypid() . '[' . __METHOD__ . "]token.php RESPONSE : ${res}");
       $params = json_decode($res, TRUE);
 
       $sql = <<< __HEREDOC__
@@ -83,13 +83,13 @@ __HEREDOC__;
       $statement = $pdo->prepare($sql);
       $rc = $statement->execute([':b_access_token' => $params['access_token'],
                                  ':b_refresh_token' => $params['refresh_token']]);
-      error_log(getmypid() . ' ' . __METHOD__ . " UPDATE RESULT : ${rc}");
+      error_log(getmypid() . '[' . __METHOD__ . "]UPDATE RESULT : ${rc}");
 
       $access_token = $params['access_token'];
     }
     $pdo = null;
 
-    error_log(getmypid() . ' ' . __METHOD__ . ' $access_token : ' . $access_token);
+    error_log(getmypid() . '[' . __METHOD__ . ']$access_token : ' . $access_token);
 
     $this->$_access_token = $access_token;
 
@@ -103,7 +103,7 @@ __HEREDOC__;
     $file_name = '/tmp/folders';
     if (file_exists($file_name)) {
       $folders = unserialize(file_get_contents($file_name));
-      error_log(getmypid() . ' ' . __METHOD__ . ' (CACHE HIT) FOLDERS');
+      error_log(getmypid() . '[' . __METHOD__ . '](CACHE HIT) FOLDERS');
     } else {
       $res = $this->get_contents('https://api.toodledo.com/3/folders/get.php?access_token=' . $this->$access_token, NULL, TRUE);
       $folders = json_decode($res, TRUE);
@@ -114,7 +114,7 @@ __HEREDOC__;
     for ($i = 0; $i < count($folders); $i++) {
       if ($folders[$i]['name'] == $folder_name_) {
         $target_folder_id = $folders[$i]['id'];
-        error_log(getmypid() . ' ' . __METHOD__ . " ${folder_name_} FOLDER ID : ${target_folder_id}");
+        error_log(getmypid() . '[' . __METHOD__ . "]${folder_name_} FOLDER ID : ${target_folder_id}");
         break;
       }
     }
@@ -126,7 +126,7 @@ __HEREDOC__;
     $file_name = '/tmp/contexts';
     if (file_exists($file_name)) {
       $list_context_id = unserialize(file_get_contents($file_name));
-      error_log(getmypid() . ' ' . __METHOD__ . ' (CACHE HIT) $list_context_id : ' . print_r($list_context_id, TRUE));
+      error_log(getmypid() . '[' . __METHOD__ . '](CACHE HIT) $list_context_id : ' . print_r($list_context_id, TRUE));
       return $list_context_id;
     }
 
@@ -158,7 +158,7 @@ __HEREDOC__;
           break;
       }
     }
-    error_log(getmypid() . ' ' . __METHOD__ . ' $list_context_id : ' . print_r($list_context_id, TRUE));
+    error_log(getmypid() . '[' . __METHOD__ . ']$list_context_id : ' . print_r($list_context_id, TRUE));
 
     file_put_contents($file_name, serialize($list_context_id));
 
@@ -167,7 +167,7 @@ __HEREDOC__;
 
   function add_tasks($list_add_task_) {
 
-    error_log(getmypid() . ' ' . __METHOD__ . ' ADD TARGET TASK COUNT : ' . count($list_add_task_));
+    error_log(getmypid() . '[' . __METHOD__ . ']ADD TARGET TASK COUNT : ' . count($list_add_task_));
 
     $list_res = [];
 
@@ -183,7 +183,7 @@ __HEREDOC__;
         [CURLOPT_POST => TRUE,
          CURLOPT_POSTFIELDS => http_build_query($post_data),
         ]);
-      error_log(getmypid() . ' ' . __METHOD__ . ' add.php RESPONSE : ' . $res);
+      error_log(getmypid() . '[' . __METHOD__ . ']add.php RESPONSE : ' . $res);
       $list_res[] = $res;
     }
 
@@ -192,7 +192,7 @@ __HEREDOC__;
 
   function edit_tasks($list_edit_task_) {
 
-    error_log(getmypid() . ' ' . __METHOD__ . ' EDIT TARGET TASK COUNT : ' . count($list_edit_task_));
+    error_log(getmypid() . '[' . __METHOD__ . ']EDIT TARGET TASK COUNT : ' . count($list_edit_task_));
 
     $list_res = [];
 
@@ -208,7 +208,7 @@ __HEREDOC__;
         [CURLOPT_POST => TRUE,
          CURLOPT_POSTFIELDS => http_build_query($post_data),
         ]);
-      error_log(getmypid() . ' ' . __METHOD__ . ' edit.php RESPONSE : ' . $res);
+      error_log(getmypid() . '[' . __METHOD__ . ']edit.php RESPONSE : ' . $res);
       $list_res[] = $res;
     }
 
@@ -217,7 +217,7 @@ __HEREDOC__;
 
   function delete_tasks($list_delete_task_) {
 
-    error_log(getmypid() . ' ' . __METHOD__ . ' DELETE TARGET TASK COUNT : ' . count($list_delete_task_));
+    error_log(getmypid() . '[' . __METHOD__ . ']DELETE TARGET TASK COUNT : ' . count($list_delete_task_));
 
     if (count($list_delete_task_) == 0) {
       return;
@@ -231,7 +231,7 @@ __HEREDOC__;
         [CURLOPT_POST => TRUE,
          CURLOPT_POSTFIELDS => http_build_query($post_data),
         ]);
-      error_log(getmypid() . ' ' . __METHOD__ . ' delete.php RESPONSE : ' . $res);
+      error_log(getmypid() . '[' . __METHOD__ . ']delete.php RESPONSE : ' . $res);
     }
   }
 
@@ -254,7 +254,7 @@ __HEREDOC__;
         $list_weather_guest_area[] = $location_number . ',' . $point_name . ',' . $yyyymmdd;
       }
     }
-    error_log(getmypid() . ' ' . __METHOD__ . ' $list_weather_guest_area : ' . print_r($list_weather_guest_area, TRUE));
+    error_log(getmypid() . '[' . __METHOD__ . ']$list_weather_guest_area : ' . print_r($list_weather_guest_area, TRUE));
     $pdo = null;
 
     return $list_weather_guest_area;
@@ -314,7 +314,7 @@ __HEREDOC__;
         $statement = $pdo->prepare($sql);
         // error_log(getmypid() . ' prepare errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
         $rc = $statement->execute([':b_url_base64' => $url_base64]);
-        error_log(getmypid() . ' ' . __METHOD__ . ' DELETE $rc : ' . $rc);
+        error_log(getmypid() . '[' . __METHOD__ . ']DELETE $rc : ' . $rc);
         // error_log(getmypid() . ' execute errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
       }
 
@@ -331,13 +331,13 @@ __HEREDOC__;
       // error_log(getmypid() . ' prepare errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
       $rc = $statement->execute([':b_url_base64' => $url_base64,
                                  ':b_content_compress_base64' => $content_compress_base64]);
-      error_log(getmypid() . ' ' . __METHOD__ . ' INSERT $rc : ' . $rc);
+      error_log(getmypid() . '[' . __METHOD__ . ']INSERT $rc : ' . $rc);
       // error_log(getmypid() . ' execute errorInfo : ' . print_r($pdo->errorInfo(), TRUE));
     } else {
       if (is_null($options_) == FALSE && array_key_exists(CURLOPT_POST, $options_) === TRUE) {
-        error_log(getmypid() . ' ' . __METHOD__ . ' (CACHE HIT) url : ' . $url_ . '?' . $options_[CURLOPT_POSTFIELDS]);
+        error_log(getmypid() . '[' . __METHOD__ . '](CACHE HIT) url : ' . $url_ . '?' . $options_[CURLOPT_POSTFIELDS]);
       } else {
-        error_log(getmypid() . ' ' . __METHOD__ . ' (CACHE HIT) url : ' . $url_);
+        error_log(getmypid() . '[' . __METHOD__ . '](CACHE HIT) url : ' . $url_);
       }
       $res = gzdecode(base64_decode($result[0]['content_compress_base64']));
     }
@@ -346,8 +346,8 @@ __HEREDOC__;
   }
 
   function get_contents_nocache($url_, $options_ = NULL) {
-    error_log(getmypid() . ' ' . __METHOD__ . ' URL : ' . $url_);
-    error_log(getmypid() . ' ' . __METHOD__ . ' options : ' . print_r($options_, TRUE));
+    error_log(getmypid() . '[' . __METHOD__ . ']URL : ' . $url_);
+    error_log(getmypid() . '[' . __METHOD__ . ']options : ' . print_r($options_, TRUE));
 
     $options = [
       CURLOPT_URL => $url_,
@@ -367,23 +367,23 @@ __HEREDOC__;
       }
       $res = curl_exec($ch);
       $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-      error_log(getmypid() . ' ' . __METHOD__ . ' HTTP STATUS CODE : ' . $http_code);
+      error_log(getmypid() . '[' . __METHOD__ . ']HTTP STATUS CODE : ' . $http_code);
       curl_close($ch);
       if ($http_code == '200') {
         break;
       }
 
-      error_log(getmypid() . ' ' . __METHOD__ . ' $res : ' . $res);
+      error_log(getmypid() . '[' . __METHOD__ . ']$res : ' . $res);
 
       if ($http_code != '503') {
         break;
       } else {
         sleep(3);
-        error_log(getmypid() . ' ' . __METHOD__ . ' RETRY URL : ' . $url_);
+        error_log(getmypid() . '[' . __METHOD__ . ']RETRY URL : ' . $url_);
       }
     }
 
-    error_log(getmypid() . ' ' . __METHOD__ . ' LENGTH : ' . strlen($res));
+    error_log(getmypid() . '[' . __METHOD__ . ']LENGTH : ' . strlen($res));
     return $res;
   }
 }
