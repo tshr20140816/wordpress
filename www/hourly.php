@@ -385,7 +385,8 @@ function get_task_quota($mu_) {
     $url,
     [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
                             "Authorization: Bearer ${api_key}",
-                           ]]);
+                           ]],
+    TRUE);
 
   $data = json_decode($res, TRUE);
   error_log(getmypid() . ' $data : ' . print_r($data, TRUE));
