@@ -111,15 +111,12 @@ if (file_exists($file_name_current) && file_exists($file_name_latest)) {
 
 // Get Tasks
 
-$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,folder,duedate&access_token=' . $access_token
-  . '&after=' . strtotime('-2 day');
+$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,folder,duedate&access_token=' . $access_token;
 $res = $mu->get_contents($url);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
 // error_log($pid . ' $tasks : ' . print_r($tasks, TRUE));
-
-// file_put_contents('/tmp/tasks_tenki2', serialize($tasks));
 
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
