@@ -61,6 +61,8 @@ $res = $mu->get_contents($url);
 $tasks = json_decode($res, TRUE);
 // error_log($pid . ' $tasks : ' . print_r($tasks, TRUE));
 
+// 30日後から70日後までの間の予定のある日を取得
+
 $list_schedule_exists_day = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
