@@ -10,6 +10,9 @@ $res = $mu->get_contents($url);
 
 error_log($res);
 
+$rc = preg_match_all('/<ul class="warnDetail_head_labels">(.+?)<\/ul>/s', $res, $matches, PREG_SET_ORDER);
+
+error_log(print_r($matches, TRUE));
 /*
 $url = 'https://typhoon.yahoo.co.jp/weather/jp/warn/5/5201/';
 
