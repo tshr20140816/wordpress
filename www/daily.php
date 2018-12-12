@@ -52,6 +52,30 @@ for ($i = 0; $i < 12; $i++) {
 }
 error_log($pid . ' $list_base : ' . print_r($list_base, TRUE));
 
+// Get Tasks
+
+$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,folder,duedate&access_token=' . $access_token;
+$res = $mu->get_contents($url);
+// error_log($res);
+
+$tasks = json_decode($res, TRUE);
+// error_log($pid . ' $tasks : ' . print_r($tasks, TRUE));
+
+$list_schedule_exists_day = [];
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+    if ($tasks[$i]['folder'] != $folder_id_label) {
+      $ymd = date('Ymd', $tasks[$i]['duedate']);
+      if (date('Ymd', strtotime('+29 days')) < $ymd && $ymd < date('Ymd', strtotime('+71 days'))) {
+        $list_schedule_exists_day[] = $ymd;
+      }
+    }
+  }
+}
+$list_schedule_exists_day = array_unique($list_schedule_exists_day);
+$rc = sort($list_schedule_exists_day);
+error_log($pid . ' $list_schedule_exists_day : ' . print_r($list_schedule_exists_day, TRUE));
+
 $list_add_task = [];
 // To Small Size
 $update_marker = $mu->to_small_size(' _' . date('ymd') . '_');
@@ -67,7 +91,8 @@ for ($i = 0; $i < 70; $i++) {
   // 30日後以降は土日月及び祝祭日、24節気のみ
   if ($i > 20 && (date('w', $timestamp) + 1) % 7 > 2
       && !array_key_exists($timestamp, $list_holiday)
-      && !array_key_exists($timestamp, $list_24sekki)) {
+      && !array_key_exists($timestamp, $list_24sekki)
+      && array_search(date('Ymd', $timestamp), $list_schedule_exists_day) == FALSE) {
     continue;
   }
   $tmp = '### ' . LIST_YOBI[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ### ' . $tmp . $update_marker;
@@ -108,15 +133,6 @@ if (file_exists($file_name_current) && file_exists($file_name_latest)) {
       . '","context":' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))] . '}';
   }
 }
-
-// Get Tasks
-
-$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,folder,duedate&access_token=' . $access_token;
-$res = $mu->get_contents($url);
-// error_log($res);
-
-$tasks = json_decode($res, TRUE);
-// error_log($pid . ' $tasks : ' . print_r($tasks, TRUE));
 
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
