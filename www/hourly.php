@@ -271,7 +271,7 @@ function get_task_amedas($mu_) {
 
   $list_add_task = [];
 
-  $res = $mu_->get_contents('http://www.jma.go.jp/jp/amedas_h/today-' . getenv('AMEDAS') . '.html');
+  $res = $mu_->get_contents(getenv('URL_AMEDAS'));
 
   $tmp = explode('">時刻</td>', $res);
   $tmp = explode('</table>', $tmp[1]);
