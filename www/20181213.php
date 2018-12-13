@@ -12,6 +12,12 @@ $rc = preg_match_all('/<ul class="warnDetail_head_labels">(.+?)<\/ul>/s', $res, 
 
 error_log(print_r($matches, TRUE));
 
+$res = preg_replace('/<.+?>/s', ' ', $matches[1]);
+$res = preg_replace('/\s+/s', ' ', $matches[1]);
+
+error_log($res);
+
+/*
 $url = 'https://typhoon.yahoo.co.jp/weather/jp/warn/5/5201/';
 
 $res = $mu->get_contents($url);
@@ -19,5 +25,5 @@ $res = $mu->get_contents($url);
 $rc = preg_match_all('/<ul class="warnDetail_head_labels">(.+?)<\/ul>/s', $res, $matches, PREG_SET_ORDER);
 
 error_log(print_r($matches, TRUE));
-
+*/
 ?>
