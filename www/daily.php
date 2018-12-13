@@ -4,7 +4,7 @@
 
 WEATHER
 ADDITIONAL
-HOURLY
+HOURLY : アメダス、直近1時間雨量予想、quota、日付設定漏れ
 
 WEATHER2
 SOCCER
