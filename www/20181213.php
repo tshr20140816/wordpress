@@ -12,7 +12,7 @@ $rc = preg_match_all('/<ul class="warnDetail_head_labels">(.+?)<\/ul>/s', $res, 
 
 error_log(print_r($matches, TRUE));
 
-$res = preg_replace('/<.+?>/s', ' ', $matches[1]);
+$res = preg_replace('/<.+?>/s', ' ', $matches[0][1]);
 error_log($res);
 
 $res = preg_replace('/\s+/s', ' ', $res);
