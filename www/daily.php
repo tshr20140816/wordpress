@@ -1,5 +1,17 @@
 <?php
 
+/*
+
+WEATHER
+ADDITIONAL
+HOURLY
+
+WEATHER2
+SOCCER
+CULTURECENTER
+HIGHWAY
+
+*/
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $pid = getmypid();
