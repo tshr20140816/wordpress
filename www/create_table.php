@@ -51,6 +51,29 @@ __HEREDOC__;
   error_log('create table result : ' . $count);
 }
 
+$sql = <<< __HEREDOC__
+SELECT 'X'
+  FROM pg_class V1
+ WHERE V1.relkind = 'r'
+   AND V1.relname = 'm_tenki';
+__HEREDOC__;
+$count = $pdo->exec($sql);
+error_log('m_tenki : ' . $count);
+
+if ($count == 0) {
+  $sql = <<< __HEREDOC__
+CREATE TABLE public.m_tenki (
+    location_number character varying(5) NOT NULL,
+    point_name character varying(100) NOT NULL,
+    yyyymmdd character varying(8) NOT NULL
+);
+CREATE UNIQUE INDEX pk_m_tenki ON public.m_tenki USING btree (location_number, point_name, yyyymmdd);
+ALTER TABLE public.m_tenki CLUSTER ON pk_m_tenki;
+__HEREDOC__;
+  $count = $pdo->exec($sql);
+  error_log('create table result : ' . $count);
+}
+
 $pdo = null;
 
 ?>
