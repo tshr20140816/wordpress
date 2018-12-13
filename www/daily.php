@@ -6,7 +6,7 @@ WEATHER : 気象庁10日間天気予報
 ADDITIONAL : タスクはあるがその日にラベルが無い
 HOURLY : アメダス、直近1時間雨量予想、quota、日付設定漏れ
 
-WEATHER2
+WEATHER2 : 長期予報、日の出、日の入り、月の出、月の入り
 SOCCER
 CULTURECENTER
 HIGHWAY
