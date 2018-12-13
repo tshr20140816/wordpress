@@ -5,6 +5,7 @@ $pdo = new PDO(
   "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
   $connection_info['user'],
   $connection_info['pass']);
+
 $sql = <<< __HEREDOC__
 SELECT 'X'
   FROM pg_class V1
@@ -23,6 +24,27 @@ CREATE TABLE m_authorization (
  ,scope character varying(255) NOT NULL
  ,create_time timestamp DEFAULT localtimestamp NOT NULL
  ,update_time timestamp DEFAULT localtimestamp NOT NULL
+);
+__HEREDOC__;
+  $count = $pdo->exec($sql);
+  error_log('create table result : ' . $count);
+}
+
+$sql = <<< __HEREDOC__
+SELECT 'X'
+  FROM pg_class V1
+ WHERE V1.relkind = 'r'
+   AND V1.relname = 't_webcache';
+__HEREDOC__;
+$count = $pdo->exec($sql);
+error_log('t_webcache : ' . $count);
+
+if ($count == 0) {
+  $sql = <<< __HEREDOC__
+CREATE TABLE public.t_webcache (
+    url_base64 character varying(1024) PRIMARY KEY,
+    content_compress_base64 text,
+    update_time timestamp without time zone DEFAULT LOCALTIMESTAMP NOT NULL
 );
 __HEREDOC__;
   $count = $pdo->exec($sql);
