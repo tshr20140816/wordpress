@@ -316,8 +316,17 @@ function get_task_amedas($mu_) {
     $title = "${hour}時 ${temp}℃ ${humi}% ${rain}mm ${wind}m/s ${pres}hPa";
   }
 
+  // 警報 注意報
+  
+  $url = getenv('URL_WEATHER_WARN');  
+  $res = $mu_->get_contents($url);
+  
+  $rc = preg_match_all('/<ul class="warnDetail_head_labels">(.+?)<\/ul>/s', $res, $matches, PREG_SET_ORDER);
+  $tmp = preg_replace('/<.+?>/s', ' ', $matches[0][1]);
+  $warn = trim(preg_replace('/\s+/s', ' ', $tmp));
+  
   if ($title != '') {
-    $list_add_task[] = '{"title":"' . $title
+    $list_add_task[] = '{"title":"' . $title . ' ' . $warn
       . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
