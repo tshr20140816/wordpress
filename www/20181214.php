@@ -28,6 +28,9 @@ function get_holiday2($mu_) {
     for ($i = 0; $i < count($tmp); $i++) {
       $tmp1 = explode(',', $tmp[$i]);
       $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
+      if (date('Ymd', $timestamp) < date('Ymd', strtotime('+100 days'))) {
+        continue;
+      }
       $list_holiday2[$timestamp] = $tmp1[7];
 
       $yyyy = $mu_->to_small_size($tmp1[0]);
