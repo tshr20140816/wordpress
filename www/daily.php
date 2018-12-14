@@ -195,21 +195,15 @@ for ($i = 0; $i < count($tasks); $i++) {
     }
   }
 }
-error_log($pid . ' $list_label_title count : ' . count($list_label_title));
 
-$list_add_task_dummy = [];
 foreach ($list_holiday2 as $key => $value) {
-  error_log($pid . ' $key : ' . $key);
   if (array_search($key, $list_label_title) == FALSE) {
-    $list_add_task_dummy[] = '{"title":"' . $key
+    $list_add_task[] = '{"title":"' . $key
     . '","duedate":"' . $value
     . '","tag":"HOLIDAY","context":' . $list_context_id[date('w', $value)]
     . ',"folder":' . $folder_id_label . '}';
-  } else {
-    error_log($pid . ' $list_label_title : ' . $list_label_title[array_search($key, $list_label_title)]);
   }
 }
-error_log($pid . ' $list_add_task_dummy : ' . print_r($list_add_task_dummy, TRUE));
 
 error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
 
