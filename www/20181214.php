@@ -32,7 +32,7 @@ function get_holiday2($mu_) {
     $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
     $list_holiday2[$timestamp] = $tmp1[7];
     
-    $yyyy = $tmp1[0];
+    $yyyy = $mu_->to_small_size($tmp1[0]);
     $tmp2 = '### ' . $tmp1[5] . ' ' . $tmp1[1] . '/' . $tmp1[2] . ' ★' . $tmp1[7] . '★ ### ' . $yyyy;
     error_log($tmp2);
   }
