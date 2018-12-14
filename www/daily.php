@@ -138,8 +138,8 @@ $file_name_current = '/tmp/current_version';
 $file_name_latest = '/tmp/latest_version';
 
 if (file_exists($file_name_current) && file_exists($file_name_latest)) {
-  $current_version = trim(file_get_contents($file_name_current), '"');
-  $latest_version = trim(file_get_contents($file_name_latest), '"');
+  $current_version = trim(trim(file_get_contents($file_name_current), '"'));
+  $latest_version = trim(trim(file_get_contents($file_name_latest), '"'));
   error_log($pid . ' heroku-buildpack-php current : ' . $current_version);
   error_log($pid . ' heroku-buildpack-php latest : ' . $latest_version);
   if ($current_version != $latest_version) {
