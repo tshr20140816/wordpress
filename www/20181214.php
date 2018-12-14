@@ -14,5 +14,5 @@ error_log($res);
 
 $rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
 
-error_log(print_r($matches));
+error_log(print_r($matches, TRUE));
 ?>
