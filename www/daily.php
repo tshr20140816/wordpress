@@ -32,6 +32,9 @@ $list_context_id = $mu->get_contexts();
 // Get Folders
 $folder_id_label = $mu->get_folder_id('LABEL');
 
+// holiday 再来年の12月まで
+$list_holiday2 = get_holiday2($mu);
+
 // holiday 今月含み4ヶ月分
 $list_holiday = get_holiday($mu);
 
@@ -182,6 +185,28 @@ $list_add_task = array_merge($list_add_task, get_task_soccer($mu));
 // Culture Center Tasks
 $list_add_task = array_merge($list_add_task, get_task_culturecenter($mu));
 
+// 祝祭日追加 (folder が LABEL で同じ title が無ければ追加)
+
+$list_label_title = [];
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('title', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+    if ($tasks[$i]['folder'] == $folder_id_label) {
+      $list_label_title[] = $tasks[$i]['title'];
+    }
+  }
+}
+
+$list_add_task_dummy = [];
+foreach ($list_holiday2 as $key => $value) {
+  if (array_search($key, $list_label_title) == FALSE) {
+    $list_add_task_dummy[] = '{"title":"' . $key
+    . '","duedate":"' . $value
+    . '","tag":"HOLIDAY","context":' . $list_context_id[date('w', $value)]
+    . ',"folder":' . $folder_id_label . '}';
+  }
+}
+error_log($pid . ' $list_add_task_dummy : ' . print_r($list_add_task_dummy, TRUE));
+
 error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
 
 // Add Tasks
@@ -193,6 +218,39 @@ $mu->delete_tasks($list_delete_task);
 error_log("${pid} FINISH");
 
 exit();
+
+function get_holiday2($mu_) {
+
+  $list_holiday2 = [];
+  for ($j = 0; $j < 3; $j++) {
+    $yyyy = date('Y', strtotime('+' . $j . ' years'));
+
+    $url = 'http://calendar-service.net/cal?start_year=' . $yyyy
+      . '&start_mon=1&end_year=' . $yyyy . '&end_mon=12'
+      . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
+
+    $res = $mu_->get_contents($url, NULL, TRUE);
+    $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
+
+    $tmp = explode("\n", $res);
+    array_shift($tmp); // ヘッダ行削除
+    array_pop($tmp); // フッタ行(空行)削除
+
+    for ($i = 0; $i < count($tmp); $i++) {
+      $tmp1 = explode(',', $tmp[$i]);
+      $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
+      if (date('Ymd', $timestamp) < date('Ymd', strtotime('+100 days'))) {
+        continue;
+      }
+
+      $yyyy = $mu_->to_small_size($tmp1[0]);
+      $list_holiday2['### ' . $tmp1[5] . ' ' . $tmp1[1] . '/' . $tmp1[2] . ' ★' . $tmp1[7] . '★ ### ' . $yyyy] = $timestamp;
+    }
+  }
+  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday2 : ' . print_r($list_holiday2, TRUE));
+
+  return $list_holiday2;
+}
 
 function get_holiday($mu_) {
   // holiday 今月含み4ヶ月分
