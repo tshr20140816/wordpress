@@ -32,7 +32,7 @@ $list_context_id = $mu->get_contexts();
 // Get Folders
 $folder_id_label = $mu->get_folder_id('LABEL');
 
-// holiday 再来年の12月まで
+// holiday 3年後の12月まで
 $list_holiday2 = get_holiday2($mu);
 
 // holiday 今月含み4ヶ月分
@@ -226,7 +226,7 @@ exit();
 function get_holiday2($mu_) {
 
   $list_holiday2 = [];
-  for ($j = 0; $j < 3; $j++) {
+  for ($j = 0; $j < 4; $j++) {
     $yyyy = date('Y', strtotime('+' . $j . ' years'));
 
     $url = 'http://calendar-service.net/cal?start_year=' . $yyyy
