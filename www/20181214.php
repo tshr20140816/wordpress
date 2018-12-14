@@ -2,6 +2,10 @@
 
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
+$mu = new MyUtils();
+
+$list_holiday2 = get_holiday2($mu);
+
 exit();
 
 function get_holiday2($mu_) {
