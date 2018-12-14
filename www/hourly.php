@@ -150,9 +150,6 @@ $tasks = json_decode($res, TRUE);
 
 error_log($pid . ' TASKS COUNT : ' . count($tasks));
 
-// for cache
-// file_put_contents('/tmp/tasks_tenki', serialize($tasks));
-
 // 予定有りでラベル無しの日のラベル追加
 
 $list_label_task = [];
