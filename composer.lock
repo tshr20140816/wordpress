@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e33bc6362b156a0524ce1c04c608e8aa",
+    "content-hash": "bbe4f9e7403965067db3db169aee5655",
     "packages": [],
     "packages-dev": [
         {
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "a380d44126a056cc5b7daaa0714714e3c888689f"
+                "reference": "3e7fdb191e83149600e09900a208646402a7aed2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/a380d44126a056cc5b7daaa0714714e3c888689f",
-                "reference": "a380d44126a056cc5b7daaa0714714e3c888689f",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/3e7fdb191e83149600e09900a208646402a7aed2",
+                "reference": "3e7fdb191e83149600e09900a208646402a7aed2",
                 "shasum": ""
             },
             "bin": [
@@ -49,7 +49,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2018-11-08T19:23:29+00:00"
+            "time": "2018-12-13T20:20:25+00:00"
         }
     ],
     "aliases": [],
