@@ -18,6 +18,7 @@ if (file_exists($file_name_current) && file_exists($file_name_latest)) {
   $latest_version = trim(trim(file_get_contents($file_name_latest), '"'));
   error_log($pid . ' heroku-buildpack-php current : ' . $current_version);
   error_log($pid . ' heroku-buildpack-php latest : ' . $latest_version);
+  error_log(base64_encode($latest_version));
   if ($current_version != $latest_version) {
     $list_add_task[date('Ymd')] = '{"title":"heroku-buildpack-php : update ' . $latest_version
       . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
