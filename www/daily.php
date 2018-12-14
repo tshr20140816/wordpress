@@ -144,7 +144,7 @@ if (file_exists($file_name_current) && file_exists($file_name_latest)) {
   error_log($pid . ' heroku-buildpack-php latest : ' . $latest_version);
   if ($current_version != $latest_version) {
     $list_add_task[date('Ymd')] = '{"title":"heroku-buildpack-php : update ' . $latest_version
-      . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
+      . ',"duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
       . '","context":' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))] . '}';
   }
 }
