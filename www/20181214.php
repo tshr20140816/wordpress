@@ -43,7 +43,9 @@ curl_setopt($session, CURLOPT_HTTPHEADER, array('Content-Type: application/json'
 
 $fp = fopen($filePath, 'r');
 curl_setopt($session, CURLOPT_INFILESIZE, filesize($filePath));
+error_log('C010');
 $result = curl_exec($session);
+error_log('C020');
 $httpCode = curl_getinfo($session, CURLINFO_HTTP_CODE);
 curl_close($session);
 fclose($fp);
