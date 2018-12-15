@@ -21,6 +21,8 @@ $url = 'https://www.ocrwebservice.com/restservices/processDocument?language=japa
 
 $session = curl_init();
 
+$username = getenv('OCRWEBSERVICE_USER');
+$license_code = getenv('OCRWEBSERVICE_LICENSE_CODE');
 curl_setopt($session, CURLOPT_USERPWD, "$username:$license_code");
 
 curl_setopt($session, CURLOPT_UPLOAD, true);
