@@ -18,10 +18,13 @@ $filePath = '/tmp/sample_image.jpg';
 $res = file_get_contents($matches[1]);
 error_log(strlen($res));
 file_put_contents($filePath, $res);
+$res = file_get_contents($filePath);
+error_log(strlen($res));
 
 $url = 'http://www.ocrwebservice.com/restservices/processDocument?language=japanese&outputformat=txt&gettext=true&getwords=true';
 
 $session = curl_init();
+curl_setopt($session, CURLOPT_URL, $url);
 
 $username = getenv('OCRWEBSERVICE_USER');
 $license_code = getenv('OCRWEBSERVICE_LICENSE_CODE');
