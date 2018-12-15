@@ -18,8 +18,6 @@ $filePath = '/tmp/sample_image.jpg';
 $res = file_get_contents($matches[1]);
 error_log(strlen($res));
 file_put_contents($filePath, $res);
-$res = file_get_contents($filePath);
-error_log(strlen($res));
 
 $url = 'http://www.ocrwebservice.com/restservices/processDocument?language=japanese&gettext=true';
 // $url = 'http://www.ocrwebservice.com/restservices/processDocument?gettext=true';
