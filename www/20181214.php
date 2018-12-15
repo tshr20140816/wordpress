@@ -24,6 +24,7 @@ error_log(strlen($res));
 $url = 'http://www.ocrwebservice.com/restservices/processDocument?language=japanese&outputformat=txt&gettext=true&getwords=true';
 $url = 'http://www.ocrwebservice.com/restservices/processDocument?gettext=true';
 
+$fp = fopen($filePath, 'r');
 $session = curl_init();
 curl_setopt($session, CURLOPT_URL, $url);
 
@@ -41,7 +42,7 @@ curl_setopt($session, CURLOPT_HEADER, false);
 //curl_setopt($session, CURLOPT_SSL_VERIFYPEER, true);
 curl_setopt($session, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 
-$fp = fopen($filePath, 'r');
+
 curl_setopt($session, CURLOPT_INFILESIZE, filesize($filePath));
 error_log('C010');
 $result = curl_exec($session);
