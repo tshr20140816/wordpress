@@ -22,6 +22,7 @@ $res = file_get_contents($filePath);
 error_log(strlen($res));
 
 $url = 'http://www.ocrwebservice.com/restservices/processDocument?language=japanese&outputformat=txt&gettext=true&getwords=true';
+$url = 'http://www.ocrwebservice.com/restservices/processDocument?gettext=true';
 
 $session = curl_init();
 curl_setopt($session, CURLOPT_URL, $url);
