@@ -19,7 +19,7 @@ $res = file_get_contents($matches[1]);
 error_log(strlen($res));
 file_put_contents($filePath, $res);
 
-$url = 'http://www.ocrwebservice.com/restservices/processDocument?language=japanese&gettext=true';
+$url = 'http://www.ocrwebservice.com/restservices/processDocument?language=japanese&gettext=true&getwords=true';
 // $url = 'http://www.ocrwebservice.com/restservices/processDocument?gettext=true';
 
 $username = getenv('OCRWEBSERVICE_USER');
