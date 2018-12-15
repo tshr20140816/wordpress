@@ -23,6 +23,7 @@ $session = curl_init();
 
 $username = getenv('OCRWEBSERVICE_USER');
 $license_code = getenv('OCRWEBSERVICE_LICENSE_CODE');
+error_log($username);
 curl_setopt($session, CURLOPT_USERPWD, "$username:$license_code");
 
 curl_setopt($session, CURLOPT_UPLOAD, true);
@@ -36,8 +37,11 @@ curl_setopt($session, CURLOPT_HTTPHEADER, array('Content-Type: application/json'
 $fp = fopen($filePath, 'r');
 curl_setopt($session, CURLOPT_INFILESIZE, filesize($filePath));
 $result = curl_exec($session);
+$httpCode = curl_getinfo($session, CURLINFO_HTTP_CODE);
 curl_close($session);
 fclose($fp);
+
+error_log($httpCode);
 
 $data = json_decode($result);
 
