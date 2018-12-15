@@ -1,61 +1,23 @@
 <?php
 
-        /*
-        
-           Sample project for OCRWebService.com (REST API).
-           Extract text from scanned images and convert into editable formats.
-           Please create new account with ocrwebservice.com via http://www.ocrwebservice.com/account/signup and get license code
 
-        */
+include(dirname(__FILE__) . '/../classes/MyUtils.php');
+$mu = new MyUtils();
+$url = 'http://the-outlets-hiroshima.com/static/detail/car';
+$res = $mu->get_contents($url);
+error_log($res);
+$rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
+error_log(print_r($matches, TRUE));
+$filePath = '/tmp/sample_image.jpg';
+$res = file_get_contents($matches[1]);
+error_log(strlen($res));
+file_put_contents($filePath, $res);
+$res = file_get_contents($filePath);
+error_log(strlen($res));
 
-        // Provide your user name and license code
-        $license_code = <license code>;
-        $username =  <user name>;
+$username = getenv('OCRWEBSERVICE_USER');
+$license_code = getenv('OCRWEBSERVICE_LICENSE_CODE');
 
-        /*
-
-           You should specify OCR settings. See full description http://www.ocrwebservice.com/service/restguide
-         
-           Input parameters:
-         
-	   [language]     - Specifies the recognition language. 
-	   		    This parameter can contain several language names separated with commas. 
-                            For example "language=english,german,spanish".
-			    Optional parameter. By default:english
-        
-	   [pagerange]    - Enter page numbers and/or page ranges separated by commas. 
-			    For example "pagerange=1,3,5-12" or "pagerange=allpages".
-                            Optional parameter. By default:allpages
-         
-           [tobw]	  - Convert image to black and white (recommend for color image and photo). 
-			    For example "tobw=false"
-                            Optional parameter. By default:false
-         
-           [zone]         - Specifies the region on the image for zonal OCR. 
-			    The coordinates in pixels relative to the left top corner in the following format: top:left:height:width. 
-			    This parameter can contain several zones separated with commas. 
-		            For example "zone=0:0:100:100,50:50:50:50"
-                            Optional parameter.
-          
-           [outputformat] - Specifies the output file format.
-                            Can be specified up to two output formats, separated with commas.
-			    For example "outputformat=pdf,txt"
-                            Optional parameter. By default:doc
-
-           [gettext]	  - Specifies that extracted text will be returned.
-			    For example "tobw=true"
-                            Optional parameter. By default:false
-        
-           [description]  - Specifies your task description. Will be returned in response.
-                            Optional parameter. 
-
-
-	   !!!!  For getting result you must specify "gettext" or "outputformat" !!!!  
-
-	*/
-
-
-        // Build your OCR:
 
         // Extraction text with English language
         $url = 'http://www.ocrwebservice.com/restservices/processDocument?gettext=true';
@@ -66,9 +28,6 @@
         // Convert first 5 pages of multipage document into doc and txt
         // $url = 'http://www.ocrwebservice.com/restservices/processDocument?language=english&pagerange=1-5&outputformat=doc,txt';
       
-
-        // Full path to uploaded document
-        $filePath = 'C:\sample_image.jpg';
   
         $fp = fopen($filePath, 'r');
         $session = curl_init();
@@ -97,7 +56,8 @@
   	$httpCode = curl_getinfo($session, CURLINFO_HTTP_CODE);
         curl_close($session);
         fclose($fp);
-	
+
+error_log($httpCode);
         if($httpCode == 401) 
 	{
            // Please provide valid username and license code
@@ -106,6 +66,7 @@
 
         // Output response
 	$data = json_decode($result);
+error_log(print_r($data, TRUE));
 
         if($httpCode != 200) 
 	{
