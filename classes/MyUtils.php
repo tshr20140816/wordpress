@@ -369,6 +369,7 @@ __HEREDOC__;
       $res = curl_exec($ch);
       $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
       error_log(getmypid() . ' [' . __METHOD__ . '] HTTP STATUS CODE : ' . $http_code);
+      error_log(getmypid() . ' [' . __METHOD__ . '] curl_getinfo : ' . print_r(curl_getinfo($ch), TRUE));
       curl_close($ch);
       if ($http_code == '200') {
         break;
