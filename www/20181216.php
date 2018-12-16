@@ -27,30 +27,22 @@ $username = getenv('OCRWEBSERVICE_USER');
 $license_code = getenv('OCRWEBSERVICE_LICENSE_CODE');
   
 $fp = fopen($filePath, 'r');
-$session = curl_init();
 
-curl_setopt($session, CURLOPT_URL, $url);
-curl_setopt($session, CURLOPT_USERPWD, "$username:$license_code");
+$options = [
+  CURLOPT_USERPWD => "$username:$license_code",
+  CURLOPT_UPLOAD => TRUE,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+  CURLOPT_TIMEOUT => 200,
+  CURLOPT_HEADER => FALSE,
+  CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+  CURLOPT_INFILE => $fp,
+  CURLOPT_INFILESIZE => filesize($filePath),
+];
 
-curl_setopt($session, CURLOPT_UPLOAD, true);
-curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
-curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($session, CURLOPT_TIMEOUT, 200);
-curl_setopt($session, CURLOPT_HEADER, false);
+$res = $mu->get_contents($url, $options);
 
-curl_setopt($session, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
- 
-curl_setopt($session, CURLOPT_INFILE, $fp);
-curl_setopt($session, CURLOPT_INFILESIZE, filesize($filePath));
-
-$result = curl_exec($session);
-
-$httpCode = curl_getinfo($session, CURLINFO_HTTP_CODE);
-curl_close($session);
 fclose($fp);
 
-error_log($httpCode);
-
-$data = json_decode($result);
+$data = json_decode($res);
 error_log(print_r($data, TRUE));
 ?>
