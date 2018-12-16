@@ -37,4 +37,17 @@ $data = json_decode($res);
 error_log(print_r($data, TRUE));
 
 error_log(print_r($data->OCRWords[0][2]->OCRWord, TRUE));
+
+$url = 'https://www.ocrwebservice.com/restservices/getAccountInformation';
+
+$options = [
+  CURLOPT_USERPWD => getenv('OCRWEBSERVICE_USER') . ':' . getenv('OCRWEBSERVICE_LICENSE_CODE'),
+  CURLOPT_TIMEOUT => 200,
+  CURLOPT_HEADER => FALSE,
+  CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+];
+$res = $mu->get_contents($url, $options);
+
+$data = json_decode($res);
+error_log(print_r($data, TRUE));
 ?>
