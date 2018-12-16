@@ -358,8 +358,10 @@ __HEREDOC__;
       CURLOPT_MAXREDIRS => 3,
       CURLOPT_SSL_FALSESTART => TRUE,
     ];
-    error_log(getmypid() . ' [' . __METHOD__ . '] default options : ' . print_r($options, TRUE));
-
+    if (is_null($options_) == FALSE) {
+      error_log(getmypid() . ' [' . __METHOD__ . '] all options : ' . print_r($options + $options_, TRUE));
+    }
+    
     for ($i = 0; $i < 3; $i++) {
       $ch = curl_init();
       curl_setopt_array($ch, $options);
