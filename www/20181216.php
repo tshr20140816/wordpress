@@ -14,7 +14,7 @@ $filePath = '/tmp/sample_image.jpg';
 file_put_contents($filePath, $res);
 
 // $url = 'http://www.ocrwebservice.com/restservices/processDocument?gettext=true';
-$url = 'http://www.ocrwebservice.com/restservices/processDocument?language=english&gettext=true&getwords=true&newline=1';
+$url = 'https://www.ocrwebservice.com/restservices/processDocument?language=english&gettext=true&getwords=true&newline=1';
 
 // $username = getenv('OCRWEBSERVICE_USER');
 // $license_code = getenv('OCRWEBSERVICE_LICENSE_CODE');
