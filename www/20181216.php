@@ -14,9 +14,10 @@ $rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
 
 error_log(print_r($matches, TRUE));
 
-$filePath = '/tmp/sample_image.jpg';
-$res = file_get_contents($matches[1]);
+$res = $mu->get_contents($matches[1]);
 error_log(strlen($res));
+
+$filePath = '/tmp/sample_image.jpg';
 file_put_contents($filePath, $res);
 
 $url = 'http://www.ocrwebservice.com/restservices/processDocument?language=english&gettext=true&getwords=true&newline=1';
