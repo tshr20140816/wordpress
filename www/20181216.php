@@ -39,5 +39,5 @@ fclose($fp);
 $data = json_decode($res);
 error_log(print_r($data, TRUE));
 
-error_log(print_r($data['OCRWords'][0][2], TRUE));
+error_log(print_r($data->OCRWords, TRUE));
 ?>
