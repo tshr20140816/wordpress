@@ -24,7 +24,8 @@ $options = [
   CURLOPT_CUSTOMREQUEST => 'POST',
   CURLOPT_TIMEOUT => 200,
   CURLOPT_HEADER => FALSE,
-  CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+  // CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+  CURLOPT_HTTPHEADER => ['Content-Type' => 'application/json']),
   CURLOPT_INFILE => $fp,
   CURLOPT_INFILESIZE => filesize($filePath),
 ];
