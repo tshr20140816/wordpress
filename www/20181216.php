@@ -8,14 +8,11 @@ $url = 'http://the-outlets-hiroshima.com/static/detail/car';
 
 $res = $mu->get_contents($url);
 
-error_log($res);
-
 $rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
 
 error_log(print_r($matches, TRUE));
 
 $res = $mu->get_contents($matches[1]);
-error_log(strlen($res));
 
 $filePath = '/tmp/sample_image.jpg';
 file_put_contents($filePath, $res);
