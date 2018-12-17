@@ -30,7 +30,7 @@ $post_data = ['base64image' => 'data:image/jpg;base64,' . base64_encode(file_get
 
 $options = [
   CURLOPT_POST => TRUE,
-  CURLOPT_HTTPHEADER => ['apiKey: ' . getenv('OCRSPACE_APIKEY')],
+  CURLOPT_HTTPHEADER => ['apiKey: ' . getenv('OCRSPACE_API_KEY')],
   CURLOPT_POSTFIELDS => http_build_query($post_data),
   CURLOPT_TIMEOUT => 20,
   ];
