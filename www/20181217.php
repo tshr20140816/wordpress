@@ -14,7 +14,7 @@ $rc = preg_match('/LAST UPDATE (.+?)<.+?Free OCR API <span class="status {{ data
 
 error_log(print_r($matches, TRUE));
 
-if (trim($matches[1]) == 'DOWN') {
+if (trim($matches[2]) == 'DOWN') {
   error_log('NO GOOD');
 }
 
