@@ -15,13 +15,11 @@ file_put_contents($file, $res);
 
 $im = imagecreatefromjpeg($file);
 
-// $size = min(imagesx($im), imagesy($im));
-
 error_log(imagesx($im));
 error_log(imagesy($im));
 
 $im2 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
-imagejpeg($im2, $file);
+imagejpeg($im2, $file, 100);
 
 /*
 header('Content-Type: image/jpeg');
