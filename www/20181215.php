@@ -63,7 +63,7 @@ echo file_get_contents($file);
 
 $url = 'https://api.cloudmersive.com/ocr/image/toText';
 
-$post_data = ['imageFile' => 'data:image/png;base64,' . base64_encode(file_get_contents($file))];
+$post_data = ['imageFile' => '@' . $file . ';type=image/png'];
 
 $options = [
   CURLOPT_POST => TRUE,
