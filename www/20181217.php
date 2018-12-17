@@ -18,10 +18,13 @@ $im = imagecreatefromjpeg($file);
 error_log(imagesx($im));
 error_log(imagesy($im));
 
+/*
 $im2 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
 imagejpeg($im2, $file);
 
 $im3 = imagecreatefromjpeg($file);
+*/
+$im3 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
 
 $canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
 imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
@@ -38,6 +41,7 @@ $options = [
   CURLOPT_POST => TRUE,
   CURLOPT_HTTPHEADER => ['apiKey: ' . getenv('OCRSPACE_APIKEY')],
   CURLOPT_POSTFIELDS => http_build_query($post_data),
+  CURLOPT_TIMEOUT => 20;
   ];
 
 $res = $mu->get_contents($url, $options);
