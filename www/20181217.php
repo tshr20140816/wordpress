@@ -11,16 +11,16 @@ $rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
 $res = $mu->get_contents($matches[1]);
 
 /*
-$im : original
+$im1 : original
 $im3 : 上段カット 左右も少しカット
 $im4 : サイズ 1/4
 $im5 : P 除去
 */
-$im = imagecreatefromstring($res);
+$im1 = imagecreatefromstring($res);
 
-$im3 = imagecrop($im, ['x' => 100, 'y' => 95, 'width' => imagesx($im) - 200, 'height' => imagesy($im) - 145]);
+$im3 = imagecrop($im1, ['x' => 100, 'y' => 95, 'width' => imagesx($im1) - 200, 'height' => imagesy($im1) - 145]);
 
-imagedestroy($im);
+imagedestroy($im1);
 
 $canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
 imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
