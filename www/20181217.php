@@ -13,6 +13,10 @@ $res = $mu->get_contents($matches[1]);
 $file = '/tmp/sample.jpg';
 file_put_contents($file, $res);
 
-$im = imagecreatefrompng($file);
+$im = imagecreatefromjpeg($file);
+
+$size = min(imagesx($im), imagesy($im));
+
+error_log(print_r($size, TRUE));
 
 ?>
