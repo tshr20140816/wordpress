@@ -2,8 +2,6 @@
 
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
-@unlink('/tmp/parse.txt');
-
 $mu = new MyUtils();
 
 $url = 'http://the-outlets-hiroshima.com/static/detail/car';
