@@ -18,16 +18,10 @@ $im3 = imagecrop($im, ['x' => 100, 'y' => 95, 'width' => imagesx($im) - 200, 'he
 $canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
 imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
 
-/*
-$file = '/tmp/sample.jpg';
-imagejpeg($canvas, $file, 100);
-header('Content-Type: image/jpg');
-echo file_get_contents($file);
-*/
 $file = '/tmp/sample.png';
 imagepng($canvas, $file);
-header('Content-Type: image/png');
-echo file_get_contents($file);
+// header('Content-Type: image/png');
+// echo file_get_contents($file);
 
 $im4 = imagecreatefrompng($file);
 $x = imagesx($im4);
@@ -55,6 +49,11 @@ for ($x = 0; $x < imagesx($im4); $x++) {
   }
 }
 
+$im5 = imagecrop($im4, ['x' => $check_point, 'y' => 0, 'width' => imagesx($im4) - $check_point, 'height' => imagesy($im4)]);
+
+header('Content-Type: image/png');
+imagepng($im5);
+
 /*
 $url = 'https://api.ocr.space/parse/image';
 
@@ -76,4 +75,5 @@ error_log(trim($data->ParsedResults[0]->ParsedText));
 imagedestroy($im);
 imagedestroy($im3);
 imagedestroy($im4);
+imagedestroy($im5);
 ?>
