@@ -63,12 +63,12 @@ echo file_get_contents($file);
 
 $url = 'https://api.cloudmersive.com/ocr/image/toText';
 
-$post_data = ['base64image' => 'data:image/png;base64,' . base64_encode(file_get_contents($file))];
+$post_data = ['imageFile' => 'data:image/png;base64,' . base64_encode(file_get_contents($file))];
 
 $options = [
   CURLOPT_POST => TRUE,
   CURLOPT_HTTPHEADER => ['Apikey: ' . getenv('CLOUDMERSIVE_API_KEY'),
-                         'Accept: application/vnd.heroku+json; version=3'],
+                         'Accept: application/json'],
   CURLOPT_POSTFIELDS => http_build_query($post_data),
   CURLOPT_TIMEOUT => 20,
   ];
@@ -77,9 +77,6 @@ $res = $mu->get_contents($url, $options);
 
 $data = json_decode($res);
 error_log($pid . ' $data : ' . print_r($data, TRUE));
-error_log($pid . ' PARSE TEXT : ' . trim($data->ParsedResults[0]->ParsedText));
-
-file_put_contents('/tmp/parse.txt', trim($data->ParsedResults[0]->ParsedText));
 
 error_log("${pid} FINISH");
 ?>
