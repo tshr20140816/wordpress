@@ -384,7 +384,7 @@ function get_task_quota($mu_) {
   // Get Contexts
   $list_context_id = $mu_->get_contexts();
 
-  $api_key = getenv('API_KEY');
+  $api_key = getenv('HEROKU_API_KEY');
   $url = 'https://api.heroku.com/account';
 
   $res = $mu_->get_contents(
