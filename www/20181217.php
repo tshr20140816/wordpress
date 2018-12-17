@@ -15,8 +15,9 @@ file_put_contents($file, $res);
 
 $im = imagecreatefromjpeg($file);
 
-$size = min(imagesx($im), imagesy($im));
+// $size = min(imagesx($im), imagesy($im));
 
-error_log(print_r($size, TRUE));
+error_log(imagesx($im));
+error_log(imagesy($im));
 
 ?>
