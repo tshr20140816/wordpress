@@ -2,6 +2,10 @@
 
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
+$pid = getmypid();
+$requesturi = $_SERVER['REQUEST_URI'];
+error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
+
 $mu = new MyUtils();
 
 $url = 'http://the-outlets-hiroshima.com/static/detail/car';
@@ -37,7 +41,7 @@ for ($x = 0; $x < imagesx($im3); $x++) {
       $count++;
     }
   }
-  error_log($x . ' ' . $count);
+  error_log($pid . ' $x $count : ' . $x . ' ' . $count);
   if ($check_point == 0 && $count < 15) {
     $check_point = 1;
   } else if ($check_point == 1 && $count > 15) {
@@ -71,9 +75,10 @@ $options = [
 $res = $mu->get_contents($url, $options);
 
 $data = json_decode($res);
-error_log(print_r($data, TRUE));
-error_log(trim($data->ParsedResults[0]->ParsedText));
+error_log($pid . ' $data : ' . print_r($data, TRUE));
+error_log($pid . ' PARSE TEXT : ' . trim($data->ParsedResults[0]->ParsedText));
 
 file_put_contents('/tmp/parse.txt', trim($data->ParsedResults[0]->ParsedText));
 
+error_log("${pid} FINISH");
 ?>
