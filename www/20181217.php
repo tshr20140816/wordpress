@@ -26,4 +26,6 @@ imagejpeg($im2, $file);
 header('Content-Type: image/jpeg');
 echo file_get_contents($file);
 
+imagedestroy($im);
+imagedestroy($im2);
 ?>
