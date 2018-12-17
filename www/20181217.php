@@ -21,10 +21,8 @@ error_log(imagesy($im));
 $im2 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
 imagejpeg($im2, $file, 100);
 
-/*
 header('Content-Type: image/jpeg');
 echo file_get_contents($file);
-*/
 
 $url = 'https://api.ocr.space/parse/image';
 
