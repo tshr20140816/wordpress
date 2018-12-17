@@ -2,6 +2,8 @@
 
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
+@unlink('/tmp/parse.txt');
+
 $mu = new MyUtils();
 
 $url = 'http://the-outlets-hiroshima.com/static/detail/car';
@@ -73,5 +75,7 @@ $res = $mu->get_contents($url, $options);
 $data = json_decode($res);
 error_log(print_r($data, TRUE));
 error_log(trim($data->ParsedResults[0]->ParsedText));
+
+file_put_contents('/tmp/parse.txt', trim($data->ParsedResults[0]->ParsedText));
 
 ?>
