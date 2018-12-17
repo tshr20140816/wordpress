@@ -12,8 +12,8 @@ $res = $mu->get_contents($matches[1]);
 
 $im = imagecreatefromstring($res);
 
-$im3 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
-// $im3 = imagecrop($im, ['x' => 100, 'y' => 95, 'width' => imagesx($im) - 200, 'height' => imagesy($im) - 145]);
+// $im3 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
+$im3 = imagecrop($im, ['x' => 100, 'y' => 95, 'width' => imagesx($im) - 200, 'height' => imagesy($im) - 145]);
 
 $canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
 imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
@@ -33,6 +33,7 @@ $im4 = imagecreatefrompng($file);
 $x = imagesx($im4);
 $y = imagesy($im4);
 
+$check_point = 0;
 for ($x = 0; $x < imagesx($im4); $x++) {
   $count = 0;
   for ($y = 0; $y < imagesy($im4); $y++) {
@@ -45,7 +46,13 @@ for ($x = 0; $x < imagesx($im4); $x++) {
       $count++;
     }
   }
-  error_log('$x ' . $count);
+  error_log($x . ' ' . $count);
+  if ($check_point == 0 && $count < 15) {
+    $check_point = 1;
+  } else if ($check_point == 1 && $count > 15) {
+    $check_point = $x;
+    break;
+  }
 }
 
 /*
