@@ -63,7 +63,7 @@ echo file_get_contents($file);
 
 $url = 'https://api.ocr.space/parse/image';
 
-$post_data = ['base64image' => 'data:image/jpg;base64,' . base64_encode(file_get_contents($file))];
+$post_data = ['base64image' => 'data:image/png;base64,' . base64_encode(file_get_contents($file))];
 
 $options = [
   CURLOPT_POST => TRUE,
