@@ -343,6 +343,11 @@ function get_task_rainfall($mu_) {
 
   $list_add_task = [];
 
+  $res = $mu_->get_contents(getenv('URL_KASA_SHISU'));
+  
+  $rc = preg_match('/<!--指数情報-->.+?<span>傘指数(.+?)<.+?<p class="index_text">(.+?)</s', $res, $matches);
+  $suffix = ' 傘指数' . $matches[1] . ' ' . $matches[2];  
+  
   $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
     . '&lon=' . getenv('LONGITUDE') . '&lat=' . getenv('LATITUDE');
   $res = $mu_->get_contents($url, NULL, TRUE);
@@ -368,7 +373,7 @@ function get_task_rainfall($mu_) {
   } else {
     $tmp = date('H:i', strtotime('+9 hours')) . ' ☀';
   }
-  $list_add_task[] = '{"title":"' . $tmp
+  $list_add_task[] = '{"title":"' . $tmp . $suffix
       . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
