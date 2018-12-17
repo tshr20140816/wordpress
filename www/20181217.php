@@ -16,10 +16,8 @@ error_log(print_r($matches, TRUE));
 error_log($matches[2] . ' ' . $matches[1] . ' '. $matches[3]);
 
 if (trim($matches[2]) == 'DOWN') {
-  error_log('NO GOOD');
+  exit();
 }
-
-exit();
 
 $url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/20181216.php';
 
