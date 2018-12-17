@@ -19,19 +19,12 @@ $im5 : P 除去
 $im1 = imagecreatefromstring($res);
 
 $im3 = imagecrop($im1, ['x' => 100, 'y' => 95, 'width' => imagesx($im1) - 200, 'height' => imagesy($im1) - 145]);
-
 imagedestroy($im1);
 
-$canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
-imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
+$im4 = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
+imagecopyresampled($im4, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
+imagedestroy($im3);
 
-$file = '/tmp/sample.png';
-// imagepng($canvas, $file);
-// header('Content-Type: image/png');
-// echo file_get_contents($file);
-
-// $im4 = imagecreatefrompng($file);
-$im4 = $canvas;
 $x = imagesx($im4);
 $y = imagesy($im4);
 
@@ -57,12 +50,14 @@ for ($x = 0; $x < imagesx($im4); $x++) {
 }
 
 $im5 = imagecrop($im4, ['x' => $check_point, 'y' => 0, 'width' => imagesx($im4) - $check_point, 'height' => imagesy($im4)]);
+imagedestroy($im4);
 
 header('Content-Type: image/png');
+$file = '/tmp/sample.png';
 imagepng($im5, $file);
+imagedestroy($im5);
 echo file_get_contents($file);
 
-/*
 $url = 'https://api.ocr.space/parse/image';
 
 $post_data = ['base64image' => 'data:image/jpg;base64,' . base64_encode(file_get_contents($file))];
@@ -79,8 +74,5 @@ $res = $mu->get_contents($url, $options);
 $data = json_decode($res);
 error_log(print_r($data, TRUE));
 error_log(trim($data->ParsedResults[0]->ParsedText));
-*/
-imagedestroy($im3);
-imagedestroy($im4);
-imagedestroy($im5);
+
 ?>
