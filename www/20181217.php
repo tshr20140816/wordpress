@@ -42,7 +42,6 @@ for ($x = 0; $x < imagesx($im4); $x++) {
     $r = ($rgb >> 16) & 0xFF;
     $g = ($rgb >> 8) & 0xFF;
     $b =  $rgb & 0xFF;
-    // error_log($x . ' ' . $y . ' ' . $r . ' ' . $g . ' ' . $b);
     if ($r > 200 && $g > 200 && $b > 200) {
       $count++;
     }
