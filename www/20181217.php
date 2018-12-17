@@ -14,6 +14,10 @@ $rc = preg_match('/LAST UPDATE (.+?)<.+?Free OCR API <span class="status {{ data
 
 error_log(print_r($matches, TRUE));
 
+if (trim($matches[1]) == 'DOWN') {
+  error_log('NO GOOD');
+}
+
 exit();
 
 $url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/20181216.php';
