@@ -52,7 +52,7 @@ for ($x = 0; $x < imagesx($im3); $x++) {
 $im4 = imagecrop($im3, ['x' => $check_point, 'y' => 0, 'width' => imagesx($im3) - $check_point, 'height' => imagesy($im3)]);
 imagedestroy($im3);
 
-$file = '/tmp/sample.png';
+$file = '/tmp/outlet_parking.png';
 imagepng($im4, $file);
 imagedestroy($im4);
 /*
