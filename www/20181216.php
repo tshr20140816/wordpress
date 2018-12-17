@@ -13,11 +13,11 @@ $rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
 $url = 'https://api.ocr.space/parse/imageurl?language=jpn&apikey=' . getenv('OCRSPACE_APIKEY') . '&url=' . $matches[1];
 $url = 'https://api.ocr.space/parse/imageurl';
 
-$post_data = ['apikey' => getenv('OCRSPACE_APIKEY'),
-              'url' => $matches[1]];
+$post_data = ['url' => $matches[1]];
 
 $options = [
   CURLOPT_POST => TRUE,
+  CURLOPT_HTTPHEADER => ['apiKey: ' . getenv('OCRSPACE_APIKEY')],
   CURLOPT_POSTFIELDS => http_build_query($post_data),
   ];
 
