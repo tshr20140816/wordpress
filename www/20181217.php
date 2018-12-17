@@ -11,7 +11,7 @@ $url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/20181216.php';
 
 $options = [
   CURLOPT_TIMEOUT => 3,
-  CURLOPT_USERPWD, getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD')),
+  CURLOPT_USERPWD, getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
   ];
 
 $res = $mu->get_contents($url);
