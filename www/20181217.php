@@ -52,11 +52,13 @@ for ($x = 0; $x < imagesx($im4); $x++) {
 $im5 = imagecrop($im4, ['x' => $check_point, 'y' => 0, 'width' => imagesx($im4) - $check_point, 'height' => imagesy($im4)]);
 imagedestroy($im4);
 
-header('Content-Type: image/png');
 $file = '/tmp/sample.png';
 imagepng($im5, $file);
 imagedestroy($im5);
+/*
+header('Content-Type: image/png');
 echo file_get_contents($file);
+*/
 
 $url = 'https://api.ocr.space/parse/image';
 
