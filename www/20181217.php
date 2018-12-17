@@ -23,8 +23,8 @@ imagejpeg($im2, $file, 100);
 
 $im3 = imagecreatefromjpeg($file);
 
-$canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im) / 4);
-imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im) / 4, imagesx($im), imagesy($im));
+$canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
+imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
 imagejpeg($canvas, $file, 100);
 
 header('Content-Type: image/jpg');
