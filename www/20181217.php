@@ -26,11 +26,12 @@ $canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
 imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
 
 $file = '/tmp/sample.png';
-imagepng($canvas, $file);
+// imagepng($canvas, $file);
 // header('Content-Type: image/png');
 // echo file_get_contents($file);
 
-$im4 = imagecreatefrompng($file);
+// $im4 = imagecreatefrompng($file);
+$im4 = $canvas;
 $x = imagesx($im4);
 $y = imagesy($im4);
 
@@ -61,6 +62,7 @@ header('Content-Type: image/png');
 imagepng($im5, $file);
 echo file_get_contents($file);
 
+/*
 $url = 'https://api.ocr.space/parse/image';
 
 $post_data = ['base64image' => 'data:image/jpg;base64,' . base64_encode(file_get_contents($file))];
@@ -77,7 +79,7 @@ $res = $mu->get_contents($url, $options);
 $data = json_decode($res);
 error_log(print_r($data, TRUE));
 error_log(trim($data->ParsedResults[0]->ParsedText));
-
+*/
 imagedestroy($im3);
 imagedestroy($im4);
 imagedestroy($im5);
