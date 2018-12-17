@@ -33,15 +33,19 @@ $im4 = imagecreatefrompng($file);
 $x = imagesx($im4);
 $y = imagesy($im4);
 
-//for ($x = 0; $x < imagesx($im4); $x++) {
-for ($x = 37; $x < 45; $x++) {
+for ($x = 0; $x < imagesx($im4); $x++) {
+  $count = 0;
   for ($y = 0; $y < imagesy($im4); $y++) {
     $rgb = imagecolorat($im4, $x, $y);
     $r = ($rgb >> 16) & 0xFF;
     $g = ($rgb >> 8) & 0xFF;
     $b =  $rgb & 0xFF;
-    error_log($x . ' ' . $y . ' ' . $r . ' ' . $g . ' ' . $b);
+    // error_log($x . ' ' . $y . ' ' . $r . ' ' . $g . ' ' . $b);
+    if ($r > 200 && $g > 200 && $b > 200) {
+      $count++;
+    }
   }
+  error_log('$x ' . $count);
 }
 
 /*
