@@ -14,7 +14,7 @@ $options = [
   CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
   ];
 
-$res = $mu->get_contents($url);
+$res = $mu->get_contents($url, $options);
 
 for ($i = 0; $i < 25; $i++) {
   if (file_exists($file) === TRUE) {
