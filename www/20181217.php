@@ -41,7 +41,7 @@ $options = [
   CURLOPT_POST => TRUE,
   CURLOPT_HTTPHEADER => ['apiKey: ' . getenv('OCRSPACE_APIKEY')],
   CURLOPT_POSTFIELDS => http_build_query($post_data),
-  CURLOPT_TIMEOUT => 20;
+  CURLOPT_TIMEOUT => 20,
   ];
 
 $res = $mu->get_contents($url, $options);
