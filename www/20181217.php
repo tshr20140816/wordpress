@@ -52,9 +52,9 @@ for ($x = 0; $x < imagesx($im4); $x++) {
 $im5 = imagecrop($im4, ['x' => $check_point, 'y' => 0, 'width' => imagesx($im4) - $check_point, 'height' => imagesy($im4)]);
 
 header('Content-Type: image/png');
-imagepng($im5);
+imagepng($im5, $file);
+echo file_get_contents($file);
 
-/*
 $url = 'https://api.ocr.space/parse/image';
 
 $post_data = ['base64image' => 'data:image/jpg;base64,' . base64_encode(file_get_contents($file))];
@@ -71,7 +71,7 @@ $res = $mu->get_contents($url, $options);
 $data = json_decode($res);
 error_log(print_r($data, TRUE));
 error_log(trim($data->ParsedResults[0]->ParsedText));
-*/
+
 imagedestroy($im);
 imagedestroy($im3);
 imagedestroy($im4);
