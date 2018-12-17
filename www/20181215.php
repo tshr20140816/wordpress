@@ -63,13 +63,13 @@ echo file_get_contents($file);
 
 $url = 'https://api.cloudmersive.com/ocr/image/toText';
 
-$post_data = ['imageFile' => '@' . $file . ';type=image/png'];
+$post_data = ['imageFile' => '@' . $file . ';filename=upload.png;type=image/png'];
 
 $options = [
   CURLOPT_POST => TRUE,
   CURLOPT_HTTPHEADER => ['Apikey: ' . getenv('CLOUDMERSIVE_API_KEY'),
                          'Accept: application/json'],
-  CURLOPT_POSTFIELDS => http_build_query($post_data),
+  CURLOPT_POSTFIELDS => $post_data,
   CURLOPT_TIMEOUT => 20,
   ];
 
