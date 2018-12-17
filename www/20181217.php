@@ -10,7 +10,7 @@ $file = '/tmp/parse.txt';
 $url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/20181216.php';
 
 $options = [
-  CURLOPT_TIMEOUT => 3,
+  CURLOPT_TIMEOUT => 2,
   CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
   ];
 
