@@ -11,9 +11,10 @@ $rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
 $res = $mu->get_contents($matches[1]);
 
 $file = '/tmp/sample.jpg';
-file_put_contents($file, $res);
+// file_put_contents($file, $res);
 
-$im = imagecreatefromjpeg($file);
+// $im = imagecreatefromjpeg($file);
+$im = imagecreatefromstring($res);
 
 error_log(imagesx($im));
 error_log(imagesy($im));
