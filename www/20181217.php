@@ -10,20 +10,15 @@ $res = $mu->get_contents($url);
 $rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
 $res = $mu->get_contents($matches[1]);
 
-$file = '/tmp/sample.jpg';
-// file_put_contents($file, $res);
-
-// $im = imagecreatefromjpeg($file);
 $im = imagecreatefromstring($res);
-
-error_log(imagesx($im));
-error_log(imagesy($im));
 
 $im3 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
 
 $canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
 imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
-imagejpeg($canvas, $file);
+
+$file = '/tmp/sample.jpg';
+imagejpeg($canvas, $file, 50);
 
 header('Content-Type: image/jpg');
 echo file_get_contents($file);
