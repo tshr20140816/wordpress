@@ -10,10 +10,17 @@ $res = $mu->get_contents($url);
 $rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
 $res = $mu->get_contents($matches[1]);
 
+/*
+$im : original
+$im3 : 上段カット 左右も少しカット
+$im4 : サイズ 1/4
+$im5 : P 除去
+*/
 $im = imagecreatefromstring($res);
 
-// $im3 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
 $im3 = imagecrop($im, ['x' => 100, 'y' => 95, 'width' => imagesx($im) - 200, 'height' => imagesy($im) - 145]);
+
+imagedestroy($im);
 
 $canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
 imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
@@ -72,7 +79,6 @@ $data = json_decode($res);
 error_log(print_r($data, TRUE));
 error_log(trim($data->ParsedResults[0]->ParsedText));
 
-imagedestroy($im);
 imagedestroy($im3);
 imagedestroy($im4);
 imagedestroy($im5);
