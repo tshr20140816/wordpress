@@ -7,7 +7,7 @@ $mu = new MyUtils();
 $file = '/tmp/parse.txt';
 @unlink($file);
 
-$url = 'https://' . get_env('HEROKU_APP_NAME') . '.herokuapp.com/20181216.php';
+$url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/20181216.php';
 
 $options = [
   CURLOPT_TIMEOUT => 3,
