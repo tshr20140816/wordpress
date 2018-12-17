@@ -39,6 +39,7 @@ $res = $mu->get_contents($url, $options);
 
 $data = json_decode($res);
 error_log(print_r($data, TRUE));
+error_log($data->ParsedResults[0]->ParsedText);
 
 imagedestroy($im);
 imagedestroy($im3);
