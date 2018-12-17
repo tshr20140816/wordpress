@@ -19,13 +19,13 @@ error_log(imagesx($im));
 error_log(imagesy($im));
 
 $im2 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
-imagejpeg($im2, $file, 100);
+imagejpeg($im2, $file);
 
 $im3 = imagecreatefromjpeg($file);
 
 $canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
 imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
-imagejpeg($canvas, $file, 100);
+imagejpeg($canvas, $file);
 
 header('Content-Type: image/jpg');
 echo file_get_contents($file);
