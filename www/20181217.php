@@ -7,6 +7,7 @@ $mu = new MyUtils();
 $file = '/tmp/parse.txt';
 @unlink($file);
 
+/*
 $url = 'https://status.ocr.space/';
 $res = $mu->get_contents($url);
 
@@ -18,8 +19,9 @@ error_log(trim($matches[2]) . ' ' . trim($matches[1]) . ' '. trim($matches[3]));
 if (trim($matches[2]) == 'DOWN') {
   exit();
 }
+*/
 
-$url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/20181216.php';
+$url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/20181215.php';
 
 $options = [
   CURLOPT_TIMEOUT => 2,
