@@ -10,7 +10,7 @@ $file = '/tmp/parse.txt';
 $url = 'https://status.ocr.space/';
 $res = $mu->get_contents($url);
 
-$rc = preg_match('/LAST UPDATE (.+?)<.+?Free OCR API <span class="status {{ data.status }}">(.+?)<.+?Free OCR API <span class="status {{ data.status }}">(.+?)</s', $res, matches);
+$rc = preg_match('/LAST UPDATE (.+?)<.+?Free OCR API <span class="status {{ data.status }}">(.+?)<.+?Free OCR API <span class="status {{ data.status }}">(.+?)</s', $res, $matches);
 
 error_log(print_r($matches, TRUE));
 
