@@ -10,8 +10,8 @@ $res = $mu->get_contents($url);
 // <!--指数情報-->
 // <!--/指数情報-->
 
-$tmp = explode('<!--指数情報-->', $res, 2);
-$tmp = explode('<!--/指数情報-->', $tmp[1], 2);
-error_log($tmp[0]);
+$rc = preg_match_all('/<!--指数情報-->(.+?)<!--\/指数情報-->/s', $res, $matches, PREG_SET_ORDER);
+
+error_log(print_r($matches, TRUE));
 
 ?>
