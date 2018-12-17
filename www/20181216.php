@@ -11,7 +11,7 @@ $rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
 // $res = $mu->get_contents($matches[1]);
 
 $url = 'https://api.ocr.space/parse/imageurl?language=jpn&apikey=' . getenv('OCRSPACE_APIKEY') . '&url=' . $matches[1];
-$url = 'https://api.ocr.space/parse/imageurl';
+$url = 'https://api.ocr.space/parse/image';
 
 $post_data = ['url' => $matches[1]];
 
