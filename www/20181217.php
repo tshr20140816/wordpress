@@ -12,27 +12,27 @@ $res = $mu->get_contents($matches[1]);
 
 /*
 $im1 : original
-$im3 : 上段カット 左右も少しカット
-$im4 : サイズ 1/4
-$im5 : P 除去
+$im2 : 上段カット 左右も少しカット
+$im3 : サイズ 1/4
+$im4 : P 除去 → png
 */
 $im1 = imagecreatefromstring($res);
 
-$im3 = imagecrop($im1, ['x' => 100, 'y' => 95, 'width' => imagesx($im1) - 200, 'height' => imagesy($im1) - 145]);
+$im2 = imagecrop($im1, ['x' => 100, 'y' => 95, 'width' => imagesx($im1) - 200, 'height' => imagesy($im1) - 145]);
 imagedestroy($im1);
 
-$im4 = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
-imagecopyresampled($im4, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
-imagedestroy($im3);
+$im3 = imagecreatetruecolor(imagesx($im2) / 4, imagesy($im2) / 4);
+imagecopyresampled($im3, $im2, 0, 0, 0, 0, imagesx($im2) / 4, imagesy($im2) / 4, imagesx($im2), imagesy($im2));
+imagedestroy($im2);
 
-$x = imagesx($im4);
-$y = imagesy($im4);
+$x = imagesx($im3);
+$y = imagesy($im3);
 
 $check_point = 0;
-for ($x = 0; $x < imagesx($im4); $x++) {
+for ($x = 0; $x < imagesx($im3); $x++) {
   $count = 0;
-  for ($y = 0; $y < imagesy($im4); $y++) {
-    $rgb = imagecolorat($im4, $x, $y);
+  for ($y = 0; $y < imagesy($im3); $y++) {
+    $rgb = imagecolorat($im3, $x, $y);
     $r = ($rgb >> 16) & 0xFF;
     $g = ($rgb >> 8) & 0xFF;
     $b =  $rgb & 0xFF;
@@ -49,12 +49,12 @@ for ($x = 0; $x < imagesx($im4); $x++) {
   }
 }
 
-$im5 = imagecrop($im4, ['x' => $check_point, 'y' => 0, 'width' => imagesx($im4) - $check_point, 'height' => imagesy($im4)]);
-imagedestroy($im4);
+$im4 = imagecrop($im3, ['x' => $check_point, 'y' => 0, 'width' => imagesx($im3) - $check_point, 'height' => imagesy($im3)]);
+imagedestroy($im3);
 
 $file = '/tmp/sample.png';
-imagepng($im5, $file);
-imagedestroy($im5);
+imagepng($im4, $file);
+imagedestroy($im4);
 /*
 header('Content-Type: image/png');
 echo file_get_contents($file);
