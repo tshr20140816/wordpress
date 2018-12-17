@@ -33,7 +33,8 @@ $im4 = imagecreatefrompng($file);
 $x = imagesx($im4);
 $y = imagesy($im4);
 
-for ($x = 0; $x < imagesx($im4); $x++) {
+//for ($x = 0; $x < imagesx($im4); $x++) {
+for ($x = 37; $x < 45; $x++) {
   for ($y = 0; $y < imagesy($im4); $y++) {
     $rgb = imagecolorat($im4, $x, $y);
     $r = ($rgb >> 16) & 0xFF;
@@ -41,7 +42,6 @@ for ($x = 0; $x < imagesx($im4); $x++) {
     $b =  $rgb & 0xFF;
     error_log($x . ' ' . $y . ' ' . $r . ' ' . $g . ' ' . $b);
   }
-  break;
 }
 
 /*
