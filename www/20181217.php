@@ -20,7 +20,7 @@ $im = imagecreatefromjpeg($file);
 error_log(imagesx($im));
 error_log(imagesy($im));
 
-$im2 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 120]);
+$im2 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 150]);
 imagejpeg($im2, $file);
 
 header('Content-Type: image/jpeg');
