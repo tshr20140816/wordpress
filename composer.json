@@ -2,7 +2,9 @@
   "require":
   {
     "php": ">=7.3.0",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "ext-gd": "*",
+    "ext-imagick": "*"
   }
   ,
   "require-dev":
