@@ -12,7 +12,7 @@ $res = $mu->get_contents($matches[1]);
 
 $im = imagecreatefromstring($res);
 
-$im3 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
+$im3 = imagecrop($im, ['x' => 30, 'y' => 95, 'width' => imagesx($im) - 60, 'height' => imagesy($im) - 145]);
 
 $canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
 imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im3) / 4, imagesx($im3), imagesy($im3));
