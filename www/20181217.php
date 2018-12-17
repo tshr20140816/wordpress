@@ -12,9 +12,9 @@ $res = $mu->get_contents($matches[1]);
 
 /*
 $im1 : original
-$im2 : 上段カット 左右も少しカット
+$im2 : 上段、下段カット 左右も少しカット
 $im3 : サイズ 1/4
-$im4 : P 除去 → png
+$im4 : Pマーク 除去 → png
 */
 $im1 = imagecreatefromstring($res);
 
@@ -24,9 +24,6 @@ imagedestroy($im1);
 $im3 = imagecreatetruecolor(imagesx($im2) / 4, imagesy($im2) / 4);
 imagecopyresampled($im3, $im2, 0, 0, 0, 0, imagesx($im2) / 4, imagesy($im2) / 4, imagesx($im2), imagesy($im2));
 imagedestroy($im2);
-
-$x = imagesx($im3);
-$y = imagesy($im3);
 
 $check_point = 0;
 for ($x = 0; $x < imagesx($im3); $x++) {
