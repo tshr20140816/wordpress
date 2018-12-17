@@ -19,7 +19,7 @@ error_log(imagesx($im));
 error_log(imagesy($im));
 
 $im2 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
-imagepng($im2, $file, 100);
+imagepng($im2, $file);
 
 header('Content-Type: image/png');
 echo file_get_contents($file);
