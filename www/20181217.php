@@ -20,4 +20,9 @@ $im = imagecreatefromjpeg($file);
 error_log(imagesx($im));
 error_log(imagesy($im));
 
+$im2 = imagecrop($im, ['x' => 0, 'y' => 0, 'width' => imagesx($im), 'height' => imagesy($im) / 2]);
+imagejpeg($im2, $file);
+
+file_get_contents($file);
+
 ?>
