@@ -18,12 +18,6 @@ $im = imagecreatefromjpeg($file);
 error_log(imagesx($im));
 error_log(imagesy($im));
 
-/*
-$im2 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
-imagejpeg($im2, $file);
-
-$im3 = imagecreatefromjpeg($file);
-*/
 $im3 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
 
 $canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im3) / 4);
@@ -50,6 +44,5 @@ $data = json_decode($res);
 error_log(print_r($data, TRUE));
 
 imagedestroy($im);
-imagedestroy($im2);
 imagedestroy($im3);
 ?>
