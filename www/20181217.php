@@ -21,6 +21,12 @@ error_log(imagesy($im));
 $im2 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
 imagejpeg($im2, $file, 100);
 
+$im3 = imagecreatefromjpeg($file);
+
+$canvas = imagecreatetruecolor(imagesx($im3) / 4, imagesy($im) / 4);
+imagecopyresampled($canvas, $im3, 0, 0, 0, 0, imagesx($im3) / 4, imagesy($im) / 4, imagesx($im), imagesy($im));
+imagejpeg($canvas, $file, 100);
+
 header('Content-Type: image/jpg');
 echo file_get_contents($file);
 
@@ -41,4 +47,5 @@ error_log(print_r($data, TRUE));
 
 imagedestroy($im);
 imagedestroy($im2);
+imagedestroy($im3);
 ?>
