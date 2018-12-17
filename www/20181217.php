@@ -23,8 +23,25 @@ error_log(imagesy($im));
 $im2 = imagecrop($im, ['x' => 0, 'y' => 95, 'width' => imagesx($im), 'height' => imagesy($im) - 145]);
 imagejpeg($im2, $file);
 
+/*
 header('Content-Type: image/jpeg');
 echo file_get_contents($file);
+*/
+
+$url = 'https://api.ocr.space/parse/image';
+
+$post_data = ['file' => $file];
+
+$options = [
+  CURLOPT_POST => TRUE,
+  CURLOPT_HTTPHEADER => ['apiKey: ' . getenv('OCRSPACE_APIKEY')],
+  CURLOPT_POSTFIELDS => http_build_query($post_data),
+  ];
+
+$res = $mu->get_contents($url, $options);
+
+$data = json_decode($res);
+error_log(print_r($data, TRUE));
 
 imagedestroy($im);
 imagedestroy($im2);
