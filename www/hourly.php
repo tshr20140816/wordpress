@@ -12,6 +12,18 @@ $mu = new MyUtils();
 
 $hour_now = ((int)date('G') + 9) % 24; // JST
 
+// outlet parking information ここでは呼び捨て 後で回収
+
+$file_outlet_parking_information = '/tmp/outlet_parking_information.txt';
+@unlink($file_outlet_parking_information);
+
+$url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/20181215.php';
+$options = [
+  CURLOPT_TIMEOUT => 1,
+  CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
+  ];
+$res = $mu->get_contents($url, $options);
+
 // Access Token
 $access_token = $mu->get_access_token();
 
@@ -142,6 +154,21 @@ $list_add_task = array_merge($list_add_task, get_task_rainfall($mu));
 
 // Quota
 $list_add_task = array_merge($list_add_task, get_task_quota($mu));
+
+for ($i = 0; $i < 20; $i++) {
+  if (file_exists($file_outlet_parking_information) === TRUE) {
+    break;
+  }
+  error_log($pid . ' waiting ' . $i);
+  sleep(1);
+}
+
+if (file_exists($file_outlet_parking_information) === TRUE) {
+  $list_add_task[] = '{"title":"P ' . file_get_contents($file_outlet_parking_information)
+    . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018)
+    . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 4, 2018))]
+    . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+}
 
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token;
