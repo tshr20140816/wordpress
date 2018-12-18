@@ -19,7 +19,7 @@ $file_outlet_parking_information = '/tmp/outlet_parking_information.txt';
 
 $url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_information.php';
 $options = [
-  CURLOPT_TIMEOUT => 1,
+  CURLOPT_TIMEOUT => 3,
   CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
   ];
 $res = $mu->get_contents($url, $options);
