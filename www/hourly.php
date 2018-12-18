@@ -292,7 +292,7 @@ function get_task_parking_information($mu_) {
     
     $hash_text = hash('sha512', $res);
     
-    $pdo = $mu->get_pdo();
+    $pdo = $mu_->get_pdo();
     
     $sql = <<< __HEREDOC__
 SELECT T1.parse_text
