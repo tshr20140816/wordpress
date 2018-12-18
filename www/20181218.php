@@ -18,4 +18,14 @@ $res = $mu->get_contents($url);
 
 error_log(md5($res));
 
+$url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=3&mode=pc';
+$res = $mu->get_contents($url);
+
+error_log(md5($res));
+
+$url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=4&mode=pc';
+$res = $mu->get_contents($url);
+
+error_log(md5($res));
+
 ?>
