@@ -78,7 +78,7 @@ $res = $mu->get_contents($url, $options);
 $data = json_decode($res);
 error_log($pid . ' $data : ' . print_r($data, TRUE));
 
-file_put_contents('/tmp/parse.txt', trim($data->TextResult));
+file_put_contents('/tmp/parse.txt', str_replace('0/0', '%', trim($data->TextResult)));
 
 error_log("${pid} FINISH");
 ?>
