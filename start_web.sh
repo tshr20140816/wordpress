@@ -14,6 +14,15 @@ if [ ! -v BASIC_PASSWORD ]; then
   exit
 fi
 
+httpd -V
+httpd -M | sort
+php --version
+whereis php
+php -m
+cat /proc/version
+cat /proc/cpuinfo | grep 'model name' | head -n 1
+curl --version
+  
 # heroku-buildpack-php
 current_version=$(cat composer.lock | grep version | awk '{print $2}' | tr -d ,)
 composer update > /dev/null 2>&1 &
