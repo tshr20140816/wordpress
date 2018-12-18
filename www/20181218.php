@@ -33,13 +33,18 @@ for($x = 0; $x < imagesx($im1); ++$x)
   }
 }
 
+$im3 = imagecreatetruecolor(imagesx($im2) / 4, imagesy($im2) / 4);
+imagecopyresampled($im3, $im2, 0, 0, 0, 0, imagesx($im2) / 4, imagesy($im2) / 4, imagesx($im2), imagesy($im2));
+imagedestroy($im2);
+
 $file = '/tmp/motomachi_parking_information.png';
 
 header('Content-type: image/png');
 //imagepng($im1, $file);
-imagepng($im2);
+imagepng($im3);
 imagedestroy($im1);
 imagedestroy($im2);
+imagedestroy($im3);
 
 
 
