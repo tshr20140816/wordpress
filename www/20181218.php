@@ -14,13 +14,17 @@ $res = $mu->get_contents($url);
 $im1 = imagecreatefromstring($res);
 imagefilter($im1, IMG_FILTER_GRAYSCALE);
 
-$im2 = imagecreatetruecolor(imagesx($im1), imagesy($im1));
-for($x = 0; $x < imagesx($im1); ++$x)
+$im3 = imagecreatetruecolor(imagesx($im1) / 4, imagesy($im1) / 4);
+imagecopyresampled($im3, $im1, 0, 0, 0, 0, imagesx($im1) / 4, imagesy($im1) / 4, imagesx($im1), imagesy($im1));
+imagedestroy($im1);
+
+$im2 = imagecreatetruecolor(imagesx($im3), imagesy($im3));
+for($x = 0; $x < imagesx($im3); ++$x)
 {
-  for($y = 0; $y < imagesy($im1); ++$y)
+  for($y = 0; $y < imagesy($im3); ++$y)
   {
-    $index = imagecolorat($im1, $x, $y);
-    $rgb = imagecolorsforindex($im1, $index);
+    $index = imagecolorat($im3, $x, $y);
+    $rgb = imagecolorsforindex($im3, $index);
     // error_log(print_r($rgb, TRUE));
     // $color = imagecolorallocate($im2, 255 - $rgb['red'], 255 - $rgb['green'], 255 - $rgb['blue']);
     if ($rgb['red'] == 255 && $rgb['green'] == 255 && $rgb['blue'] == 255) {
@@ -33,15 +37,11 @@ for($x = 0; $x < imagesx($im1); ++$x)
   }
 }
 
-$im3 = imagecreatetruecolor(imagesx($im2) / 4, imagesy($im2) / 4);
-imagecopyresampled($im3, $im2, 0, 0, 0, 0, imagesx($im2) / 4, imagesy($im2) / 4, imagesx($im2), imagesy($im2));
-imagedestroy($im2);
-
 $file = '/tmp/motomachi_parking_information.png';
 
 //imagepng($im3, $file);
 header('Content-type: image/png');
-imagepng($im3);
+imagepng($im2);
 imagedestroy($im1);
 imagedestroy($im2);
 imagedestroy($im3);
