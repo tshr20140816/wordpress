@@ -24,7 +24,7 @@ SELECT T1.parse_text
    AND T1.hash_text = :b_hash_text;
 __HEREDOC__;
 
-$statement = pdo->prepare($sql);
+$statement = $pdo->prepare($sql);
 $rc = $statement->execute([':b_hash_text' => $hash_text]);
 error_log("${pid} SELECT RESULT : ${rc}");
 $results = $statement->fetchAll();
@@ -124,7 +124,7 @@ INSERT INTO t_imageparsehash
 };
 __HEREDOC__;
 
-  $statement = pdo->prepare($sql);
+  $statement = $pdo->prepare($sql);
   $rc = $statement->execute([':b_hash_text' => $hash_text,
                              ':b_parse_text' => $parse_text]);
   
