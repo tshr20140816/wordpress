@@ -28,4 +28,10 @@ $res = $mu->get_contents($url);
 
 error_log(md5($res));
 
+$url = 'http://the-outlets-hiroshima.com/static/detail/car';
+$res = $mu->get_contents($url);
+$rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
+$res = $mu->get_contents($matches[1]);
+
+error_log(md5($res));
 ?>
