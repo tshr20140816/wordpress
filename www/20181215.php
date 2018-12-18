@@ -98,12 +98,13 @@ INSERT INTO t_imageparsehash
 );
 __HEREDOC__;
 
+    /*
     $statement = $pdo->prepare($sql);
     $rc = $statement->execute([':b_hash_text' => $hash_text,
                                ':b_parse_text' => $parse_text]);
   
     error_log("${pid} INSERT RESULT : ${rc}");
-  
+  */
     $pdo = NULL;
   }
   break;
