@@ -46,6 +46,22 @@ imagedestroy($im1);
 imagedestroy($im2);
 imagedestroy($im3);
 
+$url = 'https://api.cloudmersive.com/ocr/image/toText';
 
+$post_data = ['imageFile' => new CURLFile($file)];
+
+$options = [
+  CURLOPT_POST => TRUE,
+  CURLOPT_HTTPHEADER => ['Apikey: ' . getenv('CLOUDMERSIVE_API_KEY'),
+                         'language: JPN',
+                         'Accept: application/json'],
+  CURLOPT_POSTFIELDS => $post_data,
+  CURLOPT_TIMEOUT => 20,
+  ];
+
+$res = $mu->get_contents($url, $options);
+
+$data = json_decode($res);
+error_log($pid . ' $data : ' . print_r($data, TRUE));
 
 ?>
