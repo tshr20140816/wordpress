@@ -23,10 +23,10 @@ for($x = 0; $x < imagesx($im1); ++$x)
     $rgb = imagecolorsforindex($im1, $index);
     // error_log(print_r($rgb, TRUE));
     // $color = imagecolorallocate($im2, 255 - $rgb['red'], 255 - $rgb['green'], 255 - $rgb['blue']);
-    if ($rgb['red'] == 138 && $rgb['green'] == 138 && $rgb['blue'] == 138) {
-      $color = imagecolorallocate($im2, 255, 255, 255);
-    } else {
+    if ($rgb['red'] == 0 && $rgb['green'] == 0 && $rgb['blue'] == 0) {
       $color = imagecolorallocate($im2, 0, 0, 0);
+    } else {
+      $color = imagecolorallocate($im2, 255, 255, 255);
     }
 
     imagesetpixel($im2, $x, $y, $color);
@@ -39,12 +39,14 @@ imagedestroy($im2);
 
 $file = '/tmp/motomachi_parking_information.png';
 
-imagepng($im3, $file);
-//header('Content-type: image/png');
-//imagepng($im3);
+//imagepng($im3, $file);
+header('Content-type: image/png');
+imagepng($im3);
 imagedestroy($im1);
 imagedestroy($im2);
 imagedestroy($im3);
+
+exit();
 
 $url = 'https://api.cloudmersive.com/ocr/image/toText';
 
