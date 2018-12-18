@@ -27,7 +27,7 @@ for($x = 0; $x < imagesx($im3); ++$x)
     $rgb = imagecolorsforindex($im3, $index);
     // error_log(print_r($rgb, TRUE));
     // $color = imagecolorallocate($im2, 255 - $rgb['red'], 255 - $rgb['green'], 255 - $rgb['blue']);
-    if ($rgb['red'] == 255 && $rgb['green'] == 255 && $rgb['blue'] == 255) {
+    if ($rgb['red'] > 240 && $rgb['green'] > 240 && $rgb['blue'] > 240) {
       $color = imagecolorallocate($im2, 0, 0, 0);
     } else {
       $color = imagecolorallocate($im2, 255, 255, 255);
