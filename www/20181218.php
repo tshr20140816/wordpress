@@ -8,7 +8,7 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
-$url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=1&mode=pc';
+$url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=3&mode=pc';
 $res = $mu->get_contents($url);
 
 $im1 = imagecreatefromstring($res);
