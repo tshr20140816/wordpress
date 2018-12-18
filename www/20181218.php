@@ -39,9 +39,9 @@ imagedestroy($im2);
 
 $file = '/tmp/motomachi_parking_information.png';
 
-header('Content-type: image/png');
-//imagepng($im1, $file);
-imagepng($im3);
+imagepng($im3, $file);
+//header('Content-type: image/png');
+//imagepng($im3);
 imagedestroy($im1);
 imagedestroy($im2);
 imagedestroy($im3);
