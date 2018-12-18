@@ -281,6 +281,8 @@ function get_task_parking_information($mu_, $file_outlet_parking_information_) {
   // Get Contexts
   $list_context_id = $mu_->get_contexts();
 
+  const LIST_PARKING = array(' ', '体', 'ク', 'セ', 'シ');
+  
   $list_add_task = [];
   
   $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
@@ -318,7 +320,7 @@ __HEREDOC__;
       $parse_text = '不明';
       error_log(getmypid() . ' [' . __METHOD__ . '] $hash_text : ' . $hash_text);
     }
-    $parking_information_all .= ' ' . $parse_text;
+    $parking_information_all .= ' [' . LIST_PARKING[$i] . "]${parse_text}";
   }
   
   for ($i = 0; $i < 20; $i++) {
