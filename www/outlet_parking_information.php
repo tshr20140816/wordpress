@@ -13,6 +13,36 @@ $res = $mu->get_contents($url);
 
 $rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
 $res = $mu->get_contents($matches[1]);
+$hash_text = hash('sha512', $res);
+
+$pdo = $mu->get_pdo();
+
+$sql = <<< __HEREDOC__
+SELECT T1.parse_text
+  FROM t_imageparsehash T1
+ WHERE T1.group_id = 1
+   AND T1.hash_text = :b_hash_text;
+__HEREDOC__;
+
+$statement = pdo->prepare($sql);
+$rc = $statement->execute([':b_hash_text' => $hash_text]);
+error_log("${pid} SELECT RESULT : ${rc}");
+$results = $statement->fetchAll();
+error_log($pid . ' $results : ' . print_r($results, TRUE));
+
+$parse_text = '';
+foreach ($results as $row) {
+  $parse_text = $row['parse_text'];
+}
+
+$pdo = NULL;
+
+if (strlen($parse_text) > 0) {
+  file_put_contents('/tmp/outlet_parking_information.txt', $parse_text);
+  error_log("${pid} (CACHE HIT)PARSE TEXT ${parse_text}");
+  error_log("${pid} FINISH");
+  exit();
+}
 
 /*
 $im1 : original
@@ -74,7 +104,33 @@ $res = $mu->get_contents($url, $options);
 $data = json_decode($res);
 error_log($pid . ' $data : ' . print_r($data, TRUE));
 
-file_put_contents('/tmp/outlet_parking_information.txt', str_replace('0/0', '%', trim($data->TextResult)));
+$parse_text = str_replace('0/0', '%', trim($data->TextResult));
+file_put_contents('/tmp/outlet_parking_information.txt', $parse_text);
+error_log("${pid} PARSE TEXT ${parse_text}");
 
+if (strlen($parse_text) > 0) {
+  $pdo = $mu->get_pdo();
+
+  $sql = <<< __HEREDOC__
+INSERT INTO t_imageparsehash
+(
+ group_id
+,hash_text
+,parse_text
+) VALUES (
+ 1
+,:b_hash_text
+,:b_parse_text
+};
+__HEREDOC__;
+
+  $statement = pdo->prepare($sql);
+  $rc = $statement->execute([':b_hash_text' => $hash_text,
+                             ':b_parse_text' => $parse_text]);
+  
+  error_log("${pid} INSERT RESULT : ${rc}");
+  
+  $pdo = NULL;
+}
 error_log("${pid} FINISH");
 ?>
