@@ -11,27 +11,15 @@ $mu = new MyUtils();
 $url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=1&mode=pc';
 $res = $mu->get_contents($url);
 
-error_log(hash('sha512', $res));
+$im1 = imagecreatefromstring($res);
+imagefilter($im1, IMG_FILTER_NEGATE);
+$file = '/tmp/motomachi_parking_information.png';
 
-$url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=2&mode=pc';
-$res = $mu->get_contents($url);
+header('Content-type: image/png');
+//imagepng($im1, $file);
+imagepng($im1);
+imagedestroy($im1);
 
-error_log(hash('sha512', $res));
 
-$url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=3&mode=pc';
-$res = $mu->get_contents($url);
 
-error_log(hash('sha512', $res));
-
-$url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=4&mode=pc';
-$res = $mu->get_contents($url);
-
-error_log(hash('sha512', $res));
-
-$url = 'http://the-outlets-hiroshima.com/static/detail/car';
-$res = $mu->get_contents($url);
-$rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
-$res = $mu->get_contents($matches[1]);
-
-error_log(hash('sha512', $res));
 ?>
