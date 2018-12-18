@@ -121,7 +121,7 @@ INSERT INTO t_imageparsehash
  1
 ,:b_hash_text
 ,:b_parse_text
-};
+);
 __HEREDOC__;
 
   $statement = $pdo->prepare($sql);
