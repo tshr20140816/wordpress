@@ -12,7 +12,7 @@ $url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=1&mode=pc';
 $res = $mu->get_contents($url);
 
 $im1 = imagecreatefromstring($res);
-imagefilter($im1, IMG_FILTER_NEGATE);
+imagefilter($im1, IMG_FILTER_GRAYSCALE);
 $file = '/tmp/motomachi_parking_information.png';
 
 header('Content-type: image/png');
