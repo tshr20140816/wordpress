@@ -15,10 +15,10 @@ if [ ! -v BASIC_PASSWORD ]; then
 fi
 
 httpd -V
-httpd -M | sort
+# httpd -M | sort
 php --version
-whereis php
-php -m
+# whereis php
+# php -m
 cat /proc/version
 cat /proc/cpuinfo | grep 'model name' | head -n 1
 curl --version
