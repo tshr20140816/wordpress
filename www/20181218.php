@@ -13,6 +13,7 @@ $res = $mu->get_contents($url);
 
 $im1 = imagecreatefromstring($res);
 imagefilter($im1, IMG_FILTER_GRAYSCALE);
+/*
 for($x = 0; $x < imagesx($im1); ++$x)
 {
   for($y = 0; $y < imagesy($im1); ++$y)
@@ -24,6 +25,7 @@ for($x = 0; $x < imagesx($im1); ++$x)
     imagesetpixel($im1, $x, $y, $color);
   }
 }
+*/
 $file = '/tmp/motomachi_parking_information.png';
 
 header('Content-type: image/png');
