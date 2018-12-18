@@ -43,7 +43,7 @@ __HEREDOC__;
   }
 
   $im1 = imagecreatefromstring($res);
-  imagefilter($im1, IMG_FILTER_NEGATE);
+  imagefilter($im1, IMG_FILTER_GRAYSCALE);
   $file = '/tmp/motomachi_parking_information.png';
   imagepng($im1, $file);
   imagedestroy($im1);
