@@ -53,13 +53,9 @@ for ($x = 0; $x < imagesx($im3); $x++) {
 $im4 = imagecrop($im3, ['x' => $check_point, 'y' => 0, 'width' => imagesx($im3) - $check_point, 'height' => imagesy($im3)]);
 imagedestroy($im3);
 
-$file = '/tmp/outlet_parking.png';
+$file = '/tmp/outlet_parking_information.png';
 imagepng($im4, $file);
 imagedestroy($im4);
-/*
-header('Content-Type: image/png');
-echo file_get_contents($file);
-*/
 
 $url = 'https://api.cloudmersive.com/ocr/image/toText';
 
@@ -78,7 +74,7 @@ $res = $mu->get_contents($url, $options);
 $data = json_decode($res);
 error_log($pid . ' $data : ' . print_r($data, TRUE));
 
-file_put_contents('/tmp/parse.txt', str_replace('0/0', '%', trim($data->TextResult)));
+file_put_contents('/tmp/outlet_parking_information.txt', str_replace('0/0', '%', trim($data->TextResult)));
 
 error_log("${pid} FINISH");
 ?>
