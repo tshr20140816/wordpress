@@ -17,7 +17,7 @@ $hour_now = ((int)date('G') + 9) % 24; // JST
 $file_outlet_parking_information = '/tmp/outlet_parking_information.txt';
 @unlink($file_outlet_parking_information);
 
-$url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/20181215.php';
+$url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_information.php';
 $options = [
   CURLOPT_TIMEOUT => 1,
   CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
@@ -154,6 +154,8 @@ $list_add_task = array_merge($list_add_task, get_task_rainfall($mu));
 
 // Quota
 $list_add_task = array_merge($list_add_task, get_task_quota($mu));
+
+// outlet parking information ここで回収
 
 for ($i = 0; $i < 20; $i++) {
   if (file_exists($file_outlet_parking_information) === TRUE) {
