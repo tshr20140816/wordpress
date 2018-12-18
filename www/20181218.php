@@ -24,9 +24,9 @@ for($x = 0; $x < imagesx($im1); ++$x)
     // error_log(print_r($rgb, TRUE));
     // $color = imagecolorallocate($im2, 255 - $rgb['red'], 255 - $rgb['green'], 255 - $rgb['blue']);
     if ($rgb['red'] == 255 && $rgb['green'] == 255 && $rgb['blue'] == 255) {
-      $color = imagecolorallocate($im2, 255, 255, 255);
-    } else {
       $color = imagecolorallocate($im2, 0, 0, 0);
+    } else {
+      $color = imagecolorallocate($im2, 255, 255, 255);
     }
 
     imagesetpixel($im2, $x, $y, $color);
