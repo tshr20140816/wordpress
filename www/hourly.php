@@ -156,7 +156,7 @@ $list_add_task = array_merge($list_add_task, get_task_rainfall($mu));
 $list_add_task = array_merge($list_add_task, get_task_quota($mu));
 
 // parking information
-$list_add_task = array_merge($list_add_task, get_task_parking_information($mu));
+$list_add_task = array_merge($list_add_task, get_task_parking_information($mu, $file_outlet_parking_information));
 
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token;
@@ -273,7 +273,7 @@ error_log("${pid} FINISH");
 
 exit();
 
-function get_task_parking_information($mu_) {
+function get_task_parking_information($mu_, $file_outlet_parking_information_) {
 
   // Get Folders
   $folder_id_label = $mu_->get_folder_id('LABEL');
@@ -322,15 +322,15 @@ __HEREDOC__;
   }
   
   for ($i = 0; $i < 20; $i++) {
-    if (file_exists($file_outlet_parking_information) === TRUE) {
+    if (file_exists($file_outlet_parking_information_) === TRUE) {
       break;
     }
     error_log(getmypid() . ' [' . __METHOD__ . '] waiting ' . $i);
     sleep(1);
   }
 
-  if (file_exists($file_outlet_parking_information) === TRUE) {
-    $list_add_task[] = '{"title":"P ' . file_get_contents($file_outlet_parking_information) . $parking_information_all . $update_marker
+  if (file_exists($file_outlet_parking_information_) === TRUE) {
+    $list_add_task[] = '{"title":"P ' . file_get_contents($file_outlet_parking_information_) . $parking_information_all . $update_marker
       . '","duedate":"' . mktime(0, 0, 0, 1, 5, 2018)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 5, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
