@@ -14,18 +14,16 @@ $res = $mu->get_contents($url);
 $im1 = imagecreatefromstring($res);
 imagefilter($im1, IMG_FILTER_GRAYSCALE);
 
+$im2 = imagecreatetruecolor(imagesx($im1), imagesy($im1));
 for($x = 0; $x < imagesx($im1); ++$x)
 {
   for($y = 0; $y < imagesy($im1); ++$y)
   {
     $index = imagecolorat($im1, $x, $y);
     $rgb = imagecolorsforindex($im1, $index);
-    if ($y == 1) {
-      error_log(print_r($rgb, TRUE));
-    }
-    $color = imagecolorallocate($im1, 255 - $rgb['red'], 255 - $rgb['green'], 255 - $rgb['blue']);
+    $color = imagecolorallocate($im2, 255 - $rgb['red'], 255 - $rgb['green'], 255 - $rgb['blue']);
 
-    imagesetpixel($im1, $x, $y, $color);
+    imagesetpixel($im2, $x, $y, $color);
   }
 }
 
@@ -33,8 +31,9 @@ $file = '/tmp/motomachi_parking_information.png';
 
 header('Content-type: image/png');
 //imagepng($im1, $file);
-imagepng($im1);
+imagepng($im2);
 imagedestroy($im1);
+imagedestroy($im2);
 
 
 
