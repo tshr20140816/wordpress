@@ -6,4 +6,8 @@ wget https://cli-assets.heroku.com/heroku-cli/channels/stable/heroku-cli-linux-x
 tar xvfz heroku.tar.gz
 rm heroku.tar.gz
 
+cd heroku-cli-*
+cd bin
+./heroku version
+
 echo 'https://devcenter.heroku.com/articles/dyno-metadata'
