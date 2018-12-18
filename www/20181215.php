@@ -44,9 +44,21 @@ __HEREDOC__;
 
   $im1 = imagecreatefromstring($res);
   imagefilter($im1, IMG_FILTER_GRAYSCALE);
+  $im2 = imagecreatetruecolor(imagesx($im1), imagesy($im1));
+  for($x = 0; $x < imagesx($im1); ++$x)
+  {
+    for($y = 0; $y < imagesy($im1); ++$y)
+    {
+      $index = imagecolorat($im1, $x, $y);
+      $rgb = imagecolorsforindex($im1, $index);
+      $color = imagecolorallocate($im2, 255 - $rgb['red'], 255 - $rgb['green'], 255 - $rgb['blue']);
+      imagesetpixel($im2, $x, $y, $color);
+    }
+  }
   $file = '/tmp/motomachi_parking_information.png';
-  imagepng($im1, $file);
+  imagepng($im2, $file);
   imagedestroy($im1);
+  imagedestroy($im2);
 
   $url = 'https://api.cloudmersive.com/ocr/image/toText';
 
