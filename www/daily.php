@@ -446,7 +446,7 @@ function get_task_culturecenter($mu_) {
       . '","tag":"CULTURECENTER","folder":"' . $folder_id_private . '"}';
     }
     if ($m == 12) {
-      $yyyy++;
+      $y++;
       $m = 1;
     } else {
       $m++;
