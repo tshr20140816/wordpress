@@ -19,7 +19,7 @@ for($x = 0; $x < imagesx($im1); ++$x)
   {
     $index = imagecolorat($im1, $x, $y);
     $rgb = imagecolorsforindex($index);
-    $color = imagecolorallocate($im, 255 - $rgb['red'], 255 - $rgb['green'], 255 - $rgb['blue']);
+    $color = imagecolorallocate($im1, 255 - $rgb['red'], 255 - $rgb['green'], 255 - $rgb['blue']);
 
     imagesetpixel($im1, $x, $y, $color);
   }
