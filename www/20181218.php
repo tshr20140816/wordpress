@@ -39,14 +39,14 @@ for($x = 0; $x < imagesx($im3); ++$x)
 
 $file = '/tmp/motomachi_parking_information.png';
 
-imagepng($im2, $file);
-//header('Content-type: image/png');
-//imagepng($im2);
+//imagepng($im2, $file);
+header('Content-type: image/png');
+imagepng($im2);
 imagedestroy($im1);
 imagedestroy($im2);
 imagedestroy($im3);
 
-//exit();
+exit();
 
 $url = 'https://api.cloudmersive.com/ocr/image/toText';
 
