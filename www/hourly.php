@@ -155,22 +155,8 @@ $list_add_task = array_merge($list_add_task, get_task_rainfall($mu));
 // Quota
 $list_add_task = array_merge($list_add_task, get_task_quota($mu));
 
-// outlet parking information ここで回収
-
-for ($i = 0; $i < 20; $i++) {
-  if (file_exists($file_outlet_parking_information) === TRUE) {
-    break;
-  }
-  error_log($pid . ' waiting ' . $i);
-  sleep(1);
-}
-
-if (file_exists($file_outlet_parking_information) === TRUE) {
-  $list_add_task[] = '{"title":"P ' . file_get_contents($file_outlet_parking_information)
-    . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018)
-    . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 4, 2018))]
-    . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
-}
+// parking information
+$list_add_task = array_merge($list_add_task, get_task_parking_information($mu));
 
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token;
@@ -286,6 +272,73 @@ $mu->delete_tasks($list_delete_task);
 error_log("${pid} FINISH");
 
 exit();
+
+function get_task_parking_information($mu_) {
+
+  // Get Folders
+  $folder_id_label = $mu_->get_folder_id('LABEL');
+
+  // Get Contexts
+  $list_context_id = $mu_->get_contexts();
+
+  $list_add_task = [];
+  
+  $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
+  
+  $parking_information_all = '';
+  for ($i = 1; $i < 5; $i++) {
+    $url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=' . $i . '&mode=pc';
+    $res = $mu_->get_contents($url);
+    
+    $hash_text = hash('sha512', $res);
+    
+    $pdo = $mu->get_pdo();
+    
+    $sql = <<< __HEREDOC__
+SELECT T1.parse_text
+  FROM t_imageparsehash T1
+ WHERE T1.group_id = 2
+   AND T1.hash_text = :b_hash_text;
+__HEREDOC__;
+    
+    $statement = $pdo->prepare($sql);
+    $rc = $statement->execute([':b_hash_text' => $hash_text]);
+    error_log(getmypid() . ' [' . __METHOD__ . '] SELECT RESULT : ' . $rc);
+    $results = $statement->fetchAll();
+    // error_log(getmypid() . ' [' . __METHOD__ . '] $results : ' . print_r($results, TRUE));
+    
+    $parse_text = '';
+    foreach ($results as $row) {
+      $parse_text = $row['parse_text'];
+    }
+    
+    $pdo = NULL;
+    
+    if (strlen($parse_text) == 0) {
+      $parse_text = '不明';
+      error_log(getmypid() . ' [' . __METHOD__ . '] $hash_text : ' . $hash_text);
+    }
+    $parking_information_all .= ' ' . $parse_text;
+  }
+  
+  for ($i = 0; $i < 20; $i++) {
+    if (file_exists($file_outlet_parking_information) === TRUE) {
+      break;
+    }
+    error_log(getmypid() . ' [' . __METHOD__ . '] waiting ' . $i);
+    sleep(1);
+  }
+
+  if (file_exists($file_outlet_parking_information) === TRUE) {
+    $list_add_task[] = '{"title":"P ' . file_get_contents($file_outlet_parking_information) . $parking_information_all . $update_marker
+      . '","duedate":"' . mktime(0, 0, 0, 1, 5, 2018)
+      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 5, 2018))]
+      . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+  }
+
+  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS PARKING INFORMATION : ' . print_r($list_add_task, TRUE));
+  return $list_add_task;
+}
 
 function get_task_amedas($mu_) {
 
