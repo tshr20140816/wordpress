@@ -282,47 +282,47 @@ function get_task_parking_information($mu_, $file_outlet_parking_information_) {
   $list_context_id = $mu_->get_contexts();
 
   $list_parking_name = [' ', '体', 'ク', 'セ', 'シ'];
-  
+
   $list_add_task = [];
-  
+
   $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
-  
+
   $parking_information_all = '';
   for ($i = 1; $i < 5; $i++) {
     $url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=' . $i . '&mode=pc';
     $res = $mu_->get_contents($url);
-    
+
     $hash_text = hash('sha512', $res);
-    
+
     $pdo = $mu_->get_pdo();
-    
+
     $sql = <<< __HEREDOC__
 SELECT T1.parse_text
   FROM t_imageparsehash T1
  WHERE T1.group_id = 2
    AND T1.hash_text = :b_hash_text;
 __HEREDOC__;
-    
+
     $statement = $pdo->prepare($sql);
     $rc = $statement->execute([':b_hash_text' => $hash_text]);
     error_log(getmypid() . ' [' . __METHOD__ . '] SELECT RESULT : ' . $rc);
     $results = $statement->fetchAll();
     // error_log(getmypid() . ' [' . __METHOD__ . '] $results : ' . print_r($results, TRUE));
-    
+
     $parse_text = '';
     foreach ($results as $row) {
       $parse_text = $row['parse_text'];
     }
-    
+
     $pdo = NULL;
-    
+
     if (strlen($parse_text) == 0) {
       $parse_text = '不明';
       error_log(getmypid() . ' [' . __METHOD__ . '] $hash_text : ' . $hash_text);
     }
     $parking_information_all .= ' [' . $list_parking_name[$i] . "]${parse_text}";
   }
-  
+
   for ($i = 0; $i < 20; $i++) {
     if (file_exists($file_outlet_parking_information_) === TRUE) {
       break;
@@ -398,14 +398,14 @@ function get_task_amedas($mu_) {
   }
 
   // 警報 注意報
-  
-  $url = getenv('URL_WEATHER_WARN');  
+
+  $url = getenv('URL_WEATHER_WARN');
   $res = $mu_->get_contents($url);
-  
+
   $rc = preg_match_all('/<ul class="warnDetail_head_labels">(.+?)<\/ul>/s', $res, $matches, PREG_SET_ORDER);
   $tmp = preg_replace('/<.+?>/s', ' ', $matches[0][1]);
   $warn = trim(preg_replace('/\s+/s', ' ', $tmp));
-  
+
   if ($title != '') {
     $list_add_task[] = '{"title":"' . $title . ' ' . $warn
       . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
@@ -428,10 +428,10 @@ function get_task_rainfall($mu_) {
   $list_add_task = [];
 
   $res = $mu_->get_contents(getenv('URL_KASA_SHISU'));
-  
+
   $rc = preg_match('/<!--指数情報-->.+?<span>傘指数(.+?)<.+?<p class="index_text">(.+?)</s', $res, $matches);
-  $suffix = ' 傘指数' . $matches[1] . ' ' . $matches[2];  
-  
+  $suffix = ' 傘指数' . $matches[1] . ' ' . $matches[2];
+
   $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
     . '&lon=' . getenv('LONGITUDE') . '&lat=' . getenv('LATITUDE');
   $res = $mu_->get_contents($url, NULL, TRUE);
