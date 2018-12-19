@@ -15,11 +15,6 @@ HIGHWAY
 */
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
-if (((int)date('G') + 9) % 24 > 10) {
-  exit();
-}
-
-
 $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
