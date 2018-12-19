@@ -44,6 +44,8 @@ if (strlen($parse_text) > 0) {
   exit();
 }
 
+error_log($pid . ' NEW IMAGE (BASE64) : ' . base64_encode($res));
+
 /*
 $im1 : original
 $im2 : 上段、下段カット 左右も少しカット
