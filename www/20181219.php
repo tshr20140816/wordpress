@@ -15,6 +15,8 @@ error_log($pid . ' NEW IMAGE (ZLIB BASE64) LENGTH : ' . strlen(gzcompress(base64
 error_log($pid . ' NEW IMAGE (ZLIB 9 BASE64) LENGTH : ' . strlen(gzcompress(base64_encode($res), 9)));
 error_log($pid . ' NEW IMAGE (DEFLATE BASE64) LENGTH : ' . strlen(gzdeflate(base64_encode($res))));
 error_log($pid . ' NEW IMAGE (DEFLATE 9 BASE64) LENGTH : ' . strlen(gzdeflate(base64_encode($res), 9)));
+error_log($pid . ' NEW IMAGE (BZIP2 BASE64) LENGTH : ' . strlen(bzcompress(base64_encode($res))));
+error_log($pid . ' NEW IMAGE (BZIP2 9 BASE64) LENGTH : ' . strlen(bzcompress(base64_encode($res), 9)));
 
 error_log($pid . ' NEW IMAGE (GZIP) LENGTH : ' . strlen(gzencode($res)));
 error_log($pid . ' NEW IMAGE (GZIP 9) LENGTH : ' . strlen(gzencode($res, 9)));
@@ -22,6 +24,8 @@ error_log($pid . ' NEW IMAGE (ZLIB) LENGTH : ' . strlen(gzcompress($res)));
 error_log($pid . ' NEW IMAGE (ZLIB 9) LENGTH : ' . strlen(gzcompress($res, 9)));
 error_log($pid . ' NEW IMAGE (DEFLATE) LENGTH : ' . strlen(gzdeflate($res)));
 error_log($pid . ' NEW IMAGE (DEFLATE 9) LENGTH : ' . strlen(gzdeflate($res, 9)));
+error_log($pid . ' NEW IMAGE (BZIP2) LENGTH : ' . strlen(bzcompress($res)));
+error_log($pid . ' NEW IMAGE (BZIP2 9) LENGTH : ' . strlen(bzcompress($res, 9)));
 
 phpinfo();
 ?>
