@@ -11,5 +11,9 @@ $res = $mu->get_contents($matches[1]);
 error_log($pid . ' NEW IMAGE (BASE64) LENGTH : ' . strlen(base64_encode($res)));
 error_log($pid . ' NEW IMAGE (GZIP BASE64) LENGTH : ' . strlen(gzencode(base64_encode($res))));
 error_log($pid . ' NEW IMAGE (GZIP 9 BASE64) LENGTH : ' . strlen(gzencode(base64_encode($res), 9)));
+error_log($pid . ' NEW IMAGE (ZLIB BASE64) LENGTH : ' . strlen(gzcompress(base64_encode($res))));
+error_log($pid . ' NEW IMAGE (ZLIB 9 BASE64) LENGTH : ' . strlen(gzcompress(base64_encode($res), 9)));
+error_log($pid . ' NEW IMAGE (DEFLATE BASE64) LENGTH : ' . strlen(gzdeflate(base64_encode($res))));
+error_log($pid . ' NEW IMAGE (DEFLATE 9 BASE64) LENGTH : ' . strlen(gzdeflate(base64_encode($res), 9)));
 
 ?>
