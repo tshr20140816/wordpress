@@ -454,11 +454,12 @@ function get_task_rainfall($mu_) {
     }
   }
   if (count($list) > 0) {
-    $tmp = date('H:i', strtotime('+9 hours')) . ' ☂ ' . implode(' ', $list);
+    $tmp = '☂ ' . implode(' ', $list);
   } else {
-    $tmp = date('H:i', strtotime('+9 hours')) . ' ☀';
+    $tmp = '☀';
   }
-  $list_add_task[] = '{"title":"' . $tmp . $suffix
+  $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
+  $list_add_task[] = '{"title":"' . $tmp . $suffix . $update_marker
       . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
