@@ -44,7 +44,8 @@ if (strlen($parse_text) > 0) {
   exit();
 }
 
-error_log($pid . ' NEW IMAGE (BASE64) : ' . base64_encode($res));
+// error_log($pid . ' NEW IMAGE (BASE64) : ' . base64_encode($res));
+error_log($pid . ' NEW IMAGE (GZIP BASE64) : ' . gzencode(base64_encode($res), 9));
 
 /*
 $im1 : original
