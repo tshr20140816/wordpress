@@ -23,4 +23,5 @@ error_log($pid . ' NEW IMAGE (ZLIB 9) LENGTH : ' . strlen(gzcompress($res, 9)));
 error_log($pid . ' NEW IMAGE (DEFLATE) LENGTH : ' . strlen(gzdeflate($res)));
 error_log($pid . ' NEW IMAGE (DEFLATE 9) LENGTH : ' . strlen(gzdeflate($res, 9)));
 
+phpinfo();
 ?>
