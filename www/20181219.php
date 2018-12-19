@@ -10,7 +10,7 @@ $res = $mu->get_contents($url);
 
 // error_log($res);
 
-$rc = preg_match('/<!-- today index -->(.+?)<!-- \/today index -->/s', $res, $matches);
+$rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
 
 error_log(print_r($matches, TRUE));
 
