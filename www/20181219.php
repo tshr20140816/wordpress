@@ -22,7 +22,7 @@ $rc = preg_match('/<!-- tomorrow index -->.+?<span class="indexes-telop-0">(.+?)
 
 error_log(print_r($matches, TRUE));
 
-$rc = preg_match_all('/<!-- week -->.+?<p class="indexes-telop-0">(.+?)</p>.+?<!-- \/week -->/s', $res, $matches, PREG_SET_ORDER);
+$rc = preg_match_all('/<!-- week -->.+?<p class="indexes-telop-0">(.+?)<\/p>.+?<!-- \/week -->/s', $res, $matches, PREG_SET_ORDER);
 
 error_log(print_r($matches, TRUE));
 
