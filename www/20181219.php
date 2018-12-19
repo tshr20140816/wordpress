@@ -8,5 +8,6 @@ $url = 'https://tenki.jp/indexes/self_temp/6/30/6200/';
 
 $res = $mu->get_contents($url);
 
+error_log($res);
 
 ?>
