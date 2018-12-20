@@ -4,48 +4,6 @@ include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $mu = new MyUtils();
 
-$list_weather_guest_area = $mu->get_weather_guest_area();
-$list_add_task = [];
-$template_add_task = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER","folder":"__FOLDER_ID__"}';
-
-$update_marker = $mu->to_small_size(' _' . date('Ymd', strtotime('+9 hours')) . '_');
-for ($i = 0; $i < count($list_weather_guest_area); $i++) {
-  $is_add_flag = FALSE;
-  $tmp = explode(',', $list_weather_guest_area[$i]);
-  $location_number = $tmp[0];
-  $point_name = $tmp[1];
-  $yyyymmdd = $tmp[2];
-  $timestamp = strtotime($yyyymmdd) + 9 * 60 * 60;
-  error_log($point_name . ' ' . $yyyymmdd);
-  if ((int)$yyyymmdd < (int)date('Ymd', strtotime('+11 days') + 9 * 60 * 60)) {
-    $res = $mu->get_contents('https://tenki.jp/week/' . $location_number . '/');
-    $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
-    $dt = $matches[1]; // yyyy-mm-dd
-    $tmp = explode($point_name, $res);
-    $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
-    for ($j = 0; $j < 10; $j++) {
-      $timestamp2 = strtotime("${dt} +${j} day") + 9 * 60 * 90;
-      if (date('Ymd', $timestamp2) == $yyyymmdd) {
-        $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
-        $title = date('m/d', $timestamp2) . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
-        $is_add_flag = TRUE;
-        break;
-      }
-    }
-  }
-  if ($is_add_flag === FALSE) {
-    $title = date('m/d', $timestamp) . " 【${point_name} 天気予報未取得】${update_marker}";
-  }
-  $tmp = str_replace('__TITLE__', $title, $template_add_task);
-  $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
-  //$tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
-  $list_add_task[] = $tmp;
-}
-
-error_log(print_r($list_add_task, TRUE));
-
-exit();
-
 $res = $mu->get_contents(getenv('URL_TAIKAN_SHISU'));
 
 // error_log($res);
