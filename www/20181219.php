@@ -16,6 +16,9 @@ if (array_key_exists($timestamp, $list_shisu[getenv('URL_KASA_SHISU')])) {
   error_log('NONE');
 }
 
+$timestamp = strtotime("2018-12-20 +0 day") + 9 * 60 * 60;
+error_log($timestamp);
+
 function get_shisu($mu_) {
   $timestamp = strtotime(date('j F Y', strtotime('+9 hours')));
   $list_shisu = [];
