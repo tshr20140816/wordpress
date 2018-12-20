@@ -683,13 +683,13 @@ function get_shisu($mu_) {
     $list_shisu[$url][$ymd] = $matches[1];
 
     $rc = preg_match('/<!-- tomorrow index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
-    $list_shisu[$url][strtotime($ymd) + 24 * 60 * 60] = $matches[1];
+    $list_shisu[$url][date('Ymd', strtotime($ymd) + 24 * 60 * 60)] = $matches[1];
 
     $rc = preg_match('/<!-- week -->(.+?)<!-- \/week -->/s', $res, $matches);
     $rc = preg_match_all('/<p class="indexes-telop-0">(.+?)<\/p>/s', $matches[1], $matches2, PREG_SET_ORDER);
 
     for($i = 0; $i < count($matches2); $i++) {
-      $list_shisu[$url][strtotime($ymd) + 24 * 60 * 60 * ($i + 2)] = $matches2[$i][1];
+      $list_shisu[$url][date('Ymd', strtotime($ymd) + 24 * 60 * 60 * ($i + 2))] = $matches2[$i][1];
     }
     error_log(getmypid() . ' [' . __METHOD__ . '] $list_shisu : ' . print_r($list_shisu, TRUE));
   }
