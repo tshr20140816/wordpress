@@ -57,6 +57,6 @@ function get_shisu($mu_) {
       $list_shisu[$url][$timestamp + 24 * 60 * 60 * ($i + 2)] = $matches2[$i][1];
     }
   }
-  return $list;
+  return $list_shisu;
 }
 ?>
