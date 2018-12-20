@@ -401,15 +401,21 @@ function get_task_amedas($mu_) {
 
   // 警報 注意報
 
-  $url = getenv('URL_WEATHER_WARN');
-  $res = $mu_->get_contents($url);
+  $res = $mu_->get_contents(getenv('URL_WEATHER_WARN'));
 
   $rc = preg_match_all('/<ul class="warnDetail_head_labels">(.+?)<\/ul>/s', $res, $matches, PREG_SET_ORDER);
   $tmp = preg_replace('/<.+?>/s', ' ', $matches[0][1]);
   $warn = trim(preg_replace('/\s+/s', ' ', $tmp));
 
+  // 体感指数
+  
+  $res = $mu_->get_contents(getenv('URL_TAIKAN_SHISU'));
+  
+  $rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
+  $taikan_shisu = ' 体感指数 : ' . $matches[1];
+  
   if ($title != '') {
-    $list_add_task[] = '{"title":"' . $title . ' ' . $warn
+    $list_add_task[] = '{"title":"' . $title . ' ' . $warn . $taikan_shisu
       . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
