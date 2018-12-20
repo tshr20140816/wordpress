@@ -40,6 +40,8 @@ function get_shisu($mu_) {
   
   foreach([getenv('URL_TAIKAN_SHISU'), getenv('URL_KASA_SHISU')] as $url) {
   
+    $res = $mu_->get_contents($url);
+    
     $rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
     $list[$url][$timestamp] = $matches[1];
   
