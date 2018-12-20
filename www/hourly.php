@@ -675,7 +675,7 @@ function get_moon_age($mu_) {
 
 function get_shisu($mu_) {
 
-  $timestamp = strtotime('+9 hours');
+  $timestamp = strtotime(date('j F Y', strtotime('+9 hours')));
 
   $list_shisu = [];
   foreach([getenv('URL_TAIKAN_SHISU'), getenv('URL_KASA_SHISU')] as $url) {
