@@ -23,7 +23,7 @@ for ($i = 0; $i < 24; $i++) {
   error_log(date('Ymd', strtotime("+${i} hours")));
 }
 */
-error_log(date('Y/m/d H:i:s'));
+error_log(date('Y/m/d H:i:s', strtotime('20181201')));
 
 function get_shisu($mu_) {
   $timestamp = strtotime(date('j F Y', strtotime('+9 hours')));
