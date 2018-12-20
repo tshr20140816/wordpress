@@ -24,10 +24,10 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
     $tmp = explode($point_name, $res);
     $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
     for ($j = 0; $j < 10; $j++) {
-      $timestamp = strtotime("${dt} +${j} day") + 9 * 60 * 90;
-      if (date('Ymd', $timestamp) == $yyyymmdd) {
+      $timestamp2 = strtotime("${dt} +${j} day") + 9 * 60 * 90;
+      if (date('Ymd', $timestamp2) == $yyyymmdd) {
         $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
-        $title = date('m/d', $timestamp) . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
+        $title = date('m/d', $timestamp2) . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
         $is_add_flag = TRUE;
         break;
       }
