@@ -691,8 +691,9 @@ function get_shisu($mu_) {
     for($i = 0; $i < count($matches2); $i++) {
       $list_shisu[$url][date('Ymd', strtotime($ymd) + 24 * 60 * 60 * ($i + 2))] = $matches2[$i][1];
     }
-    error_log(getmypid() . ' [' . __METHOD__ . '] $list_shisu : ' . print_r($list_shisu, TRUE));
   }
+  error_log(getmypid() . ' [' . __METHOD__ . '] $list_shisu : ' . print_r($list_shisu, TRUE));
+
   return $list_shisu;
 }
 ?>
