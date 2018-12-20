@@ -76,6 +76,7 @@ if ($hour_now % 2 === 1) {
     $tmp2 = str_replace('晴', '☀', $tmp2);
     $tmp2 = str_replace('曇', '☁', $tmp2);
     $tmp2 = str_replace('雨', '☂', $tmp2);
+    $tmp2 = str_replace('雪', '☃', $tmp2);
     $tmp2 = str_replace('のち', '/', $tmp2);
     $tmp2 = str_replace('時々', '|', $tmp2);
     $tmp2 = str_replace('一時', '|', $tmp2);
