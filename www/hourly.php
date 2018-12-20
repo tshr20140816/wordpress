@@ -75,7 +75,7 @@ if ($hour_now % 2 === 1) {
   for ($i = 0; $i < 10; $i++) {
     // $timestamp = strtotime("${dt} +${i} day") + 9 * 60 * 60; // JST
     $tmp2 = explode('-', $dt);
-    $timestamp = strtotime("+${i} day", mktime(9, 0, 0, $tmp2[1], $tmp2[2], $tmp2[0])); // JST
+    $timestamp = strtotime("+${i} day", mktime(0, 0, 0, $tmp2[1], $tmp2[2], $tmp2[0])); // JST
     $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i + 1]))));
     $tmp2 = $list[0];
     $tmp2 = str_replace('晴', '☀', $tmp2);
