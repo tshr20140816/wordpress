@@ -70,7 +70,7 @@ if ($hour_now % 2 === 1) {
   $template_add_task = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER","folder":"__FOLDER_ID__"}';
   $template_add_task = str_replace('__FOLDER_ID__', $folder_id_label, $template_add_task);
   for ($i = 0; $i < 10; $i++) {
-    $timestamp = strtotime("${dt} +${i} day");
+    $timestamp = strtotime("${dt} +${i} day") + 9 * 60 * 60; // JST
     $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i + 1]))));
     $tmp2 = $list[0];
     $tmp2 = str_replace('晴', '☀', $tmp2);
@@ -120,7 +120,7 @@ if ($hour_now % 2 === 1) {
     $point_name = $tmp[1];
     $yyyymmdd = $tmp[2];
     $timestamp = strtotime($yyyymmdd);
-    if ((int)$yyyymmdd < (int)date('Ymd', strtotime('+11 days'))) {
+    if ((int)$yyyymmdd < (int)date('Ymd', strtotime('+11 days') + 9 * 60 * 60)) {
       $res = $mu->get_contents('https://tenki.jp/week/' . $location_number . '/');
       $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
       $dt = $matches[1]; // yyyy-mm-dd
@@ -183,7 +183,7 @@ $list_non_label = array_unique(array_diff($list_schedule_task, $list_label_task)
 sort($list_non_label);
 error_log($pid . ' $list_non_label : ' . print_r($list_non_label, TRUE));
 
-$timestamp = strtotime('+20 day');
+$timestamp = strtotime('+20 day' + 9 * 60 * 60);
 for ($i = 0; $i < count($list_non_label); $i++) {
   if ($list_non_label[$i] > $timestamp) {
 
