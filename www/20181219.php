@@ -5,6 +5,8 @@ include(dirname(__FILE__) . '/../classes/MyUtils.php');
 $mu = new MyUtils();
 
 $list_weather_guest_area = $mu->get_weather_guest_area();
+$list_add_task = [];
+$template_add_task = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER","folder":"__FOLDER_ID__"}';
 
 $update_marker = $mu->to_small_size(' _' . date('Ymd', strtotime('+9 hours')) . '_');
 for ($i = 0; $i < count($list_weather_guest_area); $i++) {
@@ -35,7 +37,7 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
   }
   $tmp = str_replace('__TITLE__', $title, $template_add_task);
   $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
-  $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
+  //$tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
   $list_add_task[] = $tmp;
 }
 
