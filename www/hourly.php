@@ -429,7 +429,7 @@ function get_task_rainfall($mu_) {
 
   $list_add_task = [];
 
-  $res = $mu_->get_contents(getenv('URL_KASA_SHISU'));
+  $res = $mu_->get_contents(getenv('URL_KASA_SHISU_YAHOO'));
 
   $rc = preg_match('/<!--指数情報-->.+?<span>傘指数(.+?)<.+?<p class="index_text">(.+?)</s', $res, $matches);
   $suffix = ' 傘指数' . $matches[1] . ' ' . $matches[2];
