@@ -50,6 +50,9 @@ if ($hour_now % 2 === 1) {
   // Moon age
   $list_moon_age = get_moon_age($mu);
 
+  // 指数 傘 体感
+  $list_shisu = get_shisu($mu);
+
   // Weather Information
 
   $res = $mu->get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
@@ -98,6 +101,12 @@ if ($hour_now % 2 === 1) {
     }
     if (array_key_exists($timestamp, $list_moon_age)) {
       $tmp3 .= ' ' . $list_moon_age[$timestamp];
+    }
+    if (array_key_exists($timestamp, $list_shisu[getenv('URL_KASA_SHISU')])) {
+      $tmp3 .= ' 傘' . $list_shisu[getenv('URL_KASA_SHISU')][$timestamp];
+    }
+    if (array_key_exists($timestamp, $list_shisu[getenv('URL_TAIKAN_SHISU')])) {
+      $tmp3 .= ' 体' . $list_shisu[getenv('URL_TAIKAN_SHISU')][$timestamp];
     }
 
     error_log("${pid} ${tmp3}");
