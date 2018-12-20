@@ -38,7 +38,7 @@ function get_shisu($mu_) {
   // $res = $mu_->get_contents(getenv('URL_TAIKAN_SHISU'));
   // $res = $mu_->get_contents(getenv('URL_KASA_SHISU'));
   
-  $list_shisu = [][];
+  $list_shisu = [];
   
   foreach([getenv('URL_TAIKAN_SHISU'), getenv('URL_KASA_SHISU')] as $url) {
   
