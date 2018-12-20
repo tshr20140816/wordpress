@@ -113,14 +113,14 @@ if ($hour_now % 2 === 1) {
 
   $list_weather_guest_area = $mu->get_weather_guest_area();
 
-  $update_marker = $mu->to_small_size(' _' . date('Ymd') . '_');
+  $update_marker = $mu->to_small_size(' _' . date('Ymd', strtotime('+9 hours')) . '_');
   for ($i = 0; $i < count($list_weather_guest_area); $i++) {
     $is_add_flag = FALSE;
     $tmp = explode(',', $list_weather_guest_area[$i]);
     $location_number = $tmp[0];
     $point_name = $tmp[1];
     $yyyymmdd = $tmp[2];
-    $timestamp = strtotime($yyyymmdd);
+    $timestamp = strtotime($yyyymmdd) + 9 * 60 * 60;
     if ((int)$yyyymmdd < (int)date('Ymd', strtotime('+11 days') + 9 * 60 * 60)) {
       $res = $mu->get_contents('https://tenki.jp/week/' . $location_number . '/');
       $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
@@ -128,10 +128,10 @@ if ($hour_now % 2 === 1) {
       $tmp = explode($point_name, $res);
       $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
       for ($j = 0; $j < 10; $j++) {
-        $timestamp = strtotime("${dt} +${j} day");
-        if (date('Ymd', $timestamp) == $yyyymmdd) {
+        $timestamp2 = strtotime("${dt} +${j} day") + 9 * 60 * 90;
+        if (date('Ymd', $timestamp2) == $yyyymmdd) {
           $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
-          $title = date('m/d', $timestamp) . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
+          $title = date('m/d', $timestamp2) . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
           $is_add_flag = TRUE;
           break;
         }
