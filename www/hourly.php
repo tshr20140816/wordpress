@@ -282,6 +282,36 @@ error_log("${pid} FINISH");
 
 exit();
 
+function get_task_heroku_buildpack_php() {
+
+  // Get Folders
+  $folder_id_label = $mu_->get_folder_id('LABEL');
+
+  // Get Contexts
+  $list_context_id = $mu_->get_contexts();
+
+  $list_add_task = [];
+
+  $file_name_current = '/tmp/current_version';
+  $file_name_latest = '/tmp/latest_version';
+
+  if (file_exists($file_name_current) && file_exists($file_name_latest)) {
+    $current_version = trim(trim(file_get_contents($file_name_current)), '"');
+    $latest_version = trim(trim(file_get_contents($file_name_latest)), '"');
+    error_log($pid . ' heroku-buildpack-php current : ' . $current_version);
+    error_log($pid . ' heroku-buildpack-php latest : ' . $latest_version);
+    if ($current_version != $latest_version) {
+      $list_add_task[] = '{"title":"heroku-buildpack-php : update ' . $latest_version
+        . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
+        . '","tag":"HOURLY","folder":"' . $folder_id_label
+        . '","context":' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))] . '}';
+    }
+  }
+
+  error_log(getmypid() . ' [' . __METHOD__ . '] HEROKU BUILDPACK PHP : ' . print_r($list_add_task, TRUE));
+  return $list_add_task;
+}
+
 function get_task_parking_information($mu_, $file_outlet_parking_information_) {
 
   // Get Folders
