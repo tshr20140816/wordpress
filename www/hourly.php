@@ -184,7 +184,7 @@ $list_non_label = array_unique(array_diff($list_schedule_task, $list_label_task)
 sort($list_non_label);
 error_log($pid . ' $list_non_label : ' . print_r($list_non_label, TRUE));
 
-$timestamp = strtotime('+20 day' + 9 * 60 * 60);
+$timestamp = strtotime('+20 day') + 9 * 60 * 60;
 for ($i = 0; $i < count($list_non_label); $i++) {
   if ($list_non_label[$i] > $timestamp) {
 
