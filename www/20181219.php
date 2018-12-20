@@ -18,6 +18,9 @@ if (array_key_exists($timestamp, $list_shisu[getenv('URL_KASA_SHISU')])) {
 
 $timestamp = mktime(9, 0, 0, 12, 20, 2018);
 error_log($timestamp);
+for ($i = 0; $i < 24; $i++) {
+  error_log(date('Ymd', strtotime("+${i} hours")));
+}
 
 function get_shisu($mu_) {
   $timestamp = strtotime(date('j F Y', strtotime('+9 hours')));
