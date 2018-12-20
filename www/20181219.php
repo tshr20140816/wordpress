@@ -15,7 +15,7 @@ for ($i = 0; $i < count($list_weather_guest_area); $i++) {
   $location_number = $tmp[0];
   $point_name = $tmp[1];
   $yyyymmdd = $tmp[2];
-  $timestamp = strtotime($yyyymmdd);
+  $timestamp = strtotime($yyyymmdd) + 9 * 60 * 60;
   error_log($point_name . ' ' . $yyyymmdd);
   if ((int)$yyyymmdd < (int)date('Ymd', strtotime('+11 days') + 9 * 60 * 60)) {
     $res = $mu->get_contents('https://tenki.jp/week/' . $location_number . '/');
