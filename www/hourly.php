@@ -73,9 +73,7 @@ if ($hour_now % 2 === 1) {
   $template_add_task = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER","folder":"__FOLDER_ID__"}';
   $template_add_task = str_replace('__FOLDER_ID__', $folder_id_label, $template_add_task);
   for ($i = 0; $i < 10; $i++) {
-    // $timestamp = strtotime("${dt} +${i} day") + 9 * 60 * 60; // JST
-    $tmp2 = explode('-', $dt);
-    $timestamp = strtotime("+${i} day", mktime(0, 0, 0, $tmp2[1], $tmp2[2], $tmp2[0])); // JST
+    $timestamp = strtotime("${dt} +${i} day"); // JST
     $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i + 1]))));
     $tmp2 = $list[0];
     $tmp2 = str_replace('晴', '☀', $tmp2);
