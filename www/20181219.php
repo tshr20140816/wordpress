@@ -4,9 +4,9 @@ include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $mu = new MyUtils();
 
-$list = get_shisu($mu);
+$list_shisu = get_shisu($mu);
 
-error_log(print_r($list, TRUE));
+error_log(print_r($list_shisu, TRUE));
 
 $timestamp = 1545264000;
 
