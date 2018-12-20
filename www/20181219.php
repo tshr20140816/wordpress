@@ -4,6 +4,12 @@ include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $mu = new MyUtils();
 
+$list_weather_guest_area = $mu->get_weather_guest_area();
+
+error_log(print_r($list_weather_guest_area, TRUE));
+
+exit();
+
 $res = $mu->get_contents(getenv('URL_TAIKAN_SHISU'));
 
 // error_log($res);
