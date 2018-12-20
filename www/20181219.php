@@ -16,7 +16,7 @@ if (array_key_exists($timestamp, $list_shisu[getenv('URL_KASA_SHISU')])) {
   error_log('NONE');
 }
 
-$timestamp = mktime(9, 0, 0, 20, 12, 2018);
+$timestamp = mktime(9, 0, 0, 12, 20, 2018);
 error_log($timestamp);
 
 function get_shisu($mu_) {
