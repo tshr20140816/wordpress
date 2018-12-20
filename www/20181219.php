@@ -27,4 +27,30 @@ $rc = preg_match_all('/<p class="indexes-telop-0">(.+?)<\/p>/s', $matches[1], $m
 
 error_log(print_r($matches2, TRUE));
 
+$list = get_shisu($mu);
+
+error_log(print_r($list, TRUE));
+
+function get_shisu($mu_) {
+  
+  $timestamp = strtotime('+9 hours');
+  
+  $res = $mu_->get_contents(getenv('URL_TAIKAN_SHISU'));
+  // $res = $mu_->get_contents(getenv('URL_KASA_SHISU'));
+  
+  $rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
+  $list[$timestamp] = $matches[1];
+  
+  $rc = preg_match('/<!-- tomorrow index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
+  $list[$timestamp + 24 * 60 * 60] = $matches[1];
+  
+  $rc = preg_match('/<!-- week -->(.+?)<!-- \/week -->/s', $res, $matches);
+  $rc = preg_match_all('/<p class="indexes-telop-0">(.+?)<\/p>/s', $matches[1], $matches2, PREG_SET_ORDER);
+  
+  for($i = 0; $i < count($matches2); $i++) {
+    $list[$timestamp + 24 * 60 * 60 * ($i + 2)] = $matches2[$i][1];
+  }
+  
+  return $list;
+}
 ?>
