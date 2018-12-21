@@ -12,11 +12,13 @@ clearstatcache();
 $file = '/tmp/toodledo_vcalendar.ics';
 
 error_log("${pid} FILE EXISTS : " . file_exists($file) ? 'YES' : 'NO');
+if (file_exists($file)){
+  error_log("${pid} ${file} FILE SIZE : " . filesize($file));
+}
 
 header('Content-Type: text/calendar');
 if (file_exists($file) && $ueragent == getenv('USER_AGENT_ICS')) {
   error_log("${pid} OK");
-  error_log("${pid} ${file} FILE SIZE : " . filesize($file));
   $res = file_get_contents($file);
   echo $res;
 } else {
