@@ -30,7 +30,8 @@ $res = $mu->get_contents(
     [CURLOPT_USERPWD => getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'),
      CURLOPT_POST => true,
      CURLOPT_POSTFIELDS => http_build_query($post_data),
-    ]);
+    ]
+);
 
 error_log($pid . ' ' . $res . ' : ${res}');
 
@@ -40,7 +41,8 @@ $connection_info = parse_url(getenv('DATABASE_URL'));
 $pdo = new PDO(
     "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
     $connection_info['user'],
-    $connection_info['pass']);
+    $connection_info['pass']
+);
   
 $sql = 'TRUNCATE TABLE m_authorization;';
 
@@ -67,10 +69,10 @@ $rc = $statement->execute(
      ':b_expires_in' => $params['expires_in'],
      ':b_refresh_token' => $params['refresh_token'],
      ':b_scope' => $params['scope'],
-    ]);
+    ]
+);
 error_log("${pid} INSERT RESULT : ${rc}");
 
 $pdo = null;
 
 error_log("${pid} FINISH");
-?>
