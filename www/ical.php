@@ -12,10 +12,10 @@ error_log("${pid} USER AGENT : ${ueragent}");
 $mu = new MyUtils();
 
 header('Content-Type: text/calendar');
-if ($ueragent != getenv('USER_AGENT_ICS')){
-  error_log("${pid} USER AGENT NG");
-  echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR";
-  exit();
+if ($ueragent != getenv('USER_AGENT_ICS')) {
+    error_log("${pid} USER AGENT NG");
+    echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR";
+    exit();
 }
 
 $pdo = $mu->get_pdo();
@@ -23,20 +23,19 @@ $pdo = $mu->get_pdo();
 $sql = 'SELECT T1.ical_data FROM t_ical T1';
 $ical_data = '';
 foreach ($pdo->query($sql) as $row) {
-  $ical_data = $row['ical_data'];
-  break;
+    $ical_data = $row['ical_data'];
+    break;
 }
 
-$pdo = NULL;
+$pdo = null;
 
 if ($ical_data == '') {
-  error_log("${pid} DATA NONE");
-  echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR";
+    error_log("${pid} DATA NONE");
+    echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR";
 } else {
-  error_log("${pid} OK");
-  echo gzdecode(base64_decode($ical_data));
+    error_log("${pid} OK");
+    echo gzdecode(base64_decode($ical_data));
 }
 
 error_log("${pid} FINISH");
 exit();
-?>
