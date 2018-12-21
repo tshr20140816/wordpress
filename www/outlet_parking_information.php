@@ -28,20 +28,20 @@ $statement = $pdo->prepare($sql);
 $rc = $statement->execute([':b_hash_text' => $hash_text]);
 error_log("${pid} SELECT RESULT : ${rc}");
 $results = $statement->fetchAll();
-error_log($pid . ' $results : ' . print_r($results, TRUE));
+error_log($pid . ' $results : ' . print_r($results, true));
 
 $parse_text = '';
 foreach ($results as $row) {
-  $parse_text = $row['parse_text'];
+    $parse_text = $row['parse_text'];
 }
 
-$pdo = NULL;
+$pdo = null;
 
 if (strlen($parse_text) > 0) {
-  file_put_contents('/tmp/outlet_parking_information.txt', $parse_text);
-  error_log("${pid} (CACHE HIT)PARSE TEXT ${parse_text}");
-  error_log("${pid} FINISH");
-  exit();
+    file_put_contents('/tmp/outlet_parking_information.txt', $parse_text);
+    error_log("${pid} (CACHE HIT)PARSE TEXT ${parse_text}");
+    error_log("${pid} FINISH");
+    exit();
 }
 
 // error_log($pid . ' NEW IMAGE (BASE64) : ' . base64_encode($res));
@@ -49,9 +49,9 @@ error_log($pid . ' NEW IMAGE (GZIP BASE64) : ' . gzencode(base64_encode($res), 9
 
 /*
 $im1 : original
-$im2 : 上段、下段カット 左右も少しカット
-$im3 : サイズ 1/4
-$im4 : Pマーク 除去 → png
+$im2 : ä¸æ®µãä¸æ®µã«ãã å·¦å³ãå°ãã«ãã
+$im3 : ãµã¤ãº 1/4
+$im4 : Pãã¼ã¯ é¤å» â png
 */
 $im1 = imagecreatefromstring($res);
 
@@ -64,23 +64,23 @@ imagedestroy($im2);
 
 $check_point = 0;
 for ($x = 0; $x < imagesx($im3); $x++) {
-  $count = 0;
-  for ($y = 0; $y < imagesy($im3); $y++) {
-    $rgb = imagecolorat($im3, $x, $y);
-    $r = ($rgb >> 16) & 0xFF;
-    $g = ($rgb >> 8) & 0xFF;
-    $b =  $rgb & 0xFF;
-    if ($r > 200 && $g > 200 && $b > 200) {
-      $count++;
+    $count = 0;
+    for ($y = 0; $y < imagesy($im3); $y++) {
+        $rgb = imagecolorat($im3, $x, $y);
+        $r = ($rgb >> 16) & 0xFF;
+        $g = ($rgb >> 8) & 0xFF;
+        $b =  $rgb & 0xFF;
+        if ($r > 200 && $g > 200 && $b > 200) {
+            $count++;
+        }
     }
-  }
-  error_log($pid . ' $x $count : ' . $x . ' ' . $count);
-  if ($check_point == 0 && $count < 15) {
-    $check_point = 1;
-  } elseif ($check_point == 1 && $count > 15) {
-    $check_point = $x;
-    break;
-  }
+    error_log($pid . ' $x $count : ' . $x . ' ' . $count);
+    if ($check_point == 0 && $count < 15) {
+        $check_point = 1;
+    } elseif ($check_point == 1 && $count > 15) {
+        $check_point = $x;
+        break;
+    }
 }
 
 $im4 = imagecrop($im3, ['x' => $check_point, 'y' => 0, 'width' => imagesx($im3) - $check_point, 'height' => imagesy($im3)]);
@@ -95,7 +95,7 @@ $url = 'https://api.cloudmersive.com/ocr/image/toText';
 $post_data = ['imageFile' => new CURLFile($file)];
 
 $options = [
-  CURLOPT_POST => TRUE,
+  CURLOPT_POST => true,
   CURLOPT_HTTPHEADER => ['Apikey: ' . getenv('CLOUDMERSIVE_API_KEY'),
                          'Accept: application/json'],
   CURLOPT_POSTFIELDS => $post_data,
@@ -105,16 +105,16 @@ $options = [
 $res = $mu->get_contents($url, $options);
 
 $data = json_decode($res);
-error_log($pid . ' $data : ' . print_r($data, TRUE));
+error_log($pid . ' $data : ' . print_r($data, true));
 
 $parse_text = str_replace('0/0', '%', trim($data->TextResult));
 file_put_contents('/tmp/outlet_parking_information.txt', $parse_text);
 error_log("${pid} PARSE TEXT ${parse_text}");
 
 if (strlen($parse_text) > 0) {
-  $pdo = $mu->get_pdo();
+    $pdo = $mu->get_pdo();
 
-  $sql = <<< __HEREDOC__
+    $sql = <<< __HEREDOC__
 INSERT INTO t_imageparsehash
 (
  group_id
@@ -127,13 +127,12 @@ INSERT INTO t_imageparsehash
 );
 __HEREDOC__;
 
-  $statement = $pdo->prepare($sql);
-  $rc = $statement->execute([':b_hash_text' => $hash_text,
+    $statement = $pdo->prepare($sql);
+    $rc = $statement->execute([':b_hash_text' => $hash_text,
                              ':b_parse_text' => $parse_text]);
   
-  error_log("${pid} INSERT RESULT : ${rc}");
+    error_log("${pid} INSERT RESULT : ${rc}");
   
-  $pdo = NULL;
+    $pdo = null;
 }
 error_log("${pid} FINISH");
-?>
