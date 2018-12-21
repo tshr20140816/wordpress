@@ -64,6 +64,8 @@ DTEND;VALUE=DATE:__DTEND__
 END:VEVENT
 __HEREDOC__;
 
+$timestamp_yesterday = strtotime('-1 day');
+
 $folder_id_label = $mu->get_folder_id('LABEL');
 $list_vevent = [];
 $list_vevent[] = $vevent_header;
@@ -72,7 +74,7 @@ for ($i = 0; $i < count($tasks); $i++) {
       && array_key_exists('folder', $tasks[$i])
       && array_key_exists('duedate', $tasks[$i])
      ) {
-    if ($folder_id_label == $tasks[$i]['folder']) {
+    if ($folder_id_label == $tasks[$i]['folder'] || $timestamp_yesterday < $tasks[$i]['duedate']) {
       continue;
     }
     $tmp = $template_vevent;
