@@ -38,6 +38,11 @@ mv ical.php ${ICS_ADDRESS}.php
 popd
 
 set +x
+pushd classes
+for file in $( ls . | grep .php$ ); do
+  php -l ${file}
+done
+popd
 pushd www
 for file in $( ls . | grep .php$ ); do
   php -l ${file}
