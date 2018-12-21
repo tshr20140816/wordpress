@@ -36,7 +36,6 @@ htpasswd -c -b .htpasswd ${BASIC_USER} ${BASIC_PASSWORD}
 set +x
 pushd www
 for file in $( ls . | grep .php$ ); do
-  echo ${file}
   php -l ${file}
 done
 popd
