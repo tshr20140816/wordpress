@@ -7,7 +7,9 @@ $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi}");
 
 if (!isset($_GET['code']) || !isset($_GET['state'])) {
-    $url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . uniqid() . '&scope=basic%20tasks%20notes%20write';
+    $url = 'https://api.toodledo.com/3/account/authorize.php?'
+        . 'response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID')
+        . '&state=' . uniqid() . '&scope=basic%20tasks%20notes%20write';
     header('Location: ' . $url, true, 301);
     error_log("${pid} FINISH HTTP STATUS 301");
     exit();
