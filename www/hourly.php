@@ -178,7 +178,7 @@ $tasks = json_decode($res, TRUE);
 error_log($pid . ' TASKS COUNT : ' . count($tasks));
 
 // iCalendar データ作成
-make_ical($mu);
+make_ical($mu, $tasks);
 
 // 予定有りでラベル無しの日のラベル追加
 
@@ -732,7 +732,7 @@ function get_shisu($mu_)
     return $list_shisu;
 }
 
-function make_ical($mu_)
+function make_ical($mu_, $tasks_)
 {
     $vevent_header = <<< __HEREDOC__
 BEGIN:VCALENDAR
@@ -755,22 +755,22 @@ __HEREDOC__;
 
     $list_vevent = [];
     $list_vevent[] = $vevent_header;
-    for ($i = 0; $i < count($tasks); $i++) {
-        if (array_key_exists('id', $tasks[$i])
-            && array_key_exists('folder', $tasks[$i])
-            && array_key_exists('duedate', $tasks[$i])
+    for ($i = 0; $i < count($tasks_); $i++) {
+        if (array_key_exists('id', $tasks_[$i])
+            && array_key_exists('folder', $tasks_[$i])
+            && array_key_exists('duedate', $tasks_[$i])
            ) {
-            if ($folder_id_label == $tasks[$i]['folder'] || $tasks[$i]['duedate'] < $timestamp_yesterday) {
+            if ($folder_id_label == $tasks_[$i]['folder'] || $tasks_[$i]['duedate'] < $timestamp_yesterday) {
                 continue;
             }
             $tmp = $template_vevent;
-            if (preg_match('/^\d\d\/\d\d .+/s', $tasks[$i]['title']) == 1) {
-                $tmp = str_replace('__SUMMARY__', substr($tasks[$i]['title'], 7), $tmp);
+            if (preg_match('/^\d\d\/\d\d .+/s', $tasks_[$i]['title']) == 1) {
+                $tmp = str_replace('__SUMMARY__', substr($tasks_[$i]['title'], 7), $tmp);
             } else {
-                $tmp = str_replace('__SUMMARY__', $tasks[$i]['title'], $tmp);
+                $tmp = str_replace('__SUMMARY__', $tasks_[$i]['title'], $tmp);
             }
-            $tmp = str_replace('__DTSTART__', date('Ymd', $tasks[$i]['duedate']), $tmp);
-            $tmp = str_replace('__DTEND__', date('Ymd', $tasks[$i]['duedate'] + 24 * 60 * 60), $tmp);
+            $tmp = str_replace('__DTSTART__', date('Ymd', $tasks_[$i]['duedate']), $tmp);
+            $tmp = str_replace('__DTEND__', date('Ymd', $tasks_[$i]['duedate'] + 24 * 60 * 60), $tmp);
             $list_vevent[] = $tmp;
         }
     }
