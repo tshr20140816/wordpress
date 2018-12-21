@@ -168,7 +168,7 @@ $list_add_task = array_merge($list_add_task, get_task_quota($mu));
 $list_add_task = array_merge($list_add_task, get_task_parking_information($mu, $file_outlet_parking_information));
 
 // heroku buildpack php
-$list_add_task = array_merge($list_add_task, get_task_heroku_buildpack_php()));
+$list_add_task = array_merge($list_add_task, get_task_heroku_buildpack_php());
 
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token;
