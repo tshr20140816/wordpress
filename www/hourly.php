@@ -279,7 +279,7 @@ for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'HOURLY' || ($hour_now % 2 === 1 && $tasks[$i]['tag'] == 'WEATHER')) {
       $list_delete_task[] = $tasks[$i]['id'];
-    } else if ($tasks[$i]['duedate'] == 0) {
+    } elseif ($tasks[$i]['duedate'] == 0) {
       $is_exists_no_duedate_task = TRUE;
     }
   }
