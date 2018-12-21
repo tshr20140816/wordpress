@@ -60,7 +60,7 @@ $list_vevent = [];
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i])
       && array_key_exists('folder', $tasks[$i])
-      && array_key_exists('dudate', $tasks[$i])
+      && array_key_exists('duedate', $tasks[$i])
      ) {
     if ($folder_id_label == $tasks[$i]['folder']) {
       continue;
