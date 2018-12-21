@@ -77,7 +77,7 @@ for ($x = 0; $x < imagesx($im3); $x++) {
   error_log($pid . ' $x $count : ' . $x . ' ' . $count);
   if ($check_point == 0 && $count < 15) {
     $check_point = 1;
-  } else if ($check_point == 1 && $count > 15) {
+  } elseif ($check_point == 1 && $count > 15) {
     $check_point = $x;
     break;
   }
