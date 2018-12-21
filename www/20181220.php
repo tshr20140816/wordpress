@@ -16,6 +16,8 @@ $pdo = $mu->get_pdo();
 
 $sql = "INSERT INTO t_test (data) VALUES ('" . gzencode($res, 9) . "')";
 
+error_log($pid . ' ' . $sql);
+
 $statement = $pdo->prepare($sql);
 $rc = $statement->execute();
 
