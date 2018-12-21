@@ -44,4 +44,21 @@ $data = gzdecode(base64_decode($data));
 $tasks = json_decode($data, TRUE);
 
 error_log($pid . ' ' . count($tasks));
+
+/*
+BEGIN:VCALENDAR
+VERSION:1.0
+BEGIN:VEVENT
+CATEGORIES:MEETING
+STATUS:TENTATIVE
+DTSTART:19960401T033000Z
+DTEND:19960401T043000Z
+SUMMARY:Your Proposal Review
+DESCRIPTION:Steve and John to review newest proposal material
+CLASS:PRIVATE
+END:VEVENT
+END:VCALENDAR
+*/
+
+
 ?>
