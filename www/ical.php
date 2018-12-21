@@ -11,9 +11,10 @@ clearstatcache();
 
 $file = '/tmp/toodledo_vcalendar.ics';
 
-error_log("${pid} FILE EXISTS : " . file_exists($file) ? 'YES' : 'NO');
 if (file_exists($file)){
   error_log("${pid} ${file} FILE SIZE : " . filesize($file));
+} else {
+  error_log("${pid} ${file} FILE NONE");
 }
 
 header('Content-Type: text/calendar');
