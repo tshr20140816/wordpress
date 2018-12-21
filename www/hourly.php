@@ -209,7 +209,11 @@ for ($i = 0; $i < count($tasks); $i++) {
       continue;
     }
     $tmp = $template_vevent;
-    $tmp = str_replace('__SUMMARY__', $tasks[$i]['title'], $tmp);
+    if (preg_match('/^\d\d\/\d\d .+/s', $tasks[$i]['title']) == 1) {
+      $tmp = str_replace('__SUMMARY__', substr($tasks[$i]['title'], 7), $tmp);
+    } else {
+      $tmp = str_replace('__SUMMARY__', $tasks[$i]['title'], $tmp);
+    }
     $tmp = str_replace('__DTSTART__', date('Ymd', $tasks[$i]['duedate']), $tmp);
     $tmp = str_replace('__DTEND__', date('Ymd', $tasks[$i]['duedate'] + 24 * 60 * 60), $tmp);
     $list_vevent[] = $tmp;
