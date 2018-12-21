@@ -3,92 +3,35 @@
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $pid = getmypid();
+$requesturi = $_SERVER['REQUEST_URI'];
+error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
+
+$ueragent = $_SERVER['HTTP_USER_AGENT'];
+error_log("${pid} USER AGENT : ${ueragent}");
 
 $mu = new MyUtils();
 
-$access_token = $mu->get_access_token();
-
-/*
-$access_token = $mu->get_access_token();
-$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token;
-$res = $mu->get_contents($url);
-
-error_log($pid . ' TASKS (GZIP) : ' . strlen(gzencode($res, 9)));
+header('Content-Type: text/calendar');
 
 $pdo = $mu->get_pdo();
 
-$sql = "INSERT INTO t_test (data) VALUES ('" . base64_encode(gzencode($res, 9)) . "')";
-
-error_log($pid . ' ' . $sql);
-
-$statement = $pdo->prepare($sql);
-$rc = $statement->execute();
-
-error_log($pid . ' ' . $rc);
-
-$pdo = null;
-*/
-
-$pdo = $mu->get_pdo();
-
-$sql = 'SELECT data FROM t_test';
-
-$data = '';
+$sql = 'SELECT T1.ical_data FROM t_ical T1';
+$ical_data = '';
 foreach ($pdo->query($sql) as $row) {
-  $data = $row['data'];
+  $ical_data = $row['ical_data'];
   break;
 }
 
-$pdo = null;
+$pdo = NULL;
 
-$data = gzdecode(base64_decode($data));
-
-$tasks = json_decode($data, TRUE);
-
-error_log($pid . ' ' . count($tasks));
-
-$vevent_header = <<< __HEREDOC__
-BEGIN:VCALENDAR
-VERSION:2.0
-__HEREDOC__;
-  
-$vevent_footer = <<< __HEREDOC__
-END:VCALENDAR
-__HEREDOC__;
-
-$template_vevent = <<< __HEREDOC__
-BEGIN:VEVENT
-SUMMARY:__SUMMARY__
-DTSTART;VALUE=DATE:__DTSTART__
-DTEND;VALUE=DATE:__DTEND__
-END:VEVENT
-__HEREDOC__;
-
-$timestamp_yesterday = strtotime('-1 day');
-
-$folder_id_label = $mu->get_folder_id('LABEL');
-$list_vevent = [];
-$list_vevent[] = $vevent_header;
-for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('id', $tasks[$i])
-      && array_key_exists('folder', $tasks[$i])
-      && array_key_exists('duedate', $tasks[$i])
-     ) {
-    if ($folder_id_label == $tasks[$i]['folder'] || $tasks[$i]['duedate'] < $timestamp_yesterday) {
-      continue;
-    }
-    $tmp = $template_vevent;
-    $tmp = str_replace('__SUMMARY__', $tasks[$i]['title'], $tmp);
-    $tmp = str_replace('__DTSTART__', date('Ymd', $tasks[$i]['duedate']), $tmp);
-    $tmp = str_replace('__DTEND__', date('Ymd', $tasks[$i]['duedate'] + 24 * 60 * 60), $tmp);
-    $list_vevent[] = $tmp;
-  }
+if ($ical_data == '') {
+  error_log("${pid} DATA NONE");
+  echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR";
+} else {
+  error_log("${pid} OK");
+  echo gzdecode(base64_decode($ical_data));
 }
-$list_vevent[] = $vevent_footer;
 
-error_log($pid . ' ' . count($list_vevent));
-
-$res = implode("\r\n", $list_vevent);
-
-error_log($res);
+error_log("${pid} FINISH");
+exit();
 ?>
