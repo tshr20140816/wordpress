@@ -86,7 +86,7 @@ $list_vevent[] = $vevent_footer;
 
 error_log($pid . ' ' . count($list_vevent));
 
-$res = implode('', $list_vevent);
+$res = implode("\r\n", $list_vevent);
 
 error_log($res);
 ?>
