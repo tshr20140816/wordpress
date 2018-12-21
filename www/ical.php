@@ -9,6 +9,8 @@ error_log("${pid} USER AGENT : ${ueragent}");
 
 $file = '/tmp/toodledo_vcalendar.ics';
 
+error_log("${pid} FILE EXISTS : " . file_exists($file) ? 'YES' : 'NO');
+
 header('Content-Type: text/calendar');
 if (file_exists($file) && $ueragent == getenv('USER_AGENT_ICS')) {
   error_log("${pid} OK");
