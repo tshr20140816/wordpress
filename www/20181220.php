@@ -14,7 +14,7 @@ error_log($pid . ' TASKS (GZIP) : ' . strlen(gzencode($res, 9)));
 
 $pdo = $mu->get_pdo();
 
-$sql = "INSERT INTO t_test (data) VALUES ('" . gzencode($res, 9) . "')";
+$sql = "INSERT INTO t_test (data) VALUES ('" . base64_encode(gzencode($res, 9)) . "')";
 
 error_log($pid . ' ' . $sql);
 
