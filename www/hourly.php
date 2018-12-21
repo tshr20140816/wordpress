@@ -220,6 +220,7 @@ $list_vevent[] = $vevent_footer;
 error_log($pid . ' VEVENT COUNT : ' . count($list_vevent));
 
 file_put_contents('/tmp/toodledo_vcalendar.ics', implode("\r\n", $list_vevent));
+error_log($pid . ' /tmp/toodledo_vcalendar.ics FILE SIZE : ' . filesize('/tmp/toodledo_vcalendar.ics'));
 
 // 予定有りでラベル無しの日のラベル追加
 
