@@ -74,7 +74,7 @@ for ($i = 0; $i < count($tasks); $i++) {
       && array_key_exists('folder', $tasks[$i])
       && array_key_exists('duedate', $tasks[$i])
      ) {
-    if ($folder_id_label == $tasks[$i]['folder'] || $timestamp_yesterday < $tasks[$i]['duedate']) {
+    if ($folder_id_label == $tasks[$i]['folder'] || $tasks[$i]['duedate'] < $timestamp_yesterday) {
       continue;
     }
     $tmp = $template_vevent;
