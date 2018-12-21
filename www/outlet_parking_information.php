@@ -49,9 +49,9 @@ error_log($pid . ' NEW IMAGE (GZIP BASE64) : ' . gzencode(base64_encode($res), 9
 
 /*
 $im1 : original
-$im2 : ä¸æ®µãä¸æ®µã«ãã å·¦å³ãå°ãã«ãã
-$im3 : ãµã¤ãº 1/4
-$im4 : Pãã¼ã¯ é¤å» â png
+$im2 : 上段、下段カット 左右も少しカット
+$im3 : サイズ 1/4
+$im4 : Pマーク 除去 → png
 */
 $im1 = imagecreatefromstring($res);
 
