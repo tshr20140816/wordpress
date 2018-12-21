@@ -177,6 +177,50 @@ $tasks = json_decode($res, TRUE);
 
 error_log($pid . ' TASKS COUNT : ' . count($tasks));
 
+// iCalendar データ作成
+
+$vevent_header = <<< __HEREDOC__
+BEGIN:VCALENDAR
+VERSION:2.0
+__HEREDOC__;
+  
+$vevent_footer = <<< __HEREDOC__
+END:VCALENDAR
+__HEREDOC__;
+
+$template_vevent = <<< __HEREDOC__
+BEGIN:VEVENT
+SUMMARY:__SUMMARY__
+DTSTART;VALUE=DATE:__DTSTART__
+DTEND;VALUE=DATE:__DTEND__
+END:VEVENT
+__HEREDOC__;
+
+$timestamp_yesterday = strtotime('-1 day');
+
+$list_vevent = [];
+$list_vevent[] = $vevent_header;
+for ($i = 0; $i < count($tasks); $i++) {
+  if (array_key_exists('id', $tasks[$i])
+      && array_key_exists('folder', $tasks[$i])
+      && array_key_exists('duedate', $tasks[$i])
+     ) {
+    if ($folder_id_label == $tasks[$i]['folder'] || $tasks[$i]['duedate'] < $timestamp_yesterday) {
+      continue;
+    }
+    $tmp = $template_vevent;
+    $tmp = str_replace('__SUMMARY__', $tasks[$i]['title'], $tmp);
+    $tmp = str_replace('__DTSTART__', date('Ymd', $tasks[$i]['duedate']), $tmp);
+    $tmp = str_replace('__DTEND__', date('Ymd', $tasks[$i]['duedate'] + 24 * 60 * 60), $tmp);
+    $list_vevent[] = $tmp;
+  }
+}
+$list_vevent[] = $vevent_footer;
+
+error_log($pid . ' VEVENT COUNT : ' . count($list_vevent));
+
+file_put_contents('/tmp/toodledo_vcalendar.ics', implode("\r\n", $list_vevent));
+
 // 予定有りでラベル無しの日のラベル追加
 
 $list_label_task = [];
