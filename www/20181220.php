@@ -47,6 +47,15 @@ $tasks = json_decode($data, TRUE);
 
 error_log($pid . ' ' . count($tasks));
 
+$vevent_header = <<< __HEREDOC__
+BEGIN:VCALENDAR
+VERSION:2.0
+__HEREDOC__
+  
+$vevent_footer = <<< __HEREDOC__
+END:VCALENDAR
+__HEREDOC__
+
 $template_vevent = <<< __HEREDOC__
 BEGIN:VEVENT
 SUMMARY:__SUMMARY__
@@ -57,6 +66,7 @@ __HEREDOC__;
 
 $folder_id_label = $mu->get_folder_id('LABEL');
 $list_vevent = [];
+$list_vevent[] = $vevent_header;
 for ($i = 0; $i < count($tasks); $i++) {
   if (array_key_exists('id', $tasks[$i])
       && array_key_exists('folder', $tasks[$i])
@@ -72,6 +82,11 @@ for ($i = 0; $i < count($tasks); $i++) {
     $list_vevent[] = $tmp;
   }
 }
+$list_vevent[] = $vevent_footer;
 
 error_log($pid . ' ' . count($list_vevent));
+
+$res = implode('', $list_vevent);
+
+error_log($res);
 ?>
