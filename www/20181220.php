@@ -31,7 +31,7 @@ $pdo = $mu->get_pdo();
 
 $sql = 'SELECT data FROM t_test';
 
-$date = '';
+$data = '';
 foreach ($pdo->query($sql) as $row) {
   $data = $row['data'];
   break;
@@ -41,7 +41,7 @@ $pdo = null;
 
 $data = gzdecode(base64_decode($data));
 
-$tasks = json_decode($res, TRUE);
+$tasks = json_decode($data, TRUE);
 
 error_log($pid . ' ' . print_r($tasks, TRUE));
 ?>
