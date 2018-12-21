@@ -729,66 +729,66 @@ function get_sun_rise_set($mu_) {
   return $list_sunrise_sunset;
 }
 
-function get_moon_age($mu_) {
+function get_moon_age($mu_)
+{
+    $timestamp = time() + 9 * 60 * 60; // JST
+    // 10日後が翌月になるときは2か月分取得
+    $loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
 
-  $timestamp = time() + 9 * 60 * 60; // JST
-  // 10日後が翌月になるときは2か月分取得
-  $loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
+    $list_moon_age = [];
+    for ($j = 0; $j < $loop_count; $j++) {
+        if ($j === 1) {
+            $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60; // JST
+        }
+        $yyyy = date('Y', $timestamp);
+        $mm = date('m', $timestamp);
 
-  $list_moon_age = [];
-  for ($j = 0; $j < $loop_count; $j++) {
-    if ($j === 1) {
-      $timestamp = time() + 9 * 60 * 60 + 10 * 24 * 60 * 60; // JST
+        $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', null, true);
+
+        $tmp = explode('<table ', $res);
+        $tmp = explode('</table>', $tmp[1]);
+        $tmp = explode('</tr>', $tmp[0]);
+        array_shift($tmp);
+        array_pop($tmp);
+
+        $dt = date('Y-m-', $timestamp) . '01';
+
+        for ($i = 0; $i < count($tmp); $i++) {
+            $ymd = date('Ymd', strtotime($dt) + $i * 24 * 60 * 60);
+            $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
+            $list_moon_age[$ymd] = '☽' . trim($matches[1]);
+        }
     }
-    $yyyy = date('Y', $timestamp);
-    $mm = date('m', $timestamp);
+    $list_moon_age = $mu_->to_small_size($list_moon_age);
+    error_log(getmypid() . ' [' . __METHOD__ . '] $list_moon_age : ' . print_r($list_moon_age, true));
 
-    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
-
-    $tmp = explode('<table ', $res);
-    $tmp = explode('</table>', $tmp[1]);
-    $tmp = explode('</tr>', $tmp[0]);
-    array_shift($tmp);
-    array_pop($tmp);
-
-    $dt = date('Y-m-', $timestamp) . '01';
-
-    for ($i = 0; $i < count($tmp); $i++) {
-      $ymd = date('Ymd', strtotime($dt) + $i * 24 * 60 * 60);
-      $rc = preg_match('/.+<td>(.+?)</', $tmp[$i], $matches);
-      $list_moon_age[$ymd] = '☽' . trim($matches[1]);
-    }
-  }
-  $list_moon_age = $mu_->to_small_size($list_moon_age);
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_moon_age : ' . print_r($list_moon_age, TRUE));
-
-  return $list_moon_age;
+    return $list_moon_age;
 }
 
-function get_shisu($mu_) {
+function get_shisu($mu_)
+{
+    $ymd = date('Ymd', strtotime('+9 hours'));
 
-  $ymd = date('Ymd', strtotime('+9 hours'));
+    $list_shisu = [];
+    foreach ([getenv('URL_TAIKAN_SHISU'), getenv('URL_KASA_SHISU')] as $url) {
+        $res = $mu_->get_contents($url);
 
-  $list_shisu = [];
-  foreach([getenv('URL_TAIKAN_SHISU'), getenv('URL_KASA_SHISU')] as $url) {
+        $rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
+        $list_shisu[$url][$ymd] = $matches[1];
 
-    $res = $mu_->get_contents($url);
+        $rc = preg_match('/<!-- tomorrow index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
+        $list_shisu[$url][date('Ymd', strtotime($ymd) + 24 * 60 * 60)] = $matches[1];
 
-    $rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
-    $list_shisu[$url][$ymd] = $matches[1];
+        $rc = preg_match('/<!-- week -->(.+?)<!-- \/week -->/s', $res, $matches);
+        $rc = preg_match_all('/<p class="indexes-telop-0">(.+?)<\/p>/s', $matches[1], $matches2, PREG_SET_ORDER);
 
-    $rc = preg_match('/<!-- tomorrow index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
-    $list_shisu[$url][date('Ymd', strtotime($ymd) + 24 * 60 * 60)] = $matches[1];
-
-    $rc = preg_match('/<!-- week -->(.+?)<!-- \/week -->/s', $res, $matches);
-    $rc = preg_match_all('/<p class="indexes-telop-0">(.+?)<\/p>/s', $matches[1], $matches2, PREG_SET_ORDER);
-
-    for($i = 0; $i < count($matches2); $i++) {
-      $list_shisu[$url][date('Ymd', strtotime($ymd) + 24 * 60 * 60 * ($i + 2))] = $matches2[$i][1];
+        for ($i = 0; $i < count($matches2); $i++) {
+            $list_shisu[$url][date('Ymd', strtotime($ymd) + 24 * 60 * 60 * ($i + 2))] = $matches2[$i][1];
+        }
     }
-  }
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_shisu : ' . print_r($list_shisu, TRUE));
+    error_log(getmypid() . ' [' . __METHOD__ . '] $list_shisu : ' . print_r($list_shisu, true));
 
-  return $list_shisu;
+    return $list_shisu;
 }
+
 ?>
