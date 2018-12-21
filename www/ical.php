@@ -1,5 +1,7 @@
 <?php
 
+include(dirname(__FILE__) . '/../classes/MyUtils.php');
+
 $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
@@ -7,27 +9,34 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 $ueragent = $_SERVER['HTTP_USER_AGENT'];
 error_log("${pid} USER AGENT : ${ueragent}");
 
-clearstatcache();
-
-$file = '/tmp/toodledo_vcalendar.ics';
-
-if (file_exists($file)){
-  error_log("${pid} ${file} FILE SIZE : " . filesize($file));
-} else {
-  error_log("${pid} ${file} FILE NONE");
-}
+$mu = new MyUtils();
 
 header('Content-Type: text/calendar');
-if (file_exists($file) && $ueragent == getenv('USER_AGENT_ICS')) {
-  error_log("${pid} OK");
-  $res = file_get_contents($file);
-  echo $res;
-} else {
-  error_log("${pid} NG");
+if ($ueragent != getenv('USER_AGENT_ICS')){
+  error_log("${pid} USER AGENT NG");
   echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR";
+  exit();
+}
+
+$pdo = $mu->get_pdo();
+
+$sql = 'SELECT T1.ical_data FROM t_ical T1';
+$ical_data = '';
+foreach ($pdo->query($sql) as $row) {
+  $ical_data = $row['ical_data'];
+  break;
+}
+
+$pdo = NULL;
+
+if ($ical_data == '') {
+  error_log("${pid} DATA NONE");
+  echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR";
+} else {
+  error_log("${pid} OK");
+  echo gzdecode(base64_decode($ical_data));
 }
 
 error_log("${pid} FINISH");
 exit();
-
 ?>
