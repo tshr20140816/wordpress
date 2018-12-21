@@ -135,23 +135,6 @@ if (count($list_add_task) == 0) {
   exit();
 }
 
-// heroku-buildpack-php
-
-$file_name_current = '/tmp/current_version';
-$file_name_latest = '/tmp/latest_version';
-
-if (file_exists($file_name_current) && file_exists($file_name_latest)) {
-  $current_version = trim(trim(file_get_contents($file_name_current)), '"');
-  $latest_version = trim(trim(file_get_contents($file_name_latest)), '"');
-  error_log($pid . ' heroku-buildpack-php current : ' . $current_version);
-  error_log($pid . ' heroku-buildpack-php latest : ' . $latest_version);
-  if ($current_version != $latest_version) {
-    $list_add_task[date('Ymd')] = '{"title":"heroku-buildpack-php : update ' . $latest_version
-      . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
-      . '","context":' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))] . '}';
-  }
-}
-
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
   // error_log($pid . ' ' . $i . ' ' . print_r($tasks[$i], TRUE));
