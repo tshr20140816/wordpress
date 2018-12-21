@@ -7,6 +7,8 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 $ueragent = $_SERVER['HTTP_USER_AGENT'];
 error_log("${pid} USER AGENT : ${ueragent}");
 
+clearstatcache();
+
 $file = '/tmp/toodledo_vcalendar.ics';
 
 error_log("${pid} FILE EXISTS : " . file_exists($file) ? 'YES' : 'NO');
