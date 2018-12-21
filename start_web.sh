@@ -33,6 +33,10 @@ export USER_AGENT=$(curl https://raw.githubusercontent.com/tshr20140816/heroku-m
 
 htpasswd -c -b .htpasswd ${BASIC_USER} ${BASIC_PASSWORD}
 
+pushd www
+mv ical.php ${ICS_ADDRESS}.php
+popd
+
 set +x
 pushd www
 for file in $( ls . | grep .php$ ); do
