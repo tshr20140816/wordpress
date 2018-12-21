@@ -50,11 +50,11 @@ error_log($pid . ' ' . count($tasks));
 $vevent_header = <<< __HEREDOC__
 BEGIN:VCALENDAR
 VERSION:2.0
-__HEREDOC__
+__HEREDOC__;
   
 $vevent_footer = <<< __HEREDOC__
 END:VCALENDAR
-__HEREDOC__
+__HEREDOC__;
 
 $template_vevent = <<< __HEREDOC__
 BEGIN:VEVENT
