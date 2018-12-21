@@ -178,66 +178,7 @@ $tasks = json_decode($res, TRUE);
 error_log($pid . ' TASKS COUNT : ' . count($tasks));
 
 // iCalendar データ作成
-
-$vevent_header = <<< __HEREDOC__
-BEGIN:VCALENDAR
-VERSION:2.0
-__HEREDOC__;
-  
-$vevent_footer = <<< __HEREDOC__
-END:VCALENDAR
-__HEREDOC__;
-
-$template_vevent = <<< __HEREDOC__
-BEGIN:VEVENT
-SUMMARY:__SUMMARY__
-DTSTART;VALUE=DATE:__DTSTART__
-DTEND;VALUE=DATE:__DTEND__
-END:VEVENT
-__HEREDOC__;
-
-$timestamp_yesterday = strtotime('-1 day');
-
-$list_vevent = [];
-$list_vevent[] = $vevent_header;
-for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('id', $tasks[$i])
-      && array_key_exists('folder', $tasks[$i])
-      && array_key_exists('duedate', $tasks[$i])
-     ) {
-    if ($folder_id_label == $tasks[$i]['folder'] || $tasks[$i]['duedate'] < $timestamp_yesterday) {
-      continue;
-    }
-    $tmp = $template_vevent;
-    if (preg_match('/^\d\d\/\d\d .+/s', $tasks[$i]['title']) == 1) {
-      $tmp = str_replace('__SUMMARY__', substr($tasks[$i]['title'], 7), $tmp);
-    } else {
-      $tmp = str_replace('__SUMMARY__', $tasks[$i]['title'], $tmp);
-    }
-    $tmp = str_replace('__DTSTART__', date('Ymd', $tasks[$i]['duedate']), $tmp);
-    $tmp = str_replace('__DTEND__', date('Ymd', $tasks[$i]['duedate'] + 24 * 60 * 60), $tmp);
-    $list_vevent[] = $tmp;
-  }
-}
-$list_vevent[] = $vevent_footer;
-
-error_log($pid . ' VEVENT COUNT : ' . count($list_vevent));
-
-$ical_data = implode("\r\n", $list_vevent);
-
-$pdo = $mu->get_pdo();
-
-$sql = 'TRUNCATE TABLE t_ical';
-$statement = $pdo->prepare($sql);
-$rc = $statement->execute();
-error_log($pid . ' TRUNCATE $rc : ' . $rc);
-
-$sql = "INSERT INTO t_ical (ical_data) VALUES (:b_ical_data)";
-$statement = $pdo->prepare($sql);
-$rc = $statement->execute([':b_ical_data' => base64_encode(gzencode($ical_data, 9))]);
-error_log($pid . ' INSERT $rc : ' . $rc);
-
-$pdo = NULL;
+make_ical($mu);
 
 // 予定有りでラベル無しの日のラベル追加
 
@@ -791,4 +732,66 @@ function get_shisu($mu_)
     return $list_shisu;
 }
 
+function make_ical($mu_)
+{
+    $vevent_header = <<< __HEREDOC__
+BEGIN:VCALENDAR
+VERSION:2.0
+__HEREDOC__;
+
+    $vevent_footer = <<< __HEREDOC__
+END:VCALENDAR
+__HEREDOC__;
+
+    $template_vevent = <<< __HEREDOC__
+BEGIN:VEVENT
+SUMMARY:__SUMMARY__
+DTSTART;VALUE=DATE:__DTSTART__
+DTEND;VALUE=DATE:__DTEND__
+END:VEVENT
+__HEREDOC__;
+
+    $timestamp_yesterday = strtotime('-1 day');
+
+    $list_vevent = [];
+    $list_vevent[] = $vevent_header;
+    for ($i = 0; $i < count($tasks); $i++) {
+        if (array_key_exists('id', $tasks[$i])
+            && array_key_exists('folder', $tasks[$i])
+            && array_key_exists('duedate', $tasks[$i])
+           ) {
+            if ($folder_id_label == $tasks[$i]['folder'] || $tasks[$i]['duedate'] < $timestamp_yesterday) {
+                continue;
+            }
+            $tmp = $template_vevent;
+            if (preg_match('/^\d\d\/\d\d .+/s', $tasks[$i]['title']) == 1) {
+                $tmp = str_replace('__SUMMARY__', substr($tasks[$i]['title'], 7), $tmp);
+            } else {
+                $tmp = str_replace('__SUMMARY__', $tasks[$i]['title'], $tmp);
+            }
+            $tmp = str_replace('__DTSTART__', date('Ymd', $tasks[$i]['duedate']), $tmp);
+            $tmp = str_replace('__DTEND__', date('Ymd', $tasks[$i]['duedate'] + 24 * 60 * 60), $tmp);
+            $list_vevent[] = $tmp;
+        }
+    }
+    $list_vevent[] = $vevent_footer;
+
+    error_log($pid . ' VEVENT COUNT : ' . count($list_vevent));
+
+    $ical_data = implode("\r\n", $list_vevent);
+
+    $pdo = $mu_->get_pdo();
+
+    $sql = 'TRUNCATE TABLE t_ical';
+    $statement = $pdo->prepare($sql);
+    $rc = $statement->execute();
+    error_log($pid . ' TRUNCATE $rc : ' . $rc);
+
+    $sql = "INSERT INTO t_ical (ical_data) VALUES (:b_ical_data)";
+    $statement = $pdo->prepare($sql);
+    $rc = $statement->execute([':b_ical_data' => base64_encode(gzencode($ical_data, 9))]);
+    error_log($pid . ' INSERT $rc : ' . $rc);
+
+    $pdo = null;
+}
 ?>
