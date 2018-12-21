@@ -8,7 +8,7 @@ error_log("${pid} START ${requesturi}");
 
 if (!isset($_GET['code']) || !isset($_GET['state'])) {
     $url = 'https://api.toodledo.com/3/account/authorize.php?response_type=code&client_id=' . getenv('TOODLEDO_CLIENTID') . '&state=' . uniqid() . '&scope=basic%20tasks%20notes%20write';
-    header('Location: ' . $url, TRUE, 301);
+    header('Location: ' . $url, true, 301);
     error_log("${pid} FINISH HTTP STATUS 301");
     exit();
 }
@@ -26,13 +26,13 @@ $post_data = ['grant_type' => 'authorization_code', 'code' => $code];
 $res = $mu->get_contents(
     'https://api.toodledo.com/3/account/token.php',
     [CURLOPT_USERPWD => getenv('TOODLEDO_CLIENTID') . ':' . getenv('TOODLEDO_SECRET'),
-     CURLOPT_POST => TRUE,
+     CURLOPT_POST => true,
      CURLOPT_POSTFIELDS => http_build_query($post_data),
     ]);
 
 error_log($pid . ' ' . $res . ' : ${res}');
 
-$params = json_decode($res, TRUE);
+$params = json_decode($res, true);
 
 $connection_info = parse_url(getenv('DATABASE_URL'));
 $pdo = new PDO(
