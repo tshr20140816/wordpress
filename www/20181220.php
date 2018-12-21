@@ -43,5 +43,5 @@ $data = gzdecode(base64_decode($data));
 
 $tasks = json_decode($res, TRUE);
 
-error_log($pid . ' ' . count($tasks));
+error_log($pid . ' ' . print_r($tasks, TRUE));
 ?>
