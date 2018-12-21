@@ -144,7 +144,7 @@ for ($i = 0; $i < count($tasks); $i++) {
         || $tasks[$i]['tag'] == 'CULTURECENTER'
         || $tasks[$i]['tag'] == 'HIGHWAY') {
       $list_delete_task[] = $tasks[$i]['id'];
-    } else if ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
+    } elseif ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
       if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_add_task)) {
         $list_delete_task[] = $tasks[$i]['id'];
       }
