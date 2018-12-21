@@ -6,6 +6,7 @@ $pid = getmypid();
 
 $mu = new MyUtils();
 
+/*
 $access_token = $mu->get_access_token();
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token;
 $res = $mu->get_contents($url);
@@ -24,5 +25,23 @@ $rc = $statement->execute();
 error_log($pid . ' ' . $rc);
 
 $pdo = null;
+*/
 
+$pdo = $mu->get_pdo();
+
+$sql = 'SELECT data FROM t_test';
+
+$date = '';
+foreach ($pdo->query($sql) as $row) {
+  $data = $row['data'];
+  break;
+}
+
+$pdo = null;
+
+$data = gzdecode(base64_decode($data));
+
+$tasks = json_decode($res, TRUE);
+
+error_log($pid . ' ' . count($tasks));
 ?>
