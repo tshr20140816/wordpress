@@ -2,13 +2,15 @@
 
 include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
-$url = 'https://www.googleapis.com/calendar/v3/users/me/calendarList?key=' . getenv('GOOGLE_API_KEY');
+$pid = getmypid();
 
 $mu = new MyUtils();
-$options = [
-  CURLOPT_REFERER => 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/',
-  ];
-$res = $mu->get_contents($url, $options);
 
-error_log($res);
+$access_token = $mu->get_access_token();
+$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token;
+$res = $mu->get_contents($url);
+
+error_log($pid . ' TASKS (GZIP BASE64) : ' . strlen(gzencode(base64_encode($res), 9)));
+error_log($pid . ' TASKS (GZIP) : ' . strlen(gzencode($res, 9)));
+
 ?>
