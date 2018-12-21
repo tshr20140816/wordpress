@@ -6,6 +6,8 @@ $pid = getmypid();
 
 $mu = new MyUtils();
 
+$access_token = $mu->get_access_token();
+
 /*
 $access_token = $mu->get_access_token();
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token;
@@ -44,21 +46,6 @@ $data = gzdecode(base64_decode($data));
 $tasks = json_decode($data, TRUE);
 
 error_log($pid . ' ' . count($tasks));
-
-/*
-BEGIN:VCALENDAR
-VERSION:1.0
-BEGIN:VEVENT
-CATEGORIES:MEETING
-STATUS:TENTATIVE
-DTSTART:19960401T033000Z
-DTEND:19960401T043000Z
-SUMMARY:Your Proposal Review
-DESCRIPTION:Steve and John to review newest proposal material
-CLASS:PRIVATE
-END:VEVENT
-END:VCALENDAR
-*/
 
 $template_vevent = <<< __HEREDOC__
 BEGIN:VEVENT
