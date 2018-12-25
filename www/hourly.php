@@ -483,16 +483,16 @@ function get_task_rainfall($mu_) {
 
   $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
     . '&lon=' . getenv('LONGITUDE') . '&lat=' . getenv('LATITUDE');
-  $res = $mu_->get_contents($url, NULL, TRUE);
-  $data = json_decode($res, TRUE);
-  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, TRUE));
+  $res = $mu_->get_contents($url, null, true);
+  $data = json_decode($res, true);
+  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
 
   $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
     . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
   $res = $mu_->get_contents($url);
 
-  $data = json_decode($res, TRUE);
-  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, TRUE));
+  $data = json_decode($res, true);
+  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
   $data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
 
   $list = [];
