@@ -270,74 +270,74 @@ function get_24sekki($mu_)
 
     $list_24sekki = [];
 
-  $yyyy = (int)date('Y');
-  for ($j = 0; $j < 2; $j++) {
-    $post_data = ['from_year' => $yyyy];
+    $yyyy = (int)date('Y');
+    for ($j = 0; $j < 2; $j++) {
+        $post_data = ['from_year' => $yyyy];
 
-    $res = $mu_->get_contents(
-      'http://www.calc-site.com/calendars/solar_year',
-      [CURLOPT_POST => TRUE,
-       CURLOPT_POSTFIELDS => http_build_query($post_data),
-      ],
-      TRUE);
+        $res = $mu_->get_contents(
+          'http://www.calc-site.com/calendars/solar_year',
+          [CURLOPT_POST => true,
+           CURLOPT_POSTFIELDS => http_build_query($post_data),
+          ],
+        true);
 
-    $tmp = explode('<th>二十四節気</th>', $res);
-    $tmp = explode('</table>', $tmp[1]);
+        $tmp = explode('<th>二十四節気</th>', $res);
+        $tmp = explode('</table>', $tmp[1]);
 
-    $tmp = explode('<tr>', $tmp[0]);
-    array_shift($tmp);
+        $tmp = explode('<tr>', $tmp[0]);
+        array_shift($tmp);
 
-    for ($i = 0; $i < count($tmp); $i++) {
-      $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
-      // error_log(print_r($matches, TRUE));
-      $tmp1 = $matches[2];
-      $tmp1 = str_replace('月', '-', $tmp1);
-      $tmp1 = str_replace('日', '', $tmp1);
-      $tmp1 = $yyyy . '-' . $tmp1;
-      error_log($tmp1 . ' ' . $matches[1]);
-      $list_24sekki[strtotime($tmp1)] = '【' . $matches[1] . '】';
+        for ($i = 0; $i < count($tmp); $i++) {
+            $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
+            // error_log(print_r($matches, TRUE));
+            $tmp1 = $matches[2];
+            $tmp1 = str_replace('月', '-', $tmp1);
+            $tmp1 = str_replace('日', '', $tmp1);
+            $tmp1 = $yyyy . '-' . $tmp1;
+            error_log($tmp1 . ' ' . $matches[1]);
+            $list_24sekki[strtotime($tmp1)] = '【' . $matches[1] . '】';
+        }
+        $yyyy++;
     }
-    $yyyy++;
-  }
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_24sekki : ' . print_r($list_24sekki, true));
+    error_log(getmypid() . ' [' . __METHOD__ . '] $list_24sekki : ' . print_r($list_24sekki, true));
 
-  return $list_24sekki;
+    return $list_24sekki;
 }
 
 function get_sun($mu_)
 {
-  // Sun 今月含み4ヶ月分
+    // Sun 今月含み4ヶ月分
 
-  $list_sunrise_sunset = [];
+    $list_sunrise_sunset = [];
 
-  for ($j = 0; $j < 4; $j++) {
-    $timestamp = strtotime(date('Y-m-01') . " +${j} month");
-    $yyyy = date('Y', $timestamp);
-    $mm = date('m', $timestamp);
-    error_log($pid . ' $yyyy : ' . $yyyy);
-    error_log($pid . ' $mm : ' . $mm);
-    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', null, true);
+    for ($j = 0; $j < 4; $j++) {
+        $timestamp = strtotime(date('Y-m-01') . " +${j} month");
+        $yyyy = date('Y', $timestamp);
+        $mm = date('m', $timestamp);
+        error_log($pid . ' $yyyy : ' . $yyyy);
+        error_log($pid . ' $mm : ' . $mm);
+        $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', null, true);
 
-    $tmp = explode('<table ', $res);
-    $tmp = explode('</table>', $tmp[1]);
-    $tmp = explode('</tr>', $tmp[0]);
-    array_shift($tmp);
-    array_pop($tmp);
+        $tmp = explode('<table ', $res);
+        $tmp = explode('</table>', $tmp[1]);
+        $tmp = explode('</tr>', $tmp[0]);
+        array_shift($tmp);
+        array_pop($tmp);
 
-    $dt = date('Y-m-01', $timestamp);
+        $dt = date('Y-m-01', $timestamp);
 
-    for ($i = 0; $i < count($tmp); $i++) {
-      $timestamp = strtotime("${dt} +${i} day"); // UTC
-      $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
-      // error_log(trim($matches[1]));
-      $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
+        for ($i = 0; $i < count($tmp); $i++) {
+            $timestamp = strtotime("${dt} +${i} day"); // UTC
+            $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
+            // error_log(trim($matches[1]));
+            $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
+        }
     }
-  }
-  // To Small Size
-  $list_sunrise_sunset = $mu_->to_small_size($list_sunrise_sunset);
+    // To Small Size
+    $list_sunrise_sunset = $mu_->to_small_size($list_sunrise_sunset);
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, true));
-  return $list_sunrise_sunset;
+    error_log(getmypid() . ' [' . __METHOD__ . '] $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, true));
+    return $list_sunrise_sunset;
 }
 
 function get_task_soccer($mu_)
