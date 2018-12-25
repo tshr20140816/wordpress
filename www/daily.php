@@ -48,25 +48,25 @@ $list_sunrise_sunset = get_sun($mu);
 
 $list_base = [];
 for ($i = 0; $i < 12; $i++) {
-  $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
-  $res = $mu->get_contents($url);
-  foreach (explode("\n", $res) as $one_line) {
-    if (strpos($one_line, '<title>_') !== FALSE) {
-      $tmp = explode('_', $one_line);
-      $tmp1 = explode(' ', $tmp[2]);
-      $tmp2 = explode('/', $tmp1[1]);
-      // 10月から4月までの閾値は30、その他は38
-      if ((int)$tmp2[0] > ((int)substr($tmp1[0], 0, 1) < 5 ? 30 : 38)) {
-        // 華氏 → 摂氏
-        $tmp2[0] = (int)(((int)$tmp2[0] - 32) * 5 / 9);
-        $tmp2[1] = (int)(((int)$tmp2[1] - 32) * 5 / 9);
-        $tmp[2] = $tmp1[0] . ' ' . $tmp2[0] . '/' . $tmp2[1];
-      }
-      $list_base[$tmp[1]] = $tmp[2];
+    $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
+    $res = $mu->get_contents($url);
+    foreach (explode("\n", $res) as $one_line) {
+        if (strpos($one_line, '<title>_') !== FALSE) {
+            $tmp = explode('_', $one_line);
+            $tmp1 = explode(' ', $tmp[2]);
+            $tmp2 = explode('/', $tmp1[1]);
+            // 10月から4月までの閾値は30、その他は38
+            if ((int)$tmp2[0] > ((int)substr($tmp1[0], 0, 1) < 5 ? 30 : 38)) {
+                // 華氏 → 摂氏
+                $tmp2[0] = (int)(((int)$tmp2[0] - 32) * 5 / 9);
+                $tmp2[1] = (int)(((int)$tmp2[1] - 32) * 5 / 9);
+                $tmp[2] = $tmp1[0] . ' ' . $tmp2[0] . '/' . $tmp2[1];
+            }
+            $list_base[$tmp[1]] = $tmp[2];
+        }
     }
-  }
 }
-error_log($pid . ' $list_base : ' . print_r($list_base, TRUE));
+error_log($pid . ' $list_base : ' . print_r($list_base, true));
 
 // Get Tasks
 
@@ -75,20 +75,20 @@ $res = $mu->get_contents($url);
 // error_log($res);
 
 $tasks = json_decode($res, TRUE);
-// error_log($pid . ' $tasks : ' . print_r($tasks, TRUE));
+// error_log($pid . ' $tasks : ' . print_r($tasks, true));
 
 // 30日後から70日後までの間の予定のある日を取得
 
 $list_schedule_exists_day = [];
 for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
-    if ($tasks[$i]['folder'] != $folder_id_label) {
-      $ymd = date('Ymd', $tasks[$i]['duedate']);
-      if (date('Ymd', strtotime('+29 days')) < $ymd && $ymd < date('Ymd', strtotime('+71 days'))) {
-        $list_schedule_exists_day[] = $ymd;
-      }
+    if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+        if ($tasks[$i]['folder'] != $folder_id_label) {
+            $ymd = date('Ymd', $tasks[$i]['duedate']);
+            if (date('Ymd', strtotime('+29 days')) < $ymd && $ymd < date('Ymd', strtotime('+71 days'))) {
+                $list_schedule_exists_day[] = $ymd;
+            }
+        }
     }
-  }
 }
 $list_schedule_exists_day = array_unique($list_schedule_exists_day);
 $rc = sort($list_schedule_exists_day);
