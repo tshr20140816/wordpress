@@ -661,8 +661,10 @@ function get_sun_rise_set($mu_)
         $mm = date('m', $timestamp);
 
         $res = $mu_->get_contents(
-          'https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html',
-          null, true);
+            'https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html',
+            null,
+            true
+        );
 
         $tmp = explode('<table ', $res);
         $tmp = explode('</table>', $tmp[1]);
@@ -675,8 +677,10 @@ function get_sun_rise_set($mu_)
         for ($i = 0; $i < count($tmp); $i++) {
             $ymd = date('Ymd', strtotime($dt) + $i * 24 * 60 * 60);
             $rc = preg_match(
-              '/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</',
-              $tmp[$i], $matches);
+                '/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</',
+                $tmp[$i],
+                $matches
+            );
             $list_sunrise_sunset[$ymd] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
         }
     }
@@ -701,8 +705,10 @@ function get_moon_age($mu_)
         $mm = date('m', $timestamp);
 
         $res = $mu_->get_contents(
-          'https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html',
-          null, true);
+            'https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html',
+            null,
+            true
+        );
 
         $tmp = explode('<table ', $res);
         $tmp = explode('</table>', $tmp[1]);
