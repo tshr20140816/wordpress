@@ -482,7 +482,6 @@ function get_task_amedas($mu_)
 
 function get_task_rainfall($mu_)
 {
-
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
 
@@ -533,7 +532,6 @@ function get_task_rainfall($mu_)
 
 function get_task_quota($mu_)
 {
-
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
     // Get Contexts
@@ -587,7 +585,6 @@ function get_task_quota($mu_)
 
 function get_holiday($mu_)
 {
-
     $start_yyyy = date('Y');
     $start_m = date('n');
     $finish_yyyy = date('Y', strtotime('+1 month'));
@@ -616,7 +613,6 @@ function get_holiday($mu_)
 
 function get_24sekki($mu_)
 {
-
     $list_24sekki = [];
 
     $yyyy = (int)date('Y');
