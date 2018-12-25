@@ -468,131 +468,131 @@ function get_task_amedas($mu_) {
 
 function get_task_rainfall($mu_) {
 
-  // Get Folders
-  $folder_id_label = $mu_->get_folder_id('LABEL');
+    // Get Folders
+    $folder_id_label = $mu_->get_folder_id('LABEL');
 
-  // Get Contexts
-  $list_context_id = $mu_->get_contexts();
+    // Get Contexts
+    $list_context_id = $mu_->get_contexts();
 
-  $list_add_task = [];
+    $list_add_task = [];
 
-  $res = $mu_->get_contents(getenv('URL_KASA_SHISU_YAHOO'));
+    $res = $mu_->get_contents(getenv('URL_KASA_SHISU_YAHOO'));
 
-  $rc = preg_match('/<!--指数情報-->.+?<span>傘指数(.+?)<.+?<p class="index_text">(.+?)</s', $res, $matches);
-  $suffix = ' 傘指数' . $matches[1] . ' ' . $matches[2];
+    $rc = preg_match('/<!--指数情報-->.+?<span>傘指数(.+?)<.+?<p class="index_text">(.+?)</s', $res, $matches);
+    $suffix = ' 傘指数' . $matches[1] . ' ' . $matches[2];
 
-  $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
-    . '&lon=' . getenv('LONGITUDE') . '&lat=' . getenv('LATITUDE');
-  $res = $mu_->get_contents($url, null, true);
-  $data = json_decode($res, true);
-  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
+    $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
+        . '&lon=' . getenv('LONGITUDE') . '&lat=' . getenv('LATITUDE');
+    $res = $mu_->get_contents($url, null, true);
+    $data = json_decode($res, true);
+    error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
 
-  $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
-    . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
-  $res = $mu_->get_contents($url);
+    $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
+        . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
+    $res = $mu_->get_contents($url);
 
-  $data = json_decode($res, true);
-  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
-  $data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
+    $data = json_decode($res, true);
+    error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
+    $data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
 
-  $list = [];
-  for ($i = 0; $i < count($data); $i++) {
-    if ($data[$i]['Rainfall'] != '0') {
-      $list[] = $mu_->to_small_size(substr($data[$i]['Date'], 8)) . ' ' . $data[$i]['Rainfall'];
+    $list = [];
+    for ($i = 0; $i < count($data); $i++) {
+        if ($data[$i]['Rainfall'] != '0') {
+            $list[] = $mu_->to_small_size(substr($data[$i]['Date'], 8)) . ' ' . $data[$i]['Rainfall'];
+        }
     }
-  }
-  if (count($list) > 0) {
-    $tmp = '☂ ' . implode(' ', $list);
-  } else {
-    $tmp = '☀';
-  }
-  $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
-  $list_add_task[] = '{"title":"' . $tmp . $suffix . $update_marker
-      . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
-      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
-      . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+    if (count($list) > 0) {
+        $tmp = '☂ ' . implode(' ', $list);
+    } else {
+        $tmp = '☀';
+    }
+    $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
+    $list_add_task[] = '{"title":"' . $tmp . $suffix . $update_marker
+          . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
+          . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
+          . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS RAINFALL : ' . print_r($list_add_task, true));
-  return $list_add_task;
+    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS RAINFALL : ' . print_r($list_add_task, true));
+    return $list_add_task;
 }
 
 function get_task_quota($mu_) {
 
-  // Get Folders
-  $folder_id_label = $mu_->get_folder_id('LABEL');
-  // Get Contexts
-  $list_context_id = $mu_->get_contexts();
+    // Get Folders
+    $folder_id_label = $mu_->get_folder_id('LABEL');
+    // Get Contexts
+    $list_context_id = $mu_->get_contexts();
 
-  $api_key = getenv('HEROKU_API_KEY');
-  $url = 'https://api.heroku.com/account';
+    $api_key = getenv('HEROKU_API_KEY');
+    $url = 'https://api.heroku.com/account';
 
-  $res = $mu_->get_contents(
-    $url,
-    [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
-                            "Authorization: Bearer ${api_key}",
-                           ]],
-    TRUE);
+    $res = $mu_->get_contents(
+        $url,
+        [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
+                                "Authorization: Bearer ${api_key}",
+                               ]],
+        true);
 
-  $data = json_decode($res, true);
-  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
-  $account = explode('@', $data['email'])[0];
-  $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
+    $data = json_decode($res, true);
+    error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
+    $account = explode('@', $data['email'])[0];
+    $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
 
-  $res = $mu_->get_contents(
-    $url,
-    [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3.account-quotas',
-                            "Authorization: Bearer ${api_key}",
-                           ]]);
+    $res = $mu_->get_contents(
+        $url,
+        [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3.account-quotas',
+                                "Authorization: Bearer ${api_key}",
+                               ]]);
 
-  $data = json_decode($res, true);
-  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
+    $data = json_decode($res, true);
+    error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
 
-  $dyno_used = (int)$data['quota_used'];
-  $dyno_quota = (int)$data['account_quota'];
+    $dyno_used = (int)$data['quota_used'];
+    $dyno_quota = (int)$data['account_quota'];
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] $dyno_used : ' . $dyno_used);
-  error_log(getmypid() . ' [' . __METHOD__ . '] $dyno_quota : ' . $dyno_quota);
+    error_log(getmypid() . ' [' . __METHOD__ . '] $dyno_used : ' . $dyno_used);
+    error_log(getmypid() . ' [' . __METHOD__ . '] $dyno_quota : ' . $dyno_quota);
 
-  $tmp = $dyno_quota - $dyno_used;
-  $tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
+    $tmp = $dyno_quota - $dyno_used;
+    $tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
 
-  $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
+    $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
 
-  $list_add_task[] = '{"title":"' . $account . ' : ' . $tmp . $update_marker
-    . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
-    . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
-    . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+    $list_add_task[] = '{"title":"' . $account . ' : ' . $tmp . $update_marker
+        . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
+        . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
+        . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS QUOTA : ' . print_r($list_add_task, true));
-  return $list_add_task;
+    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS QUOTA : ' . print_r($list_add_task, true));
+    return $list_add_task;
 }
 
 function get_holiday($mu_) {
 
-  $start_yyyy = date('Y');
-  $start_m = date('n');
-  $finish_yyyy = date('Y', strtotime('+1 month'));
-  $finish_m = date('n', strtotime('+1 month'));
+    $start_yyyy = date('Y');
+    $start_m = date('n');
+    $finish_yyyy = date('Y', strtotime('+1 month'));
+    $finish_m = date('n', strtotime('+1 month'));
 
-  $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m
-    . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
-    . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
+    $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m
+        . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
+        . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-  $res = $mu_->get_contents($url, NULL, TRUE);
-  $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
+    $res = $mu_->get_contents($url, NULL, TRUE);
+    $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
-  $tmp = explode("\n", $res);
-  array_shift($tmp);
-  array_pop($tmp);
+    $tmp = explode("\n", $res);
+    array_shift($tmp);
+    array_pop($tmp);
 
-  $list_holiday = [];
-  for ($i = 0; $i < count($tmp); $i++) {
-    $tmp1 = explode(',', $tmp[$i]);
-    $list_holiday[date('Ymd', mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]))] = $tmp1[7];
-  }
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_holiday, true));
+    $list_holiday = [];
+    for ($i = 0; $i < count($tmp); $i++) {
+        $tmp1 = explode(',', $tmp[$i]);
+        $list_holiday[date('Ymd', mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]))] = $tmp1[7];
+    }
+    error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_holiday, true));
 
-  return $list_holiday;
+    return $list_holiday;
 }
 
 function get_24sekki($mu_) {
