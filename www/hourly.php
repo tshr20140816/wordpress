@@ -205,7 +205,8 @@ for ($i = 0; $i < count($list_non_label); $i++) {
     if ($list_non_label[$i] > $timestamp) {
         $yyyy = $mu->to_small_size(date('Y', $list_non_label[$i]));
 
-        $tmp = '### ' . LIST_YOBI[date('w', $list_non_label[$i])] . '曜日 ' . date('m/d', $list_non_label[$i]) . ' ### ' . $yyyy;
+        $tmp = '### ' . LIST_YOBI[date('w', $list_non_label[$i])] . '曜日 '
+          . date('m/d', $list_non_label[$i]) . ' ### ' . $yyyy;
         $list_add_task[] = '{"title":"' . $tmp
           . '","duedate":"' . $list_non_label[$i]
           . '","context":"' . $list_context_id[date('w', $list_non_label[$i])]
