@@ -12,7 +12,7 @@ error_log("${pid} USER AGENT : ${ueragent}");
 $mu = new MyUtils();
 
 header('Content-Type: text/calendar');
-if ($ueragent != getenv('USER_AGENT_ICS')) {
+if ($ueragent != getenv('USER_AGENT_ICS') && $requesturi != '/ical.php') {
     error_log("${pid} USER AGENT NG");
     echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR";
     exit();
