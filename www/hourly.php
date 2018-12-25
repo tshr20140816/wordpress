@@ -794,4 +794,3 @@ __HEREDOC__;
 
     $pdo = null;
 }
-?>
