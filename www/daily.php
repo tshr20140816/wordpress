@@ -196,7 +196,11 @@ error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
 for ($y = date('Y'); $y < date('Y') + 3; $y++) {
     for ($m = 1; $m < 13; $m++) {
         $timestamp = mktime(0, 0, 0, $m, 1, $y);
-        error_log($pid . ' ' . LIST_WAFU_GETSUMEI[$m] . ' ' . date('F', $timestamp));
+        if ($timestamp < strtotime('+1 month')) {
+            continue;
+        }
+        $title = '## ' . LIST_WAFU_GETSUMEI[$m] . ' ' . date('F', $timestamp) . ' ## ' . $mu->to_small_size($y);
+        error_log($pid . ' ' . date('Ymd', $timestamp) . $title);
     }
 }
 
