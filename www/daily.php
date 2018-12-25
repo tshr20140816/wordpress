@@ -342,44 +342,44 @@ function get_sun($mu_)
 
 function get_task_soccer($mu_)
 {
-  // Get Folders
-  $folder_id_private = $mu_->get_folder_id('PRIVATE');
+    // Get Folders
+    $folder_id_private = $mu_->get_folder_id('PRIVATE');
 
-  // Get Contexts
-  $list_context_id = $mu_->get_contexts();
+    // Get Contexts
+    $list_context_id = $mu_->get_contexts();
 
-  $res = $mu_->get_contents(getenv('SOCCER_TEAM_CSV_FILE'));
-  $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
+    $res = $mu_->get_contents(getenv('SOCCER_TEAM_CSV_FILE'));
+    $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 
-  $list_tmp = explode("\n", $res);
+    $list_tmp = explode("\n", $res);
 
-  $list_add_task = [];
-  $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"SOCCER","folder":"'
-    . $folder_id_private . '"}';
-  for ($i = 1; $i < count($list_tmp) - 1; $i++) {
-    $tmp = explode(',', $list_tmp[$i]);
-    $timestamp = strtotime(trim($tmp[1], '"'));
-    if (date('Ymd') >= date('Ymd', $timestamp)) {
-      continue;
+    $list_add_task = [];
+    $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"SOCCER","folder":"'
+      . $folder_id_private . '"}';
+    for ($i = 1; $i < count($list_tmp) - 1; $i++) {
+        $tmp = explode(',', $list_tmp[$i]);
+        $timestamp = strtotime(trim($tmp[1], '"'));
+        if (date('Ymd') >= date('Ymd', $timestamp)) {
+            continue;
+        }
+
+        $tmp1 = trim($tmp[2], '"');
+        $rc = preg_match('/\d+:\d+:\d\d/', $tmp1);
+        if ($rc == 1) {
+            $tmp1 = substr($tmp1, 0, strlen($tmp1) - 3);
+        }
+        $tmp1 = substr(trim($tmp[1], '"'), 5) . ' ' . $tmp1 . ' ' . trim($tmp[0], '"') . ' ' . trim($tmp[6], '"');
+
+        $tmp1 = str_replace('__TITLE__', $tmp1, $add_task_template);
+        $tmp1 = str_replace('__DUEDATE__', $timestamp, $tmp1);
+        $tmp1 = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp1);
+        $list_add_task[] = $tmp1;
     }
-
-    $tmp1 = trim($tmp[2], '"');
-    $rc = preg_match('/\d+:\d+:\d\d/', $tmp1);
-    if ($rc == 1) {
-      $tmp1 = substr($tmp1, 0, strlen($tmp1) - 3);
-    }
-    $tmp1 = substr(trim($tmp[1], '"'), 5) . ' ' . $tmp1 . ' ' . trim($tmp[0], '"') . ' ' . trim($tmp[6], '"');
-
-    $tmp1 = str_replace('__TITLE__', $tmp1, $add_task_template);
-    $tmp1 = str_replace('__DUEDATE__', $timestamp, $tmp1);
-    $tmp1 = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp1);
-    $list_add_task[] = $tmp1;
-  }
-  $count_task = count($list_add_task);
-  $list_add_task[] = '{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . '  Soccer Task Add : ' . $count_task
-    . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 4, 2018))]
-    . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018) . '","folder":"' . $folder_id_private . '"}';
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS SOCCER : ' . print_r($list_add_task, true));
+    $count_task = count($list_add_task);
+    $list_add_task[] = '{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . '  Soccer Task Add : ' . $count_task
+      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 4, 2018))]
+      . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018) . '","folder":"' . $folder_id_private . '"}';
+    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS SOCCER : ' . print_r($list_add_task, true));
 
     return $list_add_task;
 }
@@ -392,54 +392,54 @@ function get_task_culturecenter($mu_)
     // Get Contexts
     $list_context_id = $mu_->get_contexts();
 
-  $y = date('Y');
-  $m = date('n');
+    $y = date('Y');
+    $m = date('n');
 
-  $list_add_task = [];
-  for ($j = 0; $j < 2; $j++) {
-    $url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=' . $y . '&mon=' . $m;
+    $list_add_task = [];
+    for ($j = 0; $j < 2; $j++) {
+        $url = 'http://www.cf.city.hiroshima.jp/saeki-cs/sche6_park/sche6.cgi?year=' . $y . '&mon=' . $m;
 
-    $res = $mu_->get_contents($url);
-    $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
+        $res = $mu_->get_contents($url);
+        $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 
-    $tmp = explode('<col span=1 align=right>', $res);
-    $tmp = explode('</table>', $tmp[1]);
+        $tmp = explode('<col span=1 align=right>', $res);
+        $tmp = explode('</table>', $tmp[1]);
 
-    $rc = preg_match_all('/<tr .+?<b>(.+?)<.*?<td(.*?)<\/td><\/tr>/s', $tmp[0], $matches, PREG_SET_ORDER);
+        $rc = preg_match_all('/<tr .+?<b>(.+?)<.*?<td(.*?)<\/td><\/tr>/s', $tmp[0], $matches, PREG_SET_ORDER);
 
-    for ($i = 0; $i < count($matches); $i++) {
-      $timestamp = mktime(0, 0, 0, $m, $matches[$i][1], $y);
-      if (date('Ymd') > date('Ymd', $timestamp)) {
-        continue;
-      }
-      $tmp = $matches[$i][2];
-      $tmp = preg_replace('/<font .+?>.+?>/', '', $tmp);
-      $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
-      $tmp = trim($tmp, " \t\n\r\0\t>");
-      $tmp = str_replace('　', '', $tmp);
-      $tmp = trim(str_replace('<br>', ' ', $tmp));
-      if (strlen($tmp) == 0) {
-        continue;
-      }
-      $list_add_task[] = '{"title":"' . date('m/d', $timestamp) . ' 文セ ★ ' . $tmp
-        . '","duedate":"' . $timestamp
-      . '","context":"' . $list_context_id[date('w', $timestamp)]
-      . '","tag":"CULTURECENTER","folder":"' . $folder_id_private . '"}';
+        for ($i = 0; $i < count($matches); $i++) {
+            $timestamp = mktime(0, 0, 0, $m, $matches[$i][1], $y);
+            if (date('Ymd') > date('Ymd', $timestamp)) {
+                continue;
+            }
+            $tmp = $matches[$i][2];
+            $tmp = preg_replace('/<font .+?>.+?>/', '', $tmp);
+            $tmp = preg_replace('/bgcolor.+?>/', '', $tmp);
+            $tmp = trim($tmp, " \t\n\r\0\t>");
+            $tmp = str_replace('　', '', $tmp);
+            $tmp = trim(str_replace('<br>', ' ', $tmp));
+            if (strlen($tmp) == 0) {
+                continue;
+            }
+            $list_add_task[] = '{"title":"' . date('m/d', $timestamp) . ' 文セ ★ ' . $tmp
+              . '","duedate":"' . $timestamp
+              . '","context":"' . $list_context_id[date('w', $timestamp)]
+              . '","tag":"CULTURECENTER","folder":"' . $folder_id_private . '"}';
+        }
+        if ($m == 12) {
+            $y++;
+            $m = 1;
+        } else {
+            $m++;
+        }
     }
-    if ($m == 12) {
-      $y++;
-      $m = 1;
-    } else {
-      $m++;
-    }
-  }
-  $count_task = count($list_add_task);
-  $list_add_task[] = '{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . '  Culture Center Task Add : ' . $count_task
-    . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 4, 2018))]
-    . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018) . '","folder":"' . $folder_id_private . '"}';
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS CULTURECENTER : ' . print_r($list_add_task, true));
+    $count_task = count($list_add_task);
+    $list_add_task[] = '{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . '  Culture Center Task Add : ' . $count_task
+      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 4, 2018))]
+      . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018) . '","folder":"' . $folder_id_private . '"}';
+    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS CULTURECENTER : ' . print_r($list_add_task, true));
 
-  return $list_add_task;
+    return $list_add_task;
 }
 
 function get_task_highway($mu_)
@@ -453,45 +453,45 @@ function get_task_highway($mu_)
     // Get Contexts
     $list_context_id = $mu_->get_contexts();
 
-  $url = 'https://www.w-nexco.co.jp/traffic_info/construction/traffic.php?fdate='
-    . date('Ymd', strtotime('+1 day'))
-    . '&tdate='
-    . date('Ymd', strtotime('+14 day'))
-    . '&ak=1&ac=1&kisei%5B%5D=901&dirc%5B%5D=1&dirc%5B%5D=2&order=2&ronarrow=1'
-    . '&road%5B%5D=1011&road%5B%5D=1912&road%5B%5D=1020&road%5B%5D=225A&road%5B%5D=1201'
-    . '&road%5B%5D=1222&road%5B%5D=1231&road%5B%5D=234D&road%5B%5D=1232&road%5B%5D=1260';
+    $url = 'https://www.w-nexco.co.jp/traffic_info/construction/traffic.php?fdate='
+      . date('Ymd', strtotime('+1 day'))
+      . '&tdate='
+      . date('Ymd', strtotime('+14 day'))
+      . '&ak=1&ac=1&kisei%5B%5D=901&dirc%5B%5D=1&dirc%5B%5D=2&order=2&ronarrow=1'
+      . '&road%5B%5D=1011&road%5B%5D=1912&road%5B%5D=1020&road%5B%5D=225A&road%5B%5D=1201'
+      . '&road%5B%5D=1222&road%5B%5D=1231&road%5B%5D=234D&road%5B%5D=1232&road%5B%5D=1260';
 
-  $res = $mu_->get_contents($url);
+    $res = $mu_->get_contents($url);
 
-  $tmp = explode('<!--工事日程順-->', $res);
-  $tmp = explode('<table cellspacing="0" summary="" class="lb05">', $tmp[0]);
-  $tmp = explode('<th>備考</th>', $tmp[1]);
+    $tmp = explode('<!--工事日程順-->', $res);
+    $tmp = explode('<table cellspacing="0" summary="" class="lb05">', $tmp[0]);
+    $tmp = explode('<th>備考</th>', $tmp[1]);
 
-  $rc = preg_match_all('/<tr.*?>' . str_repeat('.*?<td.*?>(.+?)<\/td>', 5) . '.+?<\/tr>/s', $tmp[1], $matches, PREG_SET_ORDER);
+    $rc = preg_match_all('/<tr.*?>' . str_repeat('.*?<td.*?>(.+?)<\/td>', 5) . '.+?<\/tr>/s', $tmp[1], $matches, PREG_SET_ORDER);
 
-  $list_add_task = [];
-  $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"HIGHWAY","folder":"'
-    . $folder_id_private . '"}';
-  for ($i = 0; $i < count($matches); $i++) {
-    $yyyy = (int)date('Y');
-    $tmp = explode('日', $matches[$i][4]);
-    $tmp = explode('月', $tmp[0]);
-    if (date('m') == '12' && (int)$tmp[0] == 1) {
-      $yyyy++;
+    $list_add_task = [];
+    $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"HIGHWAY","folder":"'
+      . $folder_id_private . '"}';
+    for ($i = 0; $i < count($matches); $i++) {
+        $yyyy = (int)date('Y');
+        $tmp = explode('日', $matches[$i][4]);
+        $tmp = explode('月', $tmp[0]);
+        if (date('m') == '12' && (int)$tmp[0] == 1) {
+            $yyyy++;
+        }
+        $timestamp = mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy);
+
+        $tmp = $matches[$i];
+        $tmp = date('m/d', $timestamp) . ' ★ ' . $tmp[4] . ' ' . $tmp[2] . ' ' . $tmp[3] . ' ' . $tmp[5] . ' ' . $tmp[1];
+        $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
+        $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
+        $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
+        $list_add_task[] = $tmp;
     }
-    $timestamp = mktime(0, 0, 0, $tmp[0], $tmp[1], $yyyy);
 
-    $tmp = $matches[$i];
-    $tmp = date('m/d', $timestamp) . ' ★ ' . $tmp[4] . ' ' . $tmp[2] . ' ' . $tmp[3] . ' ' . $tmp[5] . ' ' . $tmp[1];
-    $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
-    $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
-    $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
-    $list_add_task[] = $tmp;
-  }
+    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS HIGHWAY : ' . print_r($list_add_task, true));
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS HIGHWAY : ' . print_r($list_add_task, true));
-
-  return $list_add_task;
+    return $list_add_task;
 }
 
 function get_task_sun($mu_)
@@ -544,54 +544,53 @@ function get_task_sun($mu_)
 
 function get_task_moon($mu_)
 {
-  // 翌日の月の出、月の入りタスク
+    // 翌日の月の出、月の入りタスク
 
-  // Get Folders
-  $folder_id_label = $mu_->get_folder_id('LABEL');
-  // Get Contexts
-  $list_context_id = $mu_->get_contexts();
+    // Get Folders
+    $folder_id_label = $mu_->get_folder_id('LABEL');
+    // Get Contexts
+    $list_context_id = $mu_->get_contexts();
 
-  $timestamp = strtotime('+1 day');
-  $yyyy = date('Y', $timestamp);
-  $mm = date('m', $timestamp);
+    $timestamp = strtotime('+1 day');
+    $yyyy = date('Y', $timestamp);
+    $mm = date('m', $timestamp);
 
-  $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', null, true);
+    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', null, true);
 
-  $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
+    $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
-  $tmp = explode('<table ', $res);
-  $tmp = explode('</table>', $tmp[1]);
-  $tmp = explode('</tr>', $tmp[0]);
-  array_shift($tmp);
-  array_pop($tmp);
+    $tmp = explode('<table ', $res);
+    $tmp = explode('</table>', $tmp[1]);
+    $tmp = explode('</tr>', $tmp[0]);
+    array_shift($tmp);
+    array_pop($tmp);
 
-  $list_add_task = [];
-  $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER2","folder":"'
-    . $folder_id_label . '"}';
-  for ($i = 0; $i < count($tmp); $i++) {
-    $rc = preg_match('/<tr><td.*?>' . substr(' ' . date('j', $timestamp), -2) . '<\/td>/', $tmp[$i]);
-    if ($rc == 1) {
-      $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
+    $list_add_task = [];
+    $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER2","folder":"'
+      . $folder_id_label . '"}';
+    for ($i = 0; $i < count($tmp); $i++) {
+        $rc = preg_match('/<tr><td.*?>' . substr(' ' . date('j', $timestamp), -2) . '<\/td>/', $tmp[$i]);
+        if ($rc == 1) {
+            $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
 
-      if (trim($matches[1]) != '--:--') {
-        $tmp = date('m/d', $timestamp) . ' ' . substr('0' . trim($matches[1]), -5) . ' 月の出';
-        $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
-        $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
-        $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
-        $list_add_task[] = $tmp;
-      }
+            if (trim($matches[1]) != '--:--') {
+                $tmp = date('m/d', $timestamp) . ' ' . substr('0' . trim($matches[1]), -5) . ' 月の出';
+                $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
+                $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
+                $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
+                $list_add_task[] = $tmp;
+            }
 
-      if (trim($matches[2]) != '--:--') {
-        $tmp = date('m/d', $timestamp) . ' ' . substr('0' . trim($matches[2]), -5) . ' 月の入り';
-        $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
-        $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
-        $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
-        $list_add_task[] = $tmp;
-      }
-      break;
+            if (trim($matches[2]) != '--:--') {
+                $tmp = date('m/d', $timestamp) . ' ' . substr('0' . trim($matches[2]), -5) . ' 月の入り';
+                $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
+                $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
+                $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
+                $list_add_task[] = $tmp;
+            }
+            break;
+        }
     }
-  }
-  error_log(getmypid() . ' [' . __METHOD__ . '] MOON : ' . print_r($list_add_task, true));
-  return $list_add_task;
+    error_log(getmypid() . ' [' . __METHOD__ . '] MOON : ' . print_r($list_add_task, true));
+    return $list_add_task;
 }
-?>
