@@ -38,121 +38,121 @@ $list_add_task = [];
 
 if ($hour_now % 2 === 1) {
 
-  // holiday
-  $list_holiday = get_holiday($mu);
+    // holiday
+    $list_holiday = get_holiday($mu);
 
-  // 24sekki
-  $list_24sekki = get_24sekki($mu);
+    // 24sekki
+    $list_24sekki = get_24sekki($mu);
 
-  // Sun rise set
-  $list_sunrise_sunset = get_sun_rise_set($mu);
+    // Sun rise set
+    $list_sunrise_sunset = get_sun_rise_set($mu);
 
-  // Moon age
-  $list_moon_age = get_moon_age($mu);
+    // Moon age
+    $list_moon_age = get_moon_age($mu);
 
-  // 指数 傘 体感
-  $list_shisu = get_shisu($mu);
+    // 指数 傘 体感
+    $list_shisu = get_shisu($mu);
 
-  // Weather Information
+    // Weather Information
 
-  $res = $mu->get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
+    $res = $mu->get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
 
-  $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
+    $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
 
-  error_log($pid . ' $matches[0] : ' . $matches[0]);
-  error_log($pid . ' $matches[1] : ' . $matches[1]);
-  error_log($pid . ' $matches[2] : ' . $matches[2]);
+    error_log($pid . ' $matches[0] : ' . $matches[0]);
+    error_log($pid . ' $matches[1] : ' . $matches[1]);
+    error_log($pid . ' $matches[2] : ' . $matches[2]);
 
-  $dt = $matches[1]; // yyyy-mm-dd
+    $dt = $matches[1]; // yyyy-mm-dd
 
-  $update_marker = $mu->to_small_size(' _' . substr($matches[1], 8) . $matches[2] . '_'); // __DDHH__
+    $update_marker = $mu->to_small_size(' _' . substr($matches[1], 8) . $matches[2] . '_'); // __DDHH__
 
-  $tmp = explode(getenv('POINT_NAME'), $res);
-  $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
+    $tmp = explode(getenv('POINT_NAME'), $res);
+    $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
 
-  $template_add_task = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER","folder":"__FOLDER_ID__"}';
-  $template_add_task = str_replace('__FOLDER_ID__', $folder_id_label, $template_add_task);
-  for ($i = 0; $i < 10; $i++) {
-    $ymd = date('Ymd', strtotime("${dt} +${i} day"));
-    $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i + 1]))));
-    $tmp2 = $list[0];
-    $tmp2 = str_replace('晴', '☀', $tmp2);
-    $tmp2 = str_replace('曇', '☁', $tmp2);
-    $tmp2 = str_replace('雨', '☂', $tmp2);
-    $tmp2 = str_replace('雪', '☃', $tmp2);
-    $tmp2 = str_replace('のち', '/', $tmp2);
-    $tmp2 = str_replace('時々', '|', $tmp2);
-    $tmp2 = str_replace('一時', '|', $tmp2);
-    $tmp3 = '### '
-      . LIST_YOBI[date('w', strtotime($ymd))] . '曜日 '
-      . date('m/d', strtotime($ymd))
-      . ' ### '
-      . $tmp2 . ' ' . $list[2] . ' ' . $list[1]
-      . $update_marker;
+    $template_add_task = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER","folder":"__FOLDER_ID__"}';
+    $template_add_task = str_replace('__FOLDER_ID__', $folder_id_label, $template_add_task);
+    for ($i = 0; $i < 10; $i++) {
+        $ymd = date('Ymd', strtotime("${dt} +${i} day"));
+        $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i + 1]))));
+        $tmp2 = $list[0];
+        $tmp2 = str_replace('晴', '☀', $tmp2);
+        $tmp2 = str_replace('曇', '☁', $tmp2);
+        $tmp2 = str_replace('雨', '☂', $tmp2);
+        $tmp2 = str_replace('雪', '☃', $tmp2);
+        $tmp2 = str_replace('のち', '/', $tmp2);
+        $tmp2 = str_replace('時々', '|', $tmp2);
+        $tmp2 = str_replace('一時', '|', $tmp2);
+        $tmp3 = '### '
+          . LIST_YOBI[date('w', strtotime($ymd))] . '曜日 '
+          . date('m/d', strtotime($ymd))
+          . ' ### '
+          . $tmp2 . ' ' . $list[2] . ' ' . $list[1]
+          . $update_marker;
 
-    if (array_key_exists($ymd, $list_holiday)) {
-      $tmp3 = str_replace(' ###', ' ★' . $list_holiday[$ymd] . '★ ###', $tmp3);
-    }
-    if (array_key_exists($ymd, $list_24sekki)) {
-      $tmp3 .= $list_24sekki[$ymd];
-    }
-    if (array_key_exists($ymd, $list_sunrise_sunset)) {
-      $tmp3 .= ' ' . $list_sunrise_sunset[$ymd];
-    }
-    if (array_key_exists($ymd, $list_moon_age)) {
-      $tmp3 .= ' ' . $list_moon_age[$ymd];
-    }
-    if (array_key_exists($ymd, $list_shisu[getenv('URL_KASA_SHISU')])) {
-      $tmp3 .= ' 傘' . $list_shisu[getenv('URL_KASA_SHISU')][$ymd];
-    }
-    if (array_key_exists($ymd, $list_shisu[getenv('URL_TAIKAN_SHISU')])) {
-      $tmp3 .= ' 体' . $list_shisu[getenv('URL_TAIKAN_SHISU')][$ymd];
-    }
-
-    error_log("${pid} ${tmp3}");
-
-    $tmp4 = str_replace('__TITLE__', $tmp3, $template_add_task);
-    $tmp4 = str_replace('__DUEDATE__', strtotime($ymd), $tmp4);
-    $tmp4 = str_replace('__CONTEXT__', $list_context_id[date('w', strtotime($ymd))], $tmp4);
-
-    $list_add_task[] = $tmp4;
-  }
-
-  // Weather Information (Guest)
-
-  $list_weather_guest_area = $mu->get_weather_guest_area();
-
-  $update_marker = $mu->to_small_size(' _' . date('Ymd', strtotime('+9 hours')) . '_');
-  for ($i = 0; $i < count($list_weather_guest_area); $i++) {
-    $is_add_flag = false;
-    $tmp = explode(',', $list_weather_guest_area[$i]);
-    $location_number = $tmp[0];
-    $point_name = $tmp[1];
-    $ymd = $tmp[2];
-    if ((int)$ymd < (int)date('Ymd', strtotime('+11 days') + 9 * 60 * 60)) {
-      $res = $mu->get_contents('https://tenki.jp/week/' . $location_number . '/');
-      $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
-      $dt = $matches[1]; // yyyy-mm-dd
-      $tmp = explode($point_name, $res);
-      $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
-      for ($j = 0; $j < 10; $j++) {
-        $timestamp = strtotime("${dt} +${j} day") + 9 * 60 * 90;
-        if (date('Ymd', $timestamp) == $ymd) {
-          $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
-          $title = date('m/d', $timestamp) . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
-          $is_add_flag = true;
-          break;
+        if (array_key_exists($ymd, $list_holiday)) {
+            $tmp3 = str_replace(' ###', ' ★' . $list_holiday[$ymd] . '★ ###', $tmp3);
         }
-      }
+        if (array_key_exists($ymd, $list_24sekki)) {
+            $tmp3 .= $list_24sekki[$ymd];
+        }
+        if (array_key_exists($ymd, $list_sunrise_sunset)) {
+            $tmp3 .= ' ' . $list_sunrise_sunset[$ymd];
+        }
+        if (array_key_exists($ymd, $list_moon_age)) {
+            $tmp3 .= ' ' . $list_moon_age[$ymd];
+        }
+        if (array_key_exists($ymd, $list_shisu[getenv('URL_KASA_SHISU')])) {
+            $tmp3 .= ' 傘' . $list_shisu[getenv('URL_KASA_SHISU')][$ymd];
+        }
+        if (array_key_exists($ymd, $list_shisu[getenv('URL_TAIKAN_SHISU')])) {
+            $tmp3 .= ' 体' . $list_shisu[getenv('URL_TAIKAN_SHISU')][$ymd];
+        }
+
+        error_log("${pid} ${tmp3}");
+
+        $tmp4 = str_replace('__TITLE__', $tmp3, $template_add_task);
+        $tmp4 = str_replace('__DUEDATE__', strtotime($ymd), $tmp4);
+        $tmp4 = str_replace('__CONTEXT__', $list_context_id[date('w', strtotime($ymd))], $tmp4);
+
+        $list_add_task[] = $tmp4;
     }
-    if ($is_add_flag === false) {
-      $title = date('m/d', strtotime($ymd)) . " 【${point_name} 天気予報未取得】${update_marker}";
+
+    // Weather Information (Guest)
+
+    $list_weather_guest_area = $mu->get_weather_guest_area();
+
+    $update_marker = $mu->to_small_size(' _' . date('Ymd', strtotime('+9 hours')) . '_');
+    for ($i = 0; $i < count($list_weather_guest_area); $i++) {
+        $is_add_flag = false;
+        $tmp = explode(',', $list_weather_guest_area[$i]);
+        $location_number = $tmp[0];
+        $point_name = $tmp[1];
+        $ymd = $tmp[2];
+        if ((int)$ymd < (int)date('Ymd', strtotime('+11 days') + 9 * 60 * 60)) {
+            $res = $mu->get_contents('https://tenki.jp/week/' . $location_number . '/');
+            $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
+            $dt = $matches[1]; // yyyy-mm-dd
+            $tmp = explode($point_name, $res);
+            $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
+            for ($j = 0; $j < 10; $j++) {
+                $timestamp = strtotime("${dt} +${j} day") + 9 * 60 * 90;
+                if (date('Ymd', $timestamp) == $ymd) {
+                    $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
+                    $title = date('m/d', $timestamp) . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
+                    $is_add_flag = true;
+                    break;
+                }
+            }
+        }
+        if ($is_add_flag === false) {
+            $title = date('m/d', strtotime($ymd)) . " 【${point_name} 天気予報未取得】${update_marker}";
+        }
+        $tmp = str_replace('__TITLE__', $title, $template_add_task);
+        $tmp = str_replace('__DUEDATE__', strtotime($ymd), $tmp);
+        $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', strtotime($ymd))], $tmp);
+        $list_add_task[] = $tmp;
     }
-    $tmp = str_replace('__TITLE__', $title, $template_add_task);
-    $tmp = str_replace('__DUEDATE__', strtotime($ymd), $tmp);
-    $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', strtotime($ymd))], $tmp);
-    $list_add_task[] = $tmp;
-  }
 }
 
 // amedas
@@ -242,19 +242,19 @@ error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
 $list_edit_task = [];
 $template_edit_task = '{"id":"__ID__","title":"__TITLE__","context":"__CONTEXT__"}';
 for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('id', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
-    if ($tasks[$i]['folder'] == $folder_id_work && $tasks[$i]['star'] == '1') {
-      $duedate = $tasks[$i]['duedate'];
-      $title = $tasks[$i]['title'];
-      if (substr($title, 0, 5) == date('m/d', $duedate)) {
-        continue;
-      }
-      $tmp = str_replace('__ID__', $tasks[$i]['id'], $template_edit_task);
-      $tmp = str_replace('__TITLE__', date('m/d', $duedate) . substr($title, 5), $tmp);
-      $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $duedate)], $tmp);
-      $list_edit_task[] = $tmp;
+    if (array_key_exists('id', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+        if ($tasks[$i]['folder'] == $folder_id_work && $tasks[$i]['star'] == '1') {
+            $duedate = $tasks[$i]['duedate'];
+            $title = $tasks[$i]['title'];
+            if (substr($title, 0, 5) == date('m/d', $duedate)) {
+                continue;
+            }
+            $tmp = str_replace('__ID__', $tasks[$i]['id'], $template_edit_task);
+            $tmp = str_replace('__TITLE__', date('m/d', $duedate) . substr($title, 5), $tmp);
+            $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $duedate)], $tmp);
+            $list_edit_task[] = $tmp;
+        }
     }
-  }
 }
 
 // duedate と context の不一致更新
