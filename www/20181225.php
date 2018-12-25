@@ -13,6 +13,6 @@ const LIST_WAFU_GETSUMEI = array('', '睦月', '如月', '弥生', '卯月', '�
 for ($y = date('Y'); $y < date('Y') + 3; $y++) {
     for ($m = 1; $m < 13; $m++) {
         $timestamp = mktime(0, 0, 0, $m, 1, $y);
-        error_log($pid . ' ' . LIST_WAFU_GETSUMEI[$m] . ' ' . date('F', $timestamp));
+        error_log($pid . date('Ymd', $timestamp) . ' ' . LIST_WAFU_GETSUMEI[$m] . ' ' . date('F', $timestamp));
     }
 }
