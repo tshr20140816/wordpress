@@ -355,7 +355,7 @@ __HEREDOC__;
             $parse_text = $row['parse_text'];
         }
 
-        $pdo = NULL;
+        $pdo = null;
 
         if (strlen($parse_text) == 0) {
             $parse_text = '不明';
@@ -365,7 +365,7 @@ __HEREDOC__;
     }
 
     for ($i = 0; $i < 20; $i++) {
-        if (file_exists($file_outlet_parking_information_) === TRUE) {
+        if (file_exists($file_outlet_parking_information_) === true) {
             break;
         }
         error_log(getmypid() . ' [' . __METHOD__ . '] waiting ' . $i);
