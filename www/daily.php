@@ -20,6 +20,7 @@ $requesturi = $_SERVER['REQUEST_URI'];
 error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
+const LIST_WAFU_GETSUMEI = array('', '睦月', '如月', '弥生', '卯月', '皐月', '水無月', '文月', '葉月', '長月', '神無月', '霜月', '師走');
 
 $mu = new MyUtils();
 
@@ -189,6 +190,15 @@ foreach ($list_holiday2 as $key => $value) {
 }
 
 error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
+
+// 和風月名追加 (folder が LABEL で同じ title が無ければ追加)
+
+for ($y = date('Y'); $y < date('Y') + 3; $y++) {
+    for ($m = 1; $m < 13; $m++) {
+        $timestamp = mktime(0, 0, 0, $m, 1, $y);
+        error_log($pid . ' ' . LIST_WAFU_GETSUMEI[$m] . ' ' . date('F', $timestamp));
+    }
+}
 
 // Add Tasks
 $rc = $mu->add_tasks($list_add_task);
