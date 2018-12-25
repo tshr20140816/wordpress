@@ -533,8 +533,8 @@ function get_task_quota($mu_) {
                            ]],
     TRUE);
 
-  $data = json_decode($res, TRUE);
-  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, TRUE));
+  $data = json_decode($res, true);
+  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
   $account = explode('@', $data['email'])[0];
   $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
 
@@ -544,8 +544,8 @@ function get_task_quota($mu_) {
                             "Authorization: Bearer ${api_key}",
                            ]]);
 
-  $data = json_decode($res, TRUE);
-  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, TRUE));
+  $data = json_decode($res, true);
+  error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
 
   $dyno_used = (int)$data['quota_used'];
   $dyno_quota = (int)$data['account_quota'];
