@@ -48,23 +48,23 @@ $list_sunrise_sunset = get_sun($mu);
 
 $list_base = [];
 for ($i = 0; $i < 12; $i++) {
-    $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
-    $res = $mu->get_contents($url);
-    foreach (explode("\n", $res) as $one_line) {
-        if (strpos($one_line, '<title>_') !== FALSE) {
-            $tmp = explode('_', $one_line);
-            $tmp1 = explode(' ', $tmp[2]);
-            $tmp2 = explode('/', $tmp1[1]);
-            // 10月から4月までの閾値は30、その他は38
-            if ((int)$tmp2[0] > ((int)substr($tmp1[0], 0, 1) < 5 ? 30 : 38)) {
-                // 華氏 → 摂氏
-                $tmp2[0] = (int)(((int)$tmp2[0] - 32) * 5 / 9);
-                $tmp2[1] = (int)(((int)$tmp2[1] - 32) * 5 / 9);
-                $tmp[2] = $tmp1[0] . ' ' . $tmp2[0] . '/' . $tmp2[1];
-            }
-            $list_base[$tmp[1]] = $tmp[2];
-        }
-    }
+	$url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
+	$res = $mu->get_contents($url);
+	foreach (explode("\n", $res) as $one_line) {
+		if (strpos($one_line, '<title>_') !== FALSE) {
+			$tmp = explode('_', $one_line);
+			$tmp1 = explode(' ', $tmp[2]);
+			$tmp2 = explode('/', $tmp1[1]);
+			// 10月から4月までの閾値は30、その他は38
+			if ((int)$tmp2[0] > ((int)substr($tmp1[0], 0, 1) < 5 ? 30 : 38)) {
+				// 華氏 → 摂氏
+				$tmp2[0] = (int)(((int)$tmp2[0] - 32) * 5 / 9);
+				$tmp2[1] = (int)(((int)$tmp2[1] - 32) * 5 / 9);
+				$tmp[2] = $tmp1[0] . ' ' . $tmp2[0] . '/' . $tmp2[1];
+			}
+			$list_base[$tmp[1]] = $tmp[2];
+		}
+	}
 }
 error_log($pid . ' $list_base : ' . print_r($list_base, true));
 
@@ -81,14 +81,14 @@ $tasks = json_decode($res, TRUE);
 
 $list_schedule_exists_day = [];
 for ($i = 0; $i < count($tasks); $i++) {
-    if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
-        if ($tasks[$i]['folder'] != $folder_id_label) {
-            $ymd = date('Ymd', $tasks[$i]['duedate']);
-            if (date('Ymd', strtotime('+29 days')) < $ymd && $ymd < date('Ymd', strtotime('+71 days'))) {
-                $list_schedule_exists_day[] = $ymd;
-            }
-        }
-    }
+	if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+		if ($tasks[$i]['folder'] != $folder_id_label) {
+			$ymd = date('Ymd', $tasks[$i]['duedate']);
+			if (date('Ymd', strtotime('+29 days')) < $ymd && $ymd < date('Ymd', strtotime('+71 days'))) {
+				$list_schedule_exists_day[] = $ymd;
+			}
+		}
+	}
 }
 $list_schedule_exists_day = array_unique($list_schedule_exists_day);
 $rc = sort($list_schedule_exists_day);
@@ -98,58 +98,58 @@ $list_add_task = [];
 // To Small Size
 $update_marker = $mu->to_small_size(' _' . date('ymd') . '_');
 for ($i = 0; $i < 70; $i++) {
-    $timestamp = strtotime(date('Y-m-d') . ' +' . ($i + 10) . ' days');
-    $dt = date('n/j', $timestamp);
-    // error_log($pid . ' $dt : ' . $dt);
-    if (array_key_exists($dt, $list_base)) {
-        $tmp = $list_base[$dt];
-    } else {
-        $tmp = '----';
-    }
-    // 30日後以降は土日月及び祝祭日、24節気のみ
-    if ($i > 20 && (date('w', $timestamp) + 1) % 7 > 2
-      && !array_key_exists($timestamp, $list_holiday)
-      && !array_key_exists($timestamp, $list_24sekki)
-      && array_search(date('Ymd', $timestamp), $list_schedule_exists_day) == false) {
-        continue;
-    }
-    $tmp = '### ' . LIST_YOBI[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ### ' . $tmp . $update_marker;
-    if (array_key_exists($timestamp, $list_holiday)) {
-        $tmp = str_replace(' ###', ' ★' . $list_holiday[$timestamp] . '★ ###', $tmp);
-    }
-    if (array_key_exists($timestamp, $list_24sekki)) {
-        $tmp .= ' ' . $list_24sekki[$timestamp];
-    }
-    if (array_key_exists($timestamp, $list_sunrise_sunset)) {
-        $tmp .= ' ' . $list_sunrise_sunset[$timestamp];
-    }
-    $list_add_task[date('Ymd', $timestamp)] = '{"title":"' . $tmp
-      . '","duedate":"' . $timestamp
-      . '","tag":"WEATHER2","context":' . $list_context_id[date('w', $timestamp)]
-      .   ',"folder":' . $folder_id_label . '}';
+	$timestamp = strtotime(date('Y-m-d') . ' +' . ($i + 10) . ' days');
+	$dt = date('n/j', $timestamp);
+	// error_log($pid . ' $dt : ' . $dt);
+	if (array_key_exists($dt, $list_base)) {
+		$tmp = $list_base[$dt];
+	} else {
+		$tmp = '----';
+	}
+	// 30日後以降は土日月及び祝祭日、24節気のみ
+	if ($i > 20 && (date('w', $timestamp) + 1) % 7 > 2
+		&& !array_key_exists($timestamp, $list_holiday)
+		&& !array_key_exists($timestamp, $list_24sekki)
+		&& array_search(date('Ymd', $timestamp), $list_schedule_exists_day) == false) {
+		continue;
+	}
+	$tmp = '### ' . LIST_YOBI[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ### ' . $tmp . $update_marker;
+	if (array_key_exists($timestamp, $list_holiday)) {
+		$tmp = str_replace(' ###', ' ★' . $list_holiday[$timestamp] . '★ ###', $tmp);
+	}
+	if (array_key_exists($timestamp, $list_24sekki)) {
+		$tmp .= ' ' . $list_24sekki[$timestamp];
+	}
+	if (array_key_exists($timestamp, $list_sunrise_sunset)) {
+		$tmp .= ' ' . $list_sunrise_sunset[$timestamp];
+	}
+	$list_add_task[date('Ymd', $timestamp)] = '{"title":"' . $tmp
+		. '","duedate":"' . $timestamp
+		. '","tag":"WEATHER2","context":' . $list_context_id[date('w', $timestamp)]
+		.   ',"folder":' . $folder_id_label . '}';
 }
 error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
 
 if (count($list_add_task) == 0) {
-    error_log($pid . ' WEATHER DATA NONE');
-    exit();
+	error_log($pid . ' WEATHER DATA NONE');
+	exit();
 }
 
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
-    // error_log($pid . ' ' . $i . ' ' . print_r($tasks[$i], true));
-    if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-        if ($tasks[$i]['tag'] == 'WEATHER2'
-            || $tasks[$i]['tag'] == 'SOCCER'
-            || $tasks[$i]['tag'] == 'CULTURECENTER'
-            || $tasks[$i]['tag'] == 'HIGHWAY') {
-            $list_delete_task[] = $tasks[$i]['id'];
-        } elseif ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
-            if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_add_task)) {
-                $list_delete_task[] = $tasks[$i]['id'];
-            }
-        }
-    }
+	// error_log($pid . ' ' . $i . ' ' . print_r($tasks[$i], true));
+	if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
+		if ($tasks[$i]['tag'] == 'WEATHER2'
+			|| $tasks[$i]['tag'] == 'SOCCER'
+			|| $tasks[$i]['tag'] == 'CULTURECENTER'
+			|| $tasks[$i]['tag'] == 'HIGHWAY') {
+			$list_delete_task[] = $tasks[$i]['id'];
+		} elseif ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
+			if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_add_task)) {
+				$list_delete_task[] = $tasks[$i]['id'];
+			}
+		}
+	}
 }
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, true));
 
@@ -172,20 +172,20 @@ $list_add_task = array_merge($list_add_task, get_task_culturecenter($mu));
 
 $list_label_title = [];
 for ($i = 0; $i < count($tasks); $i++) {
-    if (array_key_exists('title', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
-        if ($tasks[$i]['folder'] == $folder_id_label) {
-            $list_label_title[] = $tasks[$i]['title'];
-        }
-    }
+	if (array_key_exists('title', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+		if ($tasks[$i]['folder'] == $folder_id_label) {
+			$list_label_title[] = $tasks[$i]['title'];
+		}
+	}
 }
 
 foreach ($list_holiday2 as $key => $value) {
-    if (array_search($key, $list_label_title) == false) {
-        $list_add_task[] = '{"title":"' . $key
-          . '","duedate":"' . $value
-          . '","tag":"HOLIDAY","context":' . $list_context_id[date('w', $value)]
-          . ',"folder":' . $folder_id_label . '}';
-    }
+	if (array_search($key, $list_label_title) == false) {
+		$list_add_task[] = '{"title":"' . $key
+			. '","duedate":"' . $value
+			. '","tag":"HOLIDAY","context":' . $list_context_id[date('w', $value)]
+			. ',"folder":' . $folder_id_label . '}';
+	}
 }
 
 error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
@@ -202,73 +202,73 @@ exit();
 
 function get_holiday2($mu_)
 {
-  $list_holiday2 = [];
-  for ($j = 0; $j < 4; $j++) {
-    $yyyy = date('Y', strtotime('+' . $j . ' years'));
+	$list_holiday2 = [];
+	for ($j = 0; $j < 4; $j++) {
+		$yyyy = date('Y', strtotime('+' . $j . ' years'));
 
-    $url = 'http://calendar-service.net/cal?start_year=' . $yyyy
-      . '&start_mon=1&end_year=' . $yyyy . '&end_mon=12'
-      . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
+		$url = 'http://calendar-service.net/cal?start_year=' . $yyyy
+			. '&start_mon=1&end_year=' . $yyyy . '&end_mon=12'
+			. '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-    $res = $mu_->get_contents($url, NULL, TRUE);
-    $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
+		$res = $mu_->get_contents($url, NULL, TRUE);
+		$res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
-    $tmp = explode("\n", $res);
-    array_shift($tmp); // ヘッダ行削除
-    array_pop($tmp); // フッタ行(空行)削除
+		$tmp = explode("\n", $res);
+		array_shift($tmp); // ヘッダ行削除
+		array_pop($tmp); // フッタ行(空行)削除
 
-    for ($i = 0; $i < count($tmp); $i++) {
-      $tmp1 = explode(',', $tmp[$i]);
-      $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
-      if (date('Ymd', $timestamp) < date('Ymd', strtotime('+100 days'))) {
-        continue;
-      }
+		for ($i = 0; $i < count($tmp); $i++) {
+			$tmp1 = explode(',', $tmp[$i]);
+			$timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
+			if (date('Ymd', $timestamp) < date('Ymd', strtotime('+100 days'))) {
+				continue;
+			}
 
-      $yyyy = $mu_->to_small_size($tmp1[0]);
-      $list_holiday2['### ' . $tmp1[5] . ' ' . $tmp1[1] . '/' . $tmp1[2] . ' ★' . $tmp1[7] . '★ ### ' . $yyyy] = $timestamp;
-    }
-  }
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday2 : ' . print_r($list_holiday2, true));
+			$yyyy = $mu_->to_small_size($tmp1[0]);
+			$list_holiday2['### ' . $tmp1[5] . ' ' . $tmp1[1] . '/' . $tmp1[2] . ' ★' . $tmp1[7] . '★ ### ' . $yyyy] = $timestamp;
+		}
+	}
+	error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday2 : ' . print_r($list_holiday2, true));
 
-  return $list_holiday2;
+	return $list_holiday2;
 }
 
 function get_holiday($mu_)
 {
-  // holiday 今月含み4ヶ月分
+	// holiday 今月含み4ヶ月分
 
-  $start_yyyy = date('Y');
-  $start_m = date('n');
-  $finish_yyyy = date('Y', strtotime('+3 month'));
-  $finish_m = date('n', strtotime('+3 month'));
+	$start_yyyy = date('Y');
+	$start_m = date('n');
+	$finish_yyyy = date('Y', strtotime('+3 month'));
+	$finish_m = date('n', strtotime('+3 month'));
 
-  $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy
-    . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
-    . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
+	$url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy
+		. '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
+		. '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-  $res = $mu_->get_contents($url, null, true);
-  $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
+	$res = $mu_->get_contents($url, null, true);
+	$res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
-  $tmp = explode("\n", $res);
-  array_shift($tmp); // ヘッダ行削除
-  array_pop($tmp); // フッタ行(空行)削除
+	$tmp = explode("\n", $res);
+	array_shift($tmp); // ヘッダ行削除
+	array_pop($tmp); // フッタ行(空行)削除
 
-  $list_holiday = [];
-  for ($i = 0; $i < count($tmp); $i++) {
-    $tmp1 = explode(',', $tmp[$i]);
-    $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
-    $list_holiday[$timestamp] = $tmp1[7];
-  }
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_holiday, true));
+	$list_holiday = [];
+	for ($i = 0; $i < count($tmp); $i++) {
+		$tmp1 = explode(',', $tmp[$i]);
+		$timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
+		$list_holiday[$timestamp] = $tmp1[7];
+	}
+	error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_holiday, true));
 
-  return $list_holiday;
+	return $list_holiday;
 }
 
 function get_24sekki($mu_)
 {
-  // 24sekki 今年と来年分
+	// 24sekki 今年と来年分
 
-  $list_24sekki = [];
+	$list_24sekki = [];
 
   $yyyy = (int)date('Y');
   for ($j = 0; $j < 2; $j++) {
@@ -381,16 +381,16 @@ function get_task_soccer($mu_)
     . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018) . '","folder":"' . $folder_id_private . '"}';
   error_log(getmypid() . ' [' . __METHOD__ . '] TASKS SOCCER : ' . print_r($list_add_task, true));
 
-  return $list_add_task;
+	return $list_add_task;
 }
 
 function get_task_culturecenter($mu_)
 {
-  // Get Folders
-  $folder_id_private = $mu_->get_folder_id('PRIVATE');
+	// Get Folders
+	$folder_id_private = $mu_->get_folder_id('PRIVATE');
 
-  // Get Contexts
-  $list_context_id = $mu_->get_contexts();
+	// Get Contexts
+	$list_context_id = $mu_->get_contexts();
 
   $y = date('Y');
   $m = date('n');
@@ -444,11 +444,14 @@ function get_task_culturecenter($mu_)
 
 function get_task_highway($mu_)
 {
-  // Get Folders
-  $folder_id_private = $mu_->get_folder_id('PRIVATE');
+	// Get Folders
+	$folder_id_private = $mu_->get_folder_id('PRIVATE');
 
-  // Get Contexts
-  $list_context_id = $mu_->get_contexts();
+	// Get Contexts
+	$list_context_id = $mu_->get_contexts();
+
+	// Get Contexts
+	$list_context_id = $mu_->get_contexts();
 
   $url = 'https://www.w-nexco.co.jp/traffic_info/construction/traffic.php?fdate='
     . date('Ymd', strtotime('+1 day'))
@@ -493,50 +496,50 @@ function get_task_highway($mu_)
 
 function get_task_sun($mu_)
 {
-  // 翌日の日の出、日の入りタスク
+	// 翌日の日の出、日の入りタスク
 
-  // Get Folders
-  $folder_id_label = $mu_->get_folder_id('LABEL');
-  // Get Contexts
-  $list_context_id = $mu_->get_contexts();
+	// Get Folders
+	$folder_id_label = $mu_->get_folder_id('LABEL');
+	// Get Contexts
+	$list_context_id = $mu_->get_contexts();
 
-  $timestamp = strtotime('+1 day');
-  $yyyy = date('Y', $timestamp);
-  $mm = date('m', $timestamp);
+	$timestamp = strtotime('+1 day');
+	$yyyy = date('Y', $timestamp);
+	$mm = date('m', $timestamp);
 
-  $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
-  $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
+	$res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
+	$res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
-  $tmp = explode('<table ', $res);
-  $tmp = explode('</table>', $tmp[1]);
-  $tmp = explode('</tr>', $tmp[0]);
-  array_shift($tmp);
-  array_pop($tmp);
+	$tmp = explode('<table ', $res);
+	$tmp = explode('</table>', $tmp[1]);
+	$tmp = explode('</tr>', $tmp[0]);
+	array_shift($tmp);
+	array_pop($tmp);
 
-  $list_add_task = [];
-  $add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER2","folder":"'
-    . $folder_id_label . '"}';
-  for ($i = 0; $i < count($tmp); $i++) {
-    $rc = preg_match('/<tr><td.*?>' . substr(' ' . date('j', $timestamp), -2) . '<\/td>/', $tmp[$i]);
-    if ($rc == 1) {
-      $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
+	$list_add_task = [];
+	$add_task_template = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER2","folder":"'
+		. $folder_id_label . '"}';
+	for ($i = 0; $i < count($tmp); $i++) {
+		$rc = preg_match('/<tr><td.*?>' . substr(' ' . date('j', $timestamp), -2) . '<\/td>/', $tmp[$i]);
+		if ($rc == 1) {
+			$rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
 
-      $tmp = date('m/d', $timestamp) . ' 0' . trim($matches[1]) . ' 日の出';
-      $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
-      $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
-      $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
-      $list_add_task[] = $tmp;
+			$tmp = date('m/d', $timestamp) . ' 0' . trim($matches[1]) . ' 日の出';
+			$tmp = str_replace('__TITLE__', $tmp, $add_task_template);
+			$tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
+			$tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
+			$list_add_task[] = $tmp;
 
-      $tmp = date('m/d', $timestamp) . ' ' . trim($matches[2]) . ' 日の入り';
-      $tmp = str_replace('__TITLE__', $tmp, $add_task_template);
-      $tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
-      $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
-      $list_add_task[] = $tmp;
-      break;
-    }
-  }
-  error_log(getmypid() . ' [' . __METHOD__ . '] SUN : ' . print_r($list_add_task, true));
-  return $list_add_task;
+			$tmp = date('m/d', $timestamp) . ' ' . trim($matches[2]) . ' 日の入り';
+			$tmp = str_replace('__TITLE__', $tmp, $add_task_template);
+			$tmp = str_replace('__DUEDATE__', $timestamp, $tmp);
+			$tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
+			$list_add_task[] = $tmp;
+			break;
+		}
+	}
+	error_log(getmypid() . ' [' . __METHOD__ . '] SUN : ' . print_r($list_add_task, true));
+	return $list_add_task;
 }
 
 function get_task_moon($mu_)
