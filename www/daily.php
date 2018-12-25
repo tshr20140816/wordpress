@@ -98,58 +98,58 @@ $list_add_task = [];
 // To Small Size
 $update_marker = $mu->to_small_size(' _' . date('ymd') . '_');
 for ($i = 0; $i < 70; $i++) {
-  $timestamp = strtotime(date('Y-m-d') . ' +' . ($i + 10) . ' days');
-  $dt = date('n/j', $timestamp);
-  // error_log($pid . ' $dt : ' . $dt);
-  if (array_key_exists($dt, $list_base)) {
-    $tmp = $list_base[$dt];
-  } else {
-    $tmp = '----';
-  }
-  // 30日後以降は土日月及び祝祭日、24節気のみ
-  if ($i > 20 && (date('w', $timestamp) + 1) % 7 > 2
+    $timestamp = strtotime(date('Y-m-d') . ' +' . ($i + 10) . ' days');
+    $dt = date('n/j', $timestamp);
+    // error_log($pid . ' $dt : ' . $dt);
+    if (array_key_exists($dt, $list_base)) {
+        $tmp = $list_base[$dt];
+    } else {
+        $tmp = '----';
+    }
+    // 30日後以降は土日月及び祝祭日、24節気のみ
+    if ($i > 20 && (date('w', $timestamp) + 1) % 7 > 2
       && !array_key_exists($timestamp, $list_holiday)
       && !array_key_exists($timestamp, $list_24sekki)
       && array_search(date('Ymd', $timestamp), $list_schedule_exists_day) == false) {
-    continue;
-  }
-  $tmp = '### ' . LIST_YOBI[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ### ' . $tmp . $update_marker;
-  if (array_key_exists($timestamp, $list_holiday)) {
-    $tmp = str_replace(' ###', ' ★' . $list_holiday[$timestamp] . '★ ###', $tmp);
-  }
-  if (array_key_exists($timestamp, $list_24sekki)) {
-    $tmp .= ' ' . $list_24sekki[$timestamp];
-  }
-  if (array_key_exists($timestamp, $list_sunrise_sunset)) {
-    $tmp .= ' ' . $list_sunrise_sunset[$timestamp];
-  }
-  $list_add_task[date('Ymd', $timestamp)] = '{"title":"' . $tmp
-    . '","duedate":"' . $timestamp
-    . '","tag":"WEATHER2","context":' . $list_context_id[date('w', $timestamp)]
-    . ',"folder":' . $folder_id_label . '}';
+        continue;
+    }
+    $tmp = '### ' . LIST_YOBI[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ### ' . $tmp . $update_marker;
+    if (array_key_exists($timestamp, $list_holiday)) {
+        $tmp = str_replace(' ###', ' ★' . $list_holiday[$timestamp] . '★ ###', $tmp);
+    }
+    if (array_key_exists($timestamp, $list_24sekki)) {
+        $tmp .= ' ' . $list_24sekki[$timestamp];
+    }
+    if (array_key_exists($timestamp, $list_sunrise_sunset)) {
+        $tmp .= ' ' . $list_sunrise_sunset[$timestamp];
+    }
+    $list_add_task[date('Ymd', $timestamp)] = '{"title":"' . $tmp
+      . '","duedate":"' . $timestamp
+      . '","tag":"WEATHER2","context":' . $list_context_id[date('w', $timestamp)]
+      .   ',"folder":' . $folder_id_label . '}';
 }
 error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
 
 if (count($list_add_task) == 0) {
-  error_log($pid . ' WEATHER DATA NONE');
-  exit();
+    error_log($pid . ' WEATHER DATA NONE');
+    exit();
 }
 
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
-  // error_log($pid . ' ' . $i . ' ' . print_r($tasks[$i], true));
-  if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'WEATHER2'
-        || $tasks[$i]['tag'] == 'SOCCER'
-        || $tasks[$i]['tag'] == 'CULTURECENTER'
-        || $tasks[$i]['tag'] == 'HIGHWAY') {
-      $list_delete_task[] = $tasks[$i]['id'];
-    } elseif ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
-      if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_add_task)) {
-        $list_delete_task[] = $tasks[$i]['id'];
-      }
+    // error_log($pid . ' ' . $i . ' ' . print_r($tasks[$i], true));
+    if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
+        if ($tasks[$i]['tag'] == 'WEATHER2'
+            || $tasks[$i]['tag'] == 'SOCCER'
+            || $tasks[$i]['tag'] == 'CULTURECENTER'
+            || $tasks[$i]['tag'] == 'HIGHWAY') {
+            $list_delete_task[] = $tasks[$i]['id'];
+        } elseif ($tasks[$i]['tag'] == 'HOLIDAY' || $tasks[$i]['tag'] == 'ADDITIONAL') {
+            if (array_key_exists(date('Ymd', $tasks[$i]['duedate']), $list_add_task)) {
+                $list_delete_task[] = $tasks[$i]['id'];
+            }
+        }
     }
-  }
 }
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, true));
 
@@ -172,20 +172,20 @@ $list_add_task = array_merge($list_add_task, get_task_culturecenter($mu));
 
 $list_label_title = [];
 for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('title', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
-    if ($tasks[$i]['folder'] == $folder_id_label) {
-      $list_label_title[] = $tasks[$i]['title'];
+    if (array_key_exists('title', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+        if ($tasks[$i]['folder'] == $folder_id_label) {
+            $list_label_title[] = $tasks[$i]['title'];
+        }
     }
-  }
 }
 
 foreach ($list_holiday2 as $key => $value) {
-  if (array_search($key, $list_label_title) == false) {
-    $list_add_task[] = '{"title":"' . $key
-    . '","duedate":"' . $value
-    . '","tag":"HOLIDAY","context":' . $list_context_id[date('w', $value)]
-    . ',"folder":' . $folder_id_label . '}';
-  }
+    if (array_search($key, $list_label_title) == false) {
+        $list_add_task[] = '{"title":"' . $key
+          . '","duedate":"' . $value
+          . '","tag":"HOLIDAY","context":' . $list_context_id[date('w', $value)]
+          . ',"folder":' . $folder_id_label . '}';
+    }
 }
 
 error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
@@ -200,8 +200,8 @@ error_log("${pid} FINISH");
 
 exit();
 
-function get_holiday2($mu_) {
-
+function get_holiday2($mu_)
+{
   $list_holiday2 = [];
   for ($j = 0; $j < 4; $j++) {
     $yyyy = date('Y', strtotime('+' . $j . ' years'));
@@ -233,7 +233,8 @@ function get_holiday2($mu_) {
   return $list_holiday2;
 }
 
-function get_holiday($mu_) {
+function get_holiday($mu_)
+{
   // holiday 今月含み4ヶ月分
 
   $start_yyyy = date('Y');
@@ -263,7 +264,8 @@ function get_holiday($mu_) {
   return $list_holiday;
 }
 
-function get_24sekki($mu_) {
+function get_24sekki($mu_)
+{
   // 24sekki 今年と来年分
 
   $list_24sekki = [];
@@ -302,7 +304,8 @@ function get_24sekki($mu_) {
   return $list_24sekki;
 }
 
-function get_sun($mu_) {
+function get_sun($mu_)
+{
   // Sun 今月含み4ヶ月分
 
   $list_sunrise_sunset = [];
@@ -337,8 +340,8 @@ function get_sun($mu_) {
   return $list_sunrise_sunset;
 }
 
-function get_task_soccer($mu_) {
-
+function get_task_soccer($mu_)
+{
   // Get Folders
   $folder_id_private = $mu_->get_folder_id('PRIVATE');
 
@@ -381,8 +384,8 @@ function get_task_soccer($mu_) {
   return $list_add_task;
 }
 
-function get_task_culturecenter($mu_) {
-
+function get_task_culturecenter($mu_)
+{
   // Get Folders
   $folder_id_private = $mu_->get_folder_id('PRIVATE');
 
@@ -439,8 +442,8 @@ function get_task_culturecenter($mu_) {
   return $list_add_task;
 }
 
-function get_task_highway($mu_) {
-
+function get_task_highway($mu_)
+{
   // Get Folders
   $folder_id_private = $mu_->get_folder_id('PRIVATE');
 
@@ -488,7 +491,8 @@ function get_task_highway($mu_) {
   return $list_add_task;
 }
 
-function get_task_sun($mu_) {
+function get_task_sun($mu_)
+{
   // 翌日の日の出、日の入りタスク
 
   // Get Folders
@@ -535,7 +539,8 @@ function get_task_sun($mu_) {
   return $list_add_task;
 }
 
-function get_task_moon($mu_) {
+function get_task_moon($mu_)
+{
   // 翌日の月の出、月の入りタスク
 
   // Get Folders
