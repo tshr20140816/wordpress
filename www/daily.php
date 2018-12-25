@@ -92,7 +92,7 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 $list_schedule_exists_day = array_unique($list_schedule_exists_day);
 $rc = sort($list_schedule_exists_day);
-error_log($pid . ' $list_schedule_exists_day : ' . print_r($list_schedule_exists_day, TRUE));
+error_log($pid . ' $list_schedule_exists_day : ' . print_r($list_schedule_exists_day, true));
 
 $list_add_task = [];
 // To Small Size
@@ -110,7 +110,7 @@ for ($i = 0; $i < 70; $i++) {
   if ($i > 20 && (date('w', $timestamp) + 1) % 7 > 2
       && !array_key_exists($timestamp, $list_holiday)
       && !array_key_exists($timestamp, $list_24sekki)
-      && array_search(date('Ymd', $timestamp), $list_schedule_exists_day) == FALSE) {
+      && array_search(date('Ymd', $timestamp), $list_schedule_exists_day) == false) {
     continue;
   }
   $tmp = '### ' . LIST_YOBI[date('w', $timestamp)] . '曜日 ' . date('m/d', $timestamp) . ' ### ' . $tmp . $update_marker;
@@ -128,7 +128,7 @@ for ($i = 0; $i < 70; $i++) {
     . '","tag":"WEATHER2","context":' . $list_context_id[date('w', $timestamp)]
     . ',"folder":' . $folder_id_label . '}';
 }
-error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
+error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
 
 if (count($list_add_task) == 0) {
   error_log($pid . ' WEATHER DATA NONE');
@@ -137,7 +137,7 @@ if (count($list_add_task) == 0) {
 
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
-  // error_log($pid . ' ' . $i . ' ' . print_r($tasks[$i], TRUE));
+  // error_log($pid . ' ' . $i . ' ' . print_r($tasks[$i], true));
   if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
     if ($tasks[$i]['tag'] == 'WEATHER2'
         || $tasks[$i]['tag'] == 'SOCCER'
@@ -151,7 +151,7 @@ for ($i = 0; $i < count($tasks); $i++) {
     }
   }
 }
-error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
+error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, true));
 
 // Sun Tasks 翌日分
 $list_add_task = array_merge($list_add_task, get_task_sun($mu));
@@ -180,7 +180,7 @@ for ($i = 0; $i < count($tasks); $i++) {
 }
 
 foreach ($list_holiday2 as $key => $value) {
-  if (array_search($key, $list_label_title) == FALSE) {
+  if (array_search($key, $list_label_title) == false) {
     $list_add_task[] = '{"title":"' . $key
     . '","duedate":"' . $value
     . '","tag":"HOLIDAY","context":' . $list_context_id[date('w', $value)]
@@ -188,7 +188,7 @@ foreach ($list_holiday2 as $key => $value) {
   }
 }
 
-error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
+error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
 
 // Add Tasks
 $rc = $mu->add_tasks($list_add_task);
@@ -228,7 +228,7 @@ function get_holiday2($mu_) {
       $list_holiday2['### ' . $tmp1[5] . ' ' . $tmp1[1] . '/' . $tmp1[2] . ' ★' . $tmp1[7] . '★ ### ' . $yyyy] = $timestamp;
     }
   }
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday2 : ' . print_r($list_holiday2, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday2 : ' . print_r($list_holiday2, true));
 
   return $list_holiday2;
 }
@@ -245,7 +245,7 @@ function get_holiday($mu_) {
     . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
     . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-  $res = $mu_->get_contents($url, NULL, TRUE);
+  $res = $mu_->get_contents($url, null, true);
   $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
   $tmp = explode("\n", $res);
@@ -258,7 +258,7 @@ function get_holiday($mu_) {
     $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
     $list_holiday[$timestamp] = $tmp1[7];
   }
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_holiday, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_holiday, true));
 
   return $list_holiday;
 }
@@ -297,7 +297,7 @@ function get_24sekki($mu_) {
     }
     $yyyy++;
   }
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_24sekki : ' . print_r($list_24sekki, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $list_24sekki : ' . print_r($list_24sekki, true));
 
   return $list_24sekki;
 }
@@ -313,7 +313,7 @@ function get_sun($mu_) {
     $mm = date('m', $timestamp);
     error_log($pid . ' $yyyy : ' . $yyyy);
     error_log($pid . ' $mm : ' . $mm);
-    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
+    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', null, true);
 
     $tmp = explode('<table ', $res);
     $tmp = explode('</table>', $tmp[1]);
@@ -333,7 +333,7 @@ function get_sun($mu_) {
   // To Small Size
   $list_sunrise_sunset = $mu_->to_small_size($list_sunrise_sunset);
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, true));
   return $list_sunrise_sunset;
 }
 
@@ -376,7 +376,7 @@ function get_task_soccer($mu_) {
   $list_add_task[] = '{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . '  Soccer Task Add : ' . $count_task
     . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 4, 2018))]
     . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018) . '","folder":"' . $folder_id_private . '"}';
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS SOCCER : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS SOCCER : ' . print_r($list_add_task, true));
 
   return $list_add_task;
 }
@@ -434,7 +434,7 @@ function get_task_culturecenter($mu_) {
   $list_add_task[] = '{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . '  Culture Center Task Add : ' . $count_task
     . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 4, 2018))]
     . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018) . '","folder":"' . $folder_id_private . '"}';
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS CULTURECENTER : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS CULTURECENTER : ' . print_r($list_add_task, true));
 
   return $list_add_task;
 }
@@ -483,7 +483,7 @@ function get_task_highway($mu_) {
     $list_add_task[] = $tmp;
   }
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS HIGHWAY : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS HIGHWAY : ' . print_r($list_add_task, true));
 
   return $list_add_task;
 }
@@ -531,7 +531,7 @@ function get_task_sun($mu_) {
       break;
     }
   }
-  error_log(getmypid() . ' [' . __METHOD__ . '] SUN : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] SUN : ' . print_r($list_add_task, true));
   return $list_add_task;
 }
 
@@ -547,7 +547,7 @@ function get_task_moon($mu_) {
   $yyyy = date('Y', $timestamp);
   $mm = date('m', $timestamp);
 
-  $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
+  $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', null, true);
 
   $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
@@ -583,7 +583,7 @@ function get_task_moon($mu_) {
       break;
     }
   }
-  error_log(getmypid() . ' [' . __METHOD__ . '] MOON : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] MOON : ' . print_r($list_add_task, true));
   return $list_add_task;
 }
 ?>
