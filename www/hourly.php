@@ -790,7 +790,7 @@ __HEREDOC__;
             }
             $tmp = $template_vevent;
             if (preg_match('/^\d\d\/\d\d .+/s', $tasks_[$i]['title']) == 1) {
-                $tmp = str_replace('__SUMMARY__', substr($tasks_[$i]['title'], 7), $tmp);
+                $tmp = str_replace('__SUMMARY__', trim(substr($tasks_[$i]['title'], 6)), $tmp);
             } else {
                 $tmp = str_replace('__SUMMARY__', $tasks_[$i]['title'], $tmp);
             }
