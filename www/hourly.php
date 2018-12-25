@@ -471,9 +471,9 @@ function get_task_amedas($mu_)
 
     if ($title != '') {
         $list_add_task[] = '{"title":"' . $title . ' ' . $warn . $taikan_shisu
-            . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
-            . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
-            . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+          . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
+          . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
+          . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
     }
 
     error_log(getmypid() . ' [' . __METHOD__ . '] TASKS AMEDAS : ' . print_r($list_add_task, true));
