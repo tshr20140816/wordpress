@@ -287,7 +287,6 @@ error_log("${pid} FINISH");
 exit();
 
 function get_task_heroku_buildpack_php($mu_) {
-
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
 
@@ -317,153 +316,151 @@ function get_task_heroku_buildpack_php($mu_) {
 }
 
 function get_task_parking_information($mu_, $file_outlet_parking_information_) {
+    // Get Folders
+    $folder_id_label = $mu_->get_folder_id('LABEL');
 
-  // Get Folders
-  $folder_id_label = $mu_->get_folder_id('LABEL');
+    // Get Contexts
+    $list_context_id = $mu_->get_contexts();
 
-  // Get Contexts
-  $list_context_id = $mu_->get_contexts();
+    $list_parking_name = [' ', '体', 'ク', 'セ', 'シ'];
 
-  $list_parking_name = [' ', '体', 'ク', 'セ', 'シ'];
+    $list_add_task = [];
 
-  $list_add_task = [];
+    $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
 
-  $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
+    $parking_information_all = '';
+    for ($i = 1; $i < 5; $i++) {
+        $url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=' . $i . '&mode=pc';
+        $res = $mu_->get_contents($url);
 
-  $parking_information_all = '';
-  for ($i = 1; $i < 5; $i++) {
-    $url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=' . $i . '&mode=pc';
-    $res = $mu_->get_contents($url);
+        $hash_text = hash('sha512', $res);
 
-    $hash_text = hash('sha512', $res);
+        $pdo = $mu_->get_pdo();
 
-    $pdo = $mu_->get_pdo();
-
-    $sql = <<< __HEREDOC__
+        $sql = <<< __HEREDOC__
 SELECT T1.parse_text
   FROM t_imageparsehash T1
  WHERE T1.group_id = 2
    AND T1.hash_text = :b_hash_text;
 __HEREDOC__;
 
-    $statement = $pdo->prepare($sql);
-    $rc = $statement->execute([':b_hash_text' => $hash_text]);
-    error_log(getmypid() . ' [' . __METHOD__ . '] SELECT RESULT : ' . $rc);
-    $results = $statement->fetchAll();
-    // error_log(getmypid() . ' [' . __METHOD__ . '] $results : ' . print_r($results, true));
+        $statement = $pdo->prepare($sql);
+        $rc = $statement->execute([':b_hash_text' => $hash_text]);
+        error_log(getmypid() . ' [' . __METHOD__ . '] SELECT RESULT : ' . $rc);
+        $results = $statement->fetchAll();
+        // error_log(getmypid() . ' [' . __METHOD__ . '] $results : ' . print_r($results, true));
 
-    $parse_text = '';
-    foreach ($results as $row) {
-      $parse_text = $row['parse_text'];
+        $parse_text = '';
+        foreach ($results as $row) {
+            $parse_text = $row['parse_text'];
+        }
+
+        $pdo = NULL;
+
+        if (strlen($parse_text) == 0) {
+            $parse_text = '不明';
+            error_log(getmypid() . ' [' . __METHOD__ . '] $hash_text : ' . $hash_text);
+        }
+        $parking_information_all .= ' [' . $list_parking_name[$i] . "]${parse_text}";
     }
 
-    $pdo = NULL;
-
-    if (strlen($parse_text) == 0) {
-      $parse_text = '不明';
-      error_log(getmypid() . ' [' . __METHOD__ . '] $hash_text : ' . $hash_text);
+    for ($i = 0; $i < 20; $i++) {
+        if (file_exists($file_outlet_parking_information_) === TRUE) {
+            break;
+        }
+        error_log(getmypid() . ' [' . __METHOD__ . '] waiting ' . $i);
+        sleep(1);
     }
-    $parking_information_all .= ' [' . $list_parking_name[$i] . "]${parse_text}";
-  }
 
-  for ($i = 0; $i < 20; $i++) {
-    if (file_exists($file_outlet_parking_information_) === TRUE) {
-      break;
+    if (file_exists($file_outlet_parking_information_) === true) {
+        $outlet = file_get_contents($file_outlet_parking_information_);
+        $list_add_task[] = '{"title":"P [ア]' . $outlet . $parking_information_all . $update_marker
+            . '","duedate":"' . mktime(0, 0, 0, 1, 5, 2018)
+            . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 5, 2018))]
+            . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
     }
-    error_log(getmypid() . ' [' . __METHOD__ . '] waiting ' . $i);
-    sleep(1);
-  }
 
-  if (file_exists($file_outlet_parking_information_) === TRUE) {
-    $outlet = file_get_contents($file_outlet_parking_information_);
-    $list_add_task[] = '{"title":"P [ア]' . $outlet . $parking_information_all . $update_marker
-      . '","duedate":"' . mktime(0, 0, 0, 1, 5, 2018)
-      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 5, 2018))]
-      . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
-  }
-
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS PARKING INFORMATION : ' . print_r($list_add_task, true));
-  return $list_add_task;
+    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS PARKING INFORMATION : ' . print_r($list_add_task, true));
+    return $list_add_task;
 }
 
 function get_task_amedas($mu_) {
+    // Get Folders
+    $folder_id_label = $mu_->get_folder_id('LABEL');
 
-  // Get Folders
-  $folder_id_label = $mu_->get_folder_id('LABEL');
+    // Get Contexts
+    $list_context_id = $mu_->get_contexts();
 
-  // Get Contexts
-  $list_context_id = $mu_->get_contexts();
+    $list_add_task = [];
 
-  $list_add_task = [];
+    $res = $mu_->get_contents(getenv('URL_AMEDAS'));
 
-  $res = $mu_->get_contents(getenv('URL_AMEDAS'));
+    $tmp = explode('">時刻</td>', $res);
+    $tmp = explode('</table>', $tmp[1]);
 
-  $tmp = explode('">時刻</td>', $res);
-  $tmp = explode('</table>', $tmp[1]);
+    $tmp1 = explode('</tr>', $tmp[0]);
+    $headers = explode('</td>', $tmp1[0]);
+    error_log($pid . ' [' . __METHOD__ . '] $headers : ' . print_r($headers, true));
 
-  $tmp1 = explode('</tr>', $tmp[0]);
-  $headers = explode('</td>', $tmp1[0]);
-  error_log($pid . ' [' . __METHOD__ . '] $headers : ' . print_r($headers, true));
-
-  for ($i = 0; $i < count($headers); $i++) {
-    switch (trim(strip_tags($headers[$i]))) {
-      case '気温':
-        $index_temp = $i + 2;
-      case '降水量':
-        $index_rain = $i + 2;
-      case '風向':
-        $index_wind = $i + 2;
-      case '風速':
-        $index_wind_speed = $i + 2;
-      case '湿度':
-        $index_humi = $i + 2;
-      case '気圧':
-        $index_pres = $i + 2;
+    for ($i = 0; $i < count($headers); $i++) {
+        switch (trim(strip_tags($headers[$i]))) {
+            case '気温':
+                $index_temp = $i + 2;
+            case '降水量':
+                $index_rain = $i + 2;
+            case '風向':
+                $index_wind = $i + 2;
+            case '風速':
+                $index_wind_speed = $i + 2;
+            case '湿度':
+                $index_humi = $i + 2;
+            case '気圧':
+                $index_pres = $i + 2;
+        }
     }
-  }
 
-  $rc = preg_match_all('/<tr>.*?<td.*?>(.+?)<\/td>.*?' . str_repeat('<td.*?>(.+?)<\/td>', count($headers) - 1) . '.+?<\/tr>/s'
+    $rc = preg_match_all('/<tr>.*?<td.*?>(.+?)<\/td>.*?' . str_repeat('<td.*?>(.+?)<\/td>', count($headers) - 1) . '.+?<\/tr>/s'
                        , $tmp[0], $matches, PREG_SET_ORDER);
-  array_shift($matches);
+    array_shift($matches);
 
-  $title = '';
-  for ($i = 0; $i < count($matches); $i++) {
-    $hour = $matches[$i][1];
-    $temp = $matches[$i][$index_temp];
-    $rain = $matches[$i][$index_rain];
-    $wind = $matches[$i][$index_wind] . $matches[$i][$index_wind_speed];
-    $humi = $matches[$i][$index_humi];
-    $pres = $matches[$i][$index_pres];
-    if ($temp == '&nbsp;') {
-      continue;
+    $title = '';
+    for ($i = 0; $i < count($matches); $i++) {
+        $hour = $matches[$i][1];
+        $temp = $matches[$i][$index_temp];
+        $rain = $matches[$i][$index_rain];
+        $wind = $matches[$i][$index_wind] . $matches[$i][$index_wind_speed];
+        $humi = $matches[$i][$index_humi];
+        $pres = $matches[$i][$index_pres];
+        if ($temp == '&nbsp;') {
+            continue;
+        }
+        $title = "${hour}時 ${temp}℃ ${humi}% ${rain}mm ${wind}m/s ${pres}hPa";
     }
-    $title = "${hour}時 ${temp}℃ ${humi}% ${rain}mm ${wind}m/s ${pres}hPa";
-  }
 
-  // 警報 注意報
+    // 警報 注意報
 
-  $res = $mu_->get_contents(getenv('URL_WEATHER_WARN'));
+    $res = $mu_->get_contents(getenv('URL_WEATHER_WARN'));
 
-  $rc = preg_match_all('/<ul class="warnDetail_head_labels">(.+?)<\/ul>/s', $res, $matches, PREG_SET_ORDER);
-  $tmp = preg_replace('/<.+?>/s', ' ', $matches[0][1]);
-  $warn = trim(preg_replace('/\s+/s', ' ', $tmp));
+    $rc = preg_match_all('/<ul class="warnDetail_head_labels">(.+?)<\/ul>/s', $res, $matches, PREG_SET_ORDER);
+    $tmp = preg_replace('/<.+?>/s', ' ', $matches[0][1]);
+    $warn = trim(preg_replace('/\s+/s', ' ', $tmp));
 
-  // 体感指数
+    // 体感指数
 
-  $res = $mu_->get_contents(getenv('URL_TAIKAN_SHISU'));
+    $res = $mu_->get_contents(getenv('URL_TAIKAN_SHISU'));
 
-  $rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
-  $taikan_shisu = ' 体感指数 : ' . $matches[1];
+    $rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
+    $taikan_shisu = ' 体感指数 : ' . $matches[1];
 
-  if ($title != '') {
-    $list_add_task[] = '{"title":"' . $title . ' ' . $warn . $taikan_shisu
-      . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
-      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
-      . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
-  }
+    if ($title != '') {
+        $list_add_task[] = '{"title":"' . $title . ' ' . $warn . $taikan_shisu
+            . '","duedate":"' . mktime(0, 0, 0, 1, 2, 2018)
+            . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 2, 2018))]
+            . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+    }
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS AMEDAS : ' . print_r($list_add_task, true));
-  return $list_add_task;
+    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS AMEDAS : ' . print_r($list_add_task, true));
+    return $list_add_task;
 }
 
 function get_task_rainfall($mu_) {
