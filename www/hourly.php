@@ -413,16 +413,22 @@ function get_task_amedas($mu_)
         switch (trim(strip_tags($headers[$i]))) {
             case '気温':
                 $index_temp = $i + 2;
+                break;
             case '降水量':
                 $index_rain = $i + 2;
+                break;
             case '風向':
                 $index_wind = $i + 2;
+                break;
             case '風速':
                 $index_wind_speed = $i + 2;
+                break;
             case '湿度':
                 $index_humi = $i + 2;
+                break;
             case '気圧':
                 $index_pres = $i + 2;
+                break;
         }
     }
 
