@@ -286,7 +286,8 @@ error_log("${pid} FINISH");
 
 exit();
 
-function get_task_heroku_buildpack_php($mu_) {
+function get_task_heroku_buildpack_php($mu_)
+{
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
 
@@ -315,7 +316,8 @@ function get_task_heroku_buildpack_php($mu_) {
     return $list_add_task;
 }
 
-function get_task_parking_information($mu_, $file_outlet_parking_information_) {
+function get_task_parking_information($mu_, $file_outlet_parking_information_)
+{
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
 
@@ -384,7 +386,8 @@ __HEREDOC__;
     return $list_add_task;
 }
 
-function get_task_amedas($mu_) {
+function get_task_amedas($mu_)
+{
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
 
@@ -419,8 +422,12 @@ function get_task_amedas($mu_) {
         }
     }
 
-    $rc = preg_match_all('/<tr>.*?<td.*?>(.+?)<\/td>.*?' . str_repeat('<td.*?>(.+?)<\/td>', count($headers) - 1) . '.+?<\/tr>/s'
-                       , $tmp[0], $matches, PREG_SET_ORDER);
+    $rc = preg_match_all(
+        '/<tr>.*?<td.*?>(.+?)<\/td>.*?' . str_repeat('<td.*?>(.+?)<\/td>', count($headers) - 1) . '.+?<\/tr>/s',
+        $tmp[0],
+        $matches,
+        PREG_SET_ORDER
+    );
     array_shift($matches);
 
     $title = '';
@@ -463,7 +470,8 @@ function get_task_amedas($mu_) {
     return $list_add_task;
 }
 
-function get_task_rainfall($mu_) {
+function get_task_rainfall($mu_)
+{
 
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
@@ -513,7 +521,8 @@ function get_task_rainfall($mu_) {
     return $list_add_task;
 }
 
-function get_task_quota($mu_) {
+function get_task_quota($mu_)
+{
 
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
@@ -528,7 +537,8 @@ function get_task_quota($mu_) {
         [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
                                 "Authorization: Bearer ${api_key}",
                                ]],
-        true);
+        true
+    );
 
     $data = json_decode($res, true);
     error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
@@ -539,7 +549,8 @@ function get_task_quota($mu_) {
         $url,
         [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3.account-quotas',
                                 "Authorization: Bearer ${api_key}",
-                               ]]);
+        ]]
+    );
 
     $data = json_decode($res, true);
     error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
@@ -564,7 +575,8 @@ function get_task_quota($mu_) {
     return $list_add_task;
 }
 
-function get_holiday($mu_) {
+function get_holiday($mu_)
+{
 
     $start_yyyy = date('Y');
     $start_m = date('n');
@@ -575,7 +587,7 @@ function get_holiday($mu_) {
         . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
         . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-    $res = $mu_->get_contents($url, NULL, TRUE);
+    $res = $mu_->get_contents($url, null, true);
     $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
     $tmp = explode("\n", $res);
@@ -592,7 +604,8 @@ function get_holiday($mu_) {
     return $list_holiday;
 }
 
-function get_24sekki($mu_) {
+function get_24sekki($mu_)
+{
 
     $list_24sekki = [];
 
@@ -601,11 +614,12 @@ function get_24sekki($mu_) {
         $post_data = ['from_year' => $yyyy];
 
         $res = $mu_->get_contents(
-          'http://www.calc-site.com/calendars/solar_year',
-          [CURLOPT_POST => TRUE,
-           CURLOPT_POSTFIELDS => http_build_query($post_data),
-          ],
-          true);
+            'http://www.calc-site.com/calendars/solar_year',
+            [CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query($post_data),
+            ],
+            true
+        );
 
         $tmp = explode('<th>二十四節気</th>', $res);
         $tmp = explode('</table>', $tmp[1]);
