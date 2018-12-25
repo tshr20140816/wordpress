@@ -69,7 +69,8 @@ if ($hour_now % 2 === 1) {
     $tmp = explode(getenv('POINT_NAME'), $res);
     $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
 
-    $template_add_task = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__","tag":"WEATHER","folder":"__FOLDER_ID__"}';
+    $template_add_task = '{"title":"__TITLE__","duedate":"__DUEDATE__","context":"__CONTEXT__",'
+      . '"tag":"WEATHER","folder":"__FOLDER_ID__"}';
     $template_add_task = str_replace('__FOLDER_ID__', $folder_id_label, $template_add_task);
     for ($i = 0; $i < 10; $i++) {
         $ymd = date('Ymd', strtotime("${dt} +${i} day"));
@@ -138,7 +139,8 @@ if ($hour_now % 2 === 1) {
                 $timestamp = strtotime("${dt} +${j} day") + 9 * 60 * 90;
                 if (date('Ymd', $timestamp) == $ymd) {
                     $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
-                    $title = date('m/d', $timestamp) . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
+                    $title = date('m/d', $timestamp)
+                      . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
                     $is_add_flag = true;
                     break;
                 }
@@ -170,7 +172,8 @@ $list_add_task = array_merge($list_add_task, get_task_parking_information($mu, $
 $list_add_task = array_merge($list_add_task, get_task_heroku_buildpack_php($mu));
 
 // Get Tasks
-$url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token;
+$url = 'https://api.toodledo.com/3/tasks/get.php'
+  . '?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token;
 $res = $mu->get_contents($url);
 $tasks = json_decode($res, true);
 
@@ -513,9 +516,9 @@ function get_task_rainfall($mu_)
     }
     $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
     $list_add_task[] = '{"title":"' . $tmp . $suffix . $update_marker
-          . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
-          . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
-          . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+      . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
+      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
+      . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 
     error_log(getmypid() . ' [' . __METHOD__ . '] TASKS RAINFALL : ' . print_r($list_add_task, true));
     return $list_add_task;
@@ -567,9 +570,9 @@ function get_task_quota($mu_)
     $update_marker = $mu_->to_small_size(' _' . date('Ymd Hi', strtotime('+ 9 hours')) . '_');
 
     $list_add_task[] = '{"title":"' . $account . ' : ' . $tmp . $update_marker
-        . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
-        . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
-        . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+      . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
+      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
+      . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 
     error_log(getmypid() . ' [' . __METHOD__ . '] TASKS QUOTA : ' . print_r($list_add_task, true));
     return $list_add_task;
@@ -584,8 +587,8 @@ function get_holiday($mu_)
     $finish_m = date('n', strtotime('+1 month'));
 
     $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy . '&start_mon=' . $start_m
-        . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
-        . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
+      . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
+      . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
     $res = $mu_->get_contents($url, null, true);
     $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
@@ -657,7 +660,9 @@ function get_sun_rise_set($mu_)
         $yyyy = date('Y', $timestamp);
         $mm = date('m', $timestamp);
 
-        $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', null, true);
+        $res = $mu_->get_contents(
+          'https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html',
+          null, true);
 
         $tmp = explode('<table ', $res);
         $tmp = explode('</table>', $tmp[1]);
@@ -669,7 +674,9 @@ function get_sun_rise_set($mu_)
 
         for ($i = 0; $i < count($tmp); $i++) {
             $ymd = date('Ymd', strtotime($dt) + $i * 24 * 60 * 60);
-            $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
+            $rc = preg_match(
+              '/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</',
+              $tmp[$i], $matches);
             $list_sunrise_sunset[$ymd] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
         }
     }
@@ -693,7 +700,9 @@ function get_moon_age($mu_)
         $yyyy = date('Y', $timestamp);
         $mm = date('m', $timestamp);
 
-        $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', null, true);
+        $res = $mu_->get_contents(
+          'https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html',
+          null, true);
 
         $tmp = explode('<table ', $res);
         $tmp = explode('</table>', $tmp[1]);
