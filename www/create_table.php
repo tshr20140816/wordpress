@@ -58,6 +58,7 @@ CREATE TABLE public.t_imageparsehash (
     update_time timestamp without time zone DEFAULT LOCALTIMESTAMP NOT NULL,
     PRIMARY KEY (group_id, hash_text)
 );
+__HEREDOC__;
 $count = $pdo->exec($sql);
 error_log('create table result : ' . $count);
 
