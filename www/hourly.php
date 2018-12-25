@@ -814,7 +814,7 @@ __HEREDOC__;
     $rc = $statement->execute();
     error_log($pid . ' TRUNCATE $rc : ' . $rc);
 
-    $sql = "INSERT INTO t_ical (ical_data) VALUES (:b_ical_data)";
+    $sql = 'INSERT INTO t_ical (ical_data) VALUES (:b_ical_data)';
     $statement = $pdo->prepare($sql);
     $rc = $statement->execute([':b_ical_data' => base64_encode(gzencode($ical_data, 9))]);
     error_log($pid . ' INSERT $rc : ' . $rc);
