@@ -51,7 +51,7 @@ for ($i = 0; $i < 12; $i++) {
     $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
     $res = $mu->get_contents($url);
     foreach (explode("\n", $res) as $one_line) {
-        if (strpos($one_line, '<title>_') !== FALSE) {
+        if (strpos($one_line, '<title>_') !== false) {
             $tmp = explode('_', $one_line);
             $tmp1 = explode(' ', $tmp[2]);
             $tmp2 = explode('/', $tmp1[1]);
@@ -74,7 +74,7 @@ $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,folder,duedat
 $res = $mu->get_contents($url);
 // error_log($res);
 
-$tasks = json_decode($res, TRUE);
+$tasks = json_decode($res, true);
 // error_log($pid . ' $tasks : ' . print_r($tasks, true));
 
 // 30日後から70日後までの間の予定のある日を取得
@@ -210,7 +210,7 @@ function get_holiday2($mu_)
             . '&start_mon=1&end_year=' . $yyyy . '&end_mon=12'
             . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-        $res = $mu_->get_contents($url, NULL, TRUE);
+        $res = $mu_->get_contents($url, null, true);
         $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
         $tmp = explode("\n", $res);
@@ -275,11 +275,12 @@ function get_24sekki($mu_)
         $post_data = ['from_year' => $yyyy];
 
         $res = $mu_->get_contents(
-          'http://www.calc-site.com/calendars/solar_year',
-          [CURLOPT_POST => true,
-           CURLOPT_POSTFIELDS => http_build_query($post_data),
-          ],
-        true);
+            'http://www.calc-site.com/calendars/solar_year',
+            [CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query($post_data),
+            ],
+            true
+        );
 
         $tmp = explode('<th>二十四節気</th>', $res);
         $tmp = explode('</table>', $tmp[1]);
@@ -507,7 +508,7 @@ function get_task_sun($mu_)
     $yyyy = date('Y', $timestamp);
     $mm = date('m', $timestamp);
 
-    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', NULL, TRUE);
+    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', null, true);
     $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
     $tmp = explode('<table ', $res);
