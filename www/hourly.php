@@ -37,7 +37,6 @@ $list_context_id = $mu->get_contexts();
 $list_add_task = [];
 
 if ($hour_now % 2 === 1) {
-
     // holiday
     $list_holiday = get_holiday($mu);
 
@@ -201,7 +200,6 @@ error_log($pid . ' $list_non_label : ' . print_r($list_non_label, true));
 $timestamp = strtotime('+20 day') + 9 * 60 * 60;
 for ($i = 0; $i < count($list_non_label); $i++) {
     if ($list_non_label[$i] > $timestamp) {
-
         $yyyy = $mu->to_small_size(date('Y', $list_non_label[$i]));
 
         $tmp = '### ' . LIST_YOBI[date('w', $list_non_label[$i])] . '曜日 ' . date('m/d', $list_non_label[$i]) . ' ### ' . $yyyy;
@@ -229,7 +227,7 @@ error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, true));
 
 // 日付(duedate)設定漏れ警告
 
-if ($is_exists_no_duedate_task === TRUE) {
+if ($is_exists_no_duedate_task === true) {
     $list_add_task[] = '{"title":"NO DUEDATE TASK EXISTS","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
         . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
         . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
@@ -261,16 +259,16 @@ for ($i = 0; $i < count($tasks); $i++) {
 
 $template_edit_task = '{"id":"__ID__","context":"__CONTEXT__"}';
 for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('id', $tasks[$i])) {
-    $real_context_id = $list_context_id[date('w', $tasks[$i]['duedate'])];
-    $task_context_id = $tasks[$i]['context'];
-    if ($task_context_id == '0' || $task_context_id != $real_context_id) {
-      error_log($pid . ' $tasks[$i] : ' . print_r($tasks[$i], true));
-      $tmp = str_replace('__ID__', $tasks[$i]['id'], $template_edit_task);
-      $tmp = str_replace('__CONTEXT__', $real_context_id, $tmp);
-      $list_edit_task[] = $tmp;
+    if (array_key_exists('id', $tasks[$i])) {
+        $real_context_id = $list_context_id[date('w', $tasks[$i]['duedate'])];
+        $task_context_id = $tasks[$i]['context'];
+        if ($task_context_id == '0' || $task_context_id != $real_context_id) {
+            error_log($pid . ' $tasks[$i] : ' . print_r($tasks[$i], true));
+            $tmp = str_replace('__ID__', $tasks[$i]['id'], $template_edit_task);
+            $tmp = str_replace('__CONTEXT__', $real_context_id, $tmp);
+            $list_edit_task[] = $tmp;
+        }
     }
-  }
 }
 
 error_log($pid . ' $list_edit_task : ' . print_r($list_edit_task, true));
@@ -290,32 +288,32 @@ exit();
 
 function get_task_heroku_buildpack_php($mu_) {
 
-  // Get Folders
-  $folder_id_label = $mu_->get_folder_id('LABEL');
+    // Get Folders
+    $folder_id_label = $mu_->get_folder_id('LABEL');
 
-  // Get Contexts
-  $list_context_id = $mu_->get_contexts();
+    // Get Contexts
+    $list_context_id = $mu_->get_contexts();
 
-  $list_add_task = [];
+    $list_add_task = [];
 
-  $file_name_current = '/tmp/current_version';
-  $file_name_latest = '/tmp/latest_version';
+    $file_name_current = '/tmp/current_version';
+    $file_name_latest = '/tmp/latest_version';
 
-  if (file_exists($file_name_current) && file_exists($file_name_latest)) {
-    $current_version = trim(trim(file_get_contents($file_name_current)), '"');
-    $latest_version = trim(trim(file_get_contents($file_name_latest)), '"');
-    error_log($pid . ' heroku-buildpack-php current : ' . $current_version);
-    error_log($pid . ' heroku-buildpack-php latest : ' . $latest_version);
-    if ($current_version != $latest_version) {
-      $list_add_task[] = '{"title":"heroku-buildpack-php : update ' . $latest_version
-        . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
-        . '","tag":"HOURLY","folder":"' . $folder_id_label
-        . '","context":' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))] . '}';
+    if (file_exists($file_name_current) && file_exists($file_name_latest)) {
+        $current_version = trim(trim(file_get_contents($file_name_current)), '"');
+        $latest_version = trim(trim(file_get_contents($file_name_latest)), '"');
+        error_log($pid . ' heroku-buildpack-php current : ' . $current_version);
+        error_log($pid . ' heroku-buildpack-php latest : ' . $latest_version);
+        if ($current_version != $latest_version) {
+            $list_add_task[] = '{"title":"heroku-buildpack-php : update ' . $latest_version
+              . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
+              . '","tag":"HOURLY","folder":"' . $folder_id_label
+              . '","context":' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))] . '}';
+        }
     }
-  }
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] HEROKU BUILDPACK PHP : ' . print_r($list_add_task, true));
-  return $list_add_task;
+    error_log(getmypid() . ' [' . __METHOD__ . '] HEROKU BUILDPACK PHP : ' . print_r($list_add_task, true));
+    return $list_add_task;
 }
 
 function get_task_parking_information($mu_, $file_outlet_parking_information_) {
