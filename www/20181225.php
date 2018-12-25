@@ -16,6 +16,7 @@ for ($y = date('Y'); $y < date('Y') + 3; $y++) {
         if ($timestamp < strtotime('+1 month')) {
             continue;
         }
-        error_log($pid . ' ' . date('Ymd', $timestamp) . ' ' . LIST_WAFU_GETSUMEI[$m] . ' ' . date('F', $timestamp));
+        $title = '## ' . LIST_WAFU_GETSUMEI[$m] . ' ' . date('F', $timestamp) . ' ## ' . $mu->to_small_size($y);
+        error_log($pid . ' ' . date('Ymd', $timestamp) . $title);
     }
 }
