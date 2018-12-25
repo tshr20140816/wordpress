@@ -185,13 +185,13 @@ make_ical($mu, $tasks);
 $list_label_task = [];
 $list_schedule_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
-    if ($tasks[$i]['folder'] == $folder_id_label) {
-      $list_label_task[] = $tasks[$i]['duedate'];
-    } else {
-      $list_schedule_task[] = $tasks[$i]['duedate'];
+    if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
+        if ($tasks[$i]['folder'] == $folder_id_label) {
+            $list_label_task[] = $tasks[$i]['duedate'];
+        } else {
+            $list_schedule_task[] = $tasks[$i]['duedate'];
+        }
     }
-  }
 }
 
 $list_non_label = array_unique(array_diff($list_schedule_task, $list_label_task));
@@ -200,16 +200,16 @@ error_log($pid . ' $list_non_label : ' . print_r($list_non_label, TRUE));
 
 $timestamp = strtotime('+20 day') + 9 * 60 * 60;
 for ($i = 0; $i < count($list_non_label); $i++) {
-  if ($list_non_label[$i] > $timestamp) {
+    if ($list_non_label[$i] > $timestamp) {
 
-    $yyyy = $mu->to_small_size(date('Y', $list_non_label[$i]));
+        $yyyy = $mu->to_small_size(date('Y', $list_non_label[$i]));
 
-    $tmp = '### ' . LIST_YOBI[date('w', $list_non_label[$i])] . '曜日 ' . date('m/d', $list_non_label[$i]) . ' ### ' . $yyyy;
-    $list_add_task[] = '{"title":"' . $tmp
-      . '","duedate":"' . $list_non_label[$i]
-      . '","context":"' . $list_context_id[date('w', $list_non_label[$i])]
-      . '","tag":"ADDITIONAL","folder":"' . $folder_id_label . '"}';
-  }
+        $tmp = '### ' . LIST_YOBI[date('w', $list_non_label[$i])] . '曜日 ' . date('m/d', $list_non_label[$i]) . ' ### ' . $yyyy;
+        $list_add_task[] = '{"title":"' . $tmp
+          . '","duedate":"' . $list_non_label[$i]
+          . '","context":"' . $list_context_id[date('w', $list_non_label[$i])]
+          . '","tag":"ADDITIONAL","folder":"' . $folder_id_label . '"}';
+    }
 }
 
 // 削除タスク抽出
@@ -217,22 +217,22 @@ for ($i = 0; $i < count($list_non_label); $i++) {
 $is_exists_no_duedate_task = FALSE;
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
-  if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-    if ($tasks[$i]['tag'] == 'HOURLY' || ($hour_now % 2 === 1 && $tasks[$i]['tag'] == 'WEATHER')) {
-      $list_delete_task[] = $tasks[$i]['id'];
-    } elseif ($tasks[$i]['duedate'] == 0) {
-      $is_exists_no_duedate_task = TRUE;
+    if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
+        if ($tasks[$i]['tag'] == 'HOURLY' || ($hour_now % 2 === 1 && $tasks[$i]['tag'] == 'WEATHER')) {
+            $list_delete_task[] = $tasks[$i]['id'];
+        } elseif ($tasks[$i]['duedate'] == 0) {
+            $is_exists_no_duedate_task = TRUE;
+        }
     }
-  }
 }
 error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
 
 // 日付(duedate)設定漏れ警告
 
 if ($is_exists_no_duedate_task === TRUE) {
-  $list_add_task[] = '{"title":"NO DUEDATE TASK EXISTS","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
-      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
-      . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+    $list_add_task[] = '{"title":"NO DUEDATE TASK EXISTS","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
+        . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
+        . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 }
 
 error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
