@@ -183,9 +183,9 @@ for ($i = 0; $i < count($tasks); $i++) {
 foreach ($list_holiday2 as $key => $value) {
     if (array_search($key, $list_label_title) == false) {
         $list_add_task[] = '{"title":"' . $key
-            . '","duedate":"' . $value
-            . '","tag":"HOLIDAY","context":' . $list_context_id[date('w', $value)]
-            . ',"folder":' . $folder_id_label . '}';
+          . '","duedate":"' . $value
+          . '","tag":"HOLIDAY","context":' . $list_context_id[date('w', $value)]
+          . ',"folder":' . $folder_id_label . '}';
     }
 }
 
@@ -193,14 +193,20 @@ error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
 
 // 和風月名追加 (folder が LABEL で同じ title が無ければ追加)
 
-for ($y = date('Y'); $y < date('Y') + 3; $y++) {
+for ($y = date('Y'); $y < date('Y') + 4; $y++) {
     for ($m = 1; $m < 13; $m++) {
         $timestamp = mktime(0, 0, 0, $m, 1, $y);
         if ($timestamp < strtotime('+1 month')) {
             continue;
         }
         $title = '## ' . LIST_WAFU_GETSUMEI[$m] . ' ' . date('F', $timestamp) . ' ## ' . $mu->to_small_size($y);
-        error_log($pid . ' ' . date('Ymd', $timestamp) . $title);
+        if (array_search($title, $list_label_title) == false) {
+            $list_add_task[] = '{"title":"' . $title
+              . '","duedate":' . $timestamp
+              . ',"context":' . $list_context_id[date('w', $timestamp)]
+              . ',"folder":' . $folder_id_label . '}';
+            error_log($pid . ' ' . date('Y/m/d', $timestamp) . ' ' . $title);
+        }
     }
 }
 
