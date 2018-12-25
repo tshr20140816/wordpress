@@ -124,7 +124,7 @@ if ($hour_now % 2 === 1) {
 
   $update_marker = $mu->to_small_size(' _' . date('Ymd', strtotime('+9 hours')) . '_');
   for ($i = 0; $i < count($list_weather_guest_area); $i++) {
-    $is_add_flag = FALSE;
+    $is_add_flag = false;
     $tmp = explode(',', $list_weather_guest_area[$i]);
     $location_number = $tmp[0];
     $point_name = $tmp[1];
@@ -140,12 +140,12 @@ if ($hour_now % 2 === 1) {
         if (date('Ymd', $timestamp) == $ymd) {
           $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
           $title = date('m/d', $timestamp) . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
-          $is_add_flag = TRUE;
+          $is_add_flag = true;
           break;
         }
       }
     }
-    if ($is_add_flag === FALSE) {
+    if ($is_add_flag === false) {
       $title = date('m/d', strtotime($ymd)) . " 【${point_name} 天気予報未取得】${update_marker}";
     }
     $tmp = str_replace('__TITLE__', $title, $template_add_task);
@@ -173,7 +173,7 @@ $list_add_task = array_merge($list_add_task, get_task_heroku_buildpack_php($mu))
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,duedate,context,star,folder&access_token=' . $access_token;
 $res = $mu->get_contents($url);
-$tasks = json_decode($res, TRUE);
+$tasks = json_decode($res, true);
 
 error_log($pid . ' TASKS COUNT : ' . count($tasks));
 
@@ -196,7 +196,7 @@ for ($i = 0; $i < count($tasks); $i++) {
 
 $list_non_label = array_unique(array_diff($list_schedule_task, $list_label_task));
 sort($list_non_label);
-error_log($pid . ' $list_non_label : ' . print_r($list_non_label, TRUE));
+error_log($pid . ' $list_non_label : ' . print_r($list_non_label, true));
 
 $timestamp = strtotime('+20 day') + 9 * 60 * 60;
 for ($i = 0; $i < count($list_non_label); $i++) {
@@ -214,18 +214,18 @@ for ($i = 0; $i < count($list_non_label); $i++) {
 
 // 削除タスク抽出
 
-$is_exists_no_duedate_task = FALSE;
+$is_exists_no_duedate_task = false;
 $list_delete_task = [];
 for ($i = 0; $i < count($tasks); $i++) {
     if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
         if ($tasks[$i]['tag'] == 'HOURLY' || ($hour_now % 2 === 1 && $tasks[$i]['tag'] == 'WEATHER')) {
             $list_delete_task[] = $tasks[$i]['id'];
         } elseif ($tasks[$i]['duedate'] == 0) {
-            $is_exists_no_duedate_task = TRUE;
+            $is_exists_no_duedate_task = true;
         }
     }
 }
-error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, TRUE));
+error_log($pid . ' $list_delete_task : ' . print_r($list_delete_task, true));
 
 // 日付(duedate)設定漏れ警告
 
@@ -235,7 +235,7 @@ if ($is_exists_no_duedate_task === TRUE) {
         . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 }
 
-error_log($pid . ' $list_add_task : ' . print_r($list_add_task, TRUE));
+error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
 
 // WORK & Star の日付更新
 
@@ -265,7 +265,7 @@ for ($i = 0; $i < count($tasks); $i++) {
     $real_context_id = $list_context_id[date('w', $tasks[$i]['duedate'])];
     $task_context_id = $tasks[$i]['context'];
     if ($task_context_id == '0' || $task_context_id != $real_context_id) {
-      error_log($pid . ' $tasks[$i] : ' . print_r($tasks[$i], TRUE));
+      error_log($pid . ' $tasks[$i] : ' . print_r($tasks[$i], true));
       $tmp = str_replace('__ID__', $tasks[$i]['id'], $template_edit_task);
       $tmp = str_replace('__CONTEXT__', $real_context_id, $tmp);
       $list_edit_task[] = $tmp;
@@ -273,7 +273,7 @@ for ($i = 0; $i < count($tasks); $i++) {
   }
 }
 
-error_log($pid . ' $list_edit_task : ' . print_r($list_edit_task, TRUE));
+error_log($pid . ' $list_edit_task : ' . print_r($list_edit_task, true));
 
 // Add Tasks
 $rc = $mu->add_tasks($list_add_task);
@@ -314,7 +314,7 @@ function get_task_heroku_buildpack_php($mu_) {
     }
   }
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] HEROKU BUILDPACK PHP : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] HEROKU BUILDPACK PHP : ' . print_r($list_add_task, true));
   return $list_add_task;
 }
 
@@ -352,7 +352,7 @@ __HEREDOC__;
     $rc = $statement->execute([':b_hash_text' => $hash_text]);
     error_log(getmypid() . ' [' . __METHOD__ . '] SELECT RESULT : ' . $rc);
     $results = $statement->fetchAll();
-    // error_log(getmypid() . ' [' . __METHOD__ . '] $results : ' . print_r($results, TRUE));
+    // error_log(getmypid() . ' [' . __METHOD__ . '] $results : ' . print_r($results, true));
 
     $parse_text = '';
     foreach ($results as $row) {
@@ -384,7 +384,7 @@ __HEREDOC__;
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
   }
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS PARKING INFORMATION : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS PARKING INFORMATION : ' . print_r($list_add_task, true));
   return $list_add_task;
 }
 
@@ -405,7 +405,7 @@ function get_task_amedas($mu_) {
 
   $tmp1 = explode('</tr>', $tmp[0]);
   $headers = explode('</td>', $tmp1[0]);
-  error_log($pid . ' [' . __METHOD__ . '] $headers : ' . print_r($headers, TRUE));
+  error_log($pid . ' [' . __METHOD__ . '] $headers : ' . print_r($headers, true));
 
   for ($i = 0; $i < count($headers); $i++) {
     switch (trim(strip_tags($headers[$i]))) {
@@ -464,7 +464,7 @@ function get_task_amedas($mu_) {
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
   }
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS AMEDAS : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS AMEDAS : ' . print_r($list_add_task, true));
   return $list_add_task;
 }
 
@@ -514,7 +514,7 @@ function get_task_rainfall($mu_) {
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS RAINFALL : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS RAINFALL : ' . print_r($list_add_task, true));
   return $list_add_task;
 }
 
@@ -565,7 +565,7 @@ function get_task_quota($mu_) {
     . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
     . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 
-  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS QUOTA : ' . print_r($list_add_task, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] TASKS QUOTA : ' . print_r($list_add_task, true));
   return $list_add_task;
 }
 
@@ -592,46 +592,46 @@ function get_holiday($mu_) {
     $tmp1 = explode(',', $tmp[$i]);
     $list_holiday[date('Ymd', mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]))] = $tmp1[7];
   }
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_holiday, TRUE));
+  error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_holiday, true));
 
   return $list_holiday;
 }
 
 function get_24sekki($mu_) {
 
-  $list_24sekki = [];
+    $list_24sekki = [];
 
-  $yyyy = (int)date('Y');
-  for ($j = 0; $j < 2; $j++) {
-    $post_data = ['from_year' => $yyyy];
+    $yyyy = (int)date('Y');
+    for ($j = 0; $j < 2; $j++) {
+        $post_data = ['from_year' => $yyyy];
 
-    $res = $mu_->get_contents(
-      'http://www.calc-site.com/calendars/solar_year',
-      [CURLOPT_POST => TRUE,
-       CURLOPT_POSTFIELDS => http_build_query($post_data),
-      ],
-      TRUE);
+        $res = $mu_->get_contents(
+          'http://www.calc-site.com/calendars/solar_year',
+          [CURLOPT_POST => TRUE,
+           CURLOPT_POSTFIELDS => http_build_query($post_data),
+          ],
+          true);
 
-    $tmp = explode('<th>二十四節気</th>', $res);
-    $tmp = explode('</table>', $tmp[1]);
+        $tmp = explode('<th>二十四節気</th>', $res);
+        $tmp = explode('</table>', $tmp[1]);
 
-    $tmp = explode('<tr>', $tmp[0]);
-    array_shift($tmp);
+        $tmp = explode('<tr>', $tmp[0]);
+        array_shift($tmp);
 
-    for ($i = 0; $i < count($tmp); $i++) {
-      $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
-      $tmp1 = $matches[2];
-      $tmp1 = str_replace('月', '-', $tmp1);
-      $tmp1 = str_replace('日', '', $tmp1);
-      $tmp1 = $yyyy . '-' . $tmp1;
-      error_log(getmypid() . ' [' . __METHOD__ . "] ${tmp1} " . $matches[1]);
-      $list_24sekki[date('Ymd', strtotime($tmp1))] = '【' . $matches[1] . '】';
+        for ($i = 0; $i < count($tmp); $i++) {
+            $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
+            $tmp1 = $matches[2];
+            $tmp1 = str_replace('月', '-', $tmp1);
+            $tmp1 = str_replace('日', '', $tmp1);
+            $tmp1 = $yyyy . '-' . $tmp1;
+            error_log(getmypid() . ' [' . __METHOD__ . "] ${tmp1} " . $matches[1]);
+            $list_24sekki[date('Ymd', strtotime($tmp1))] = '【' . $matches[1] . '】';
+        }
+        $yyyy++;
     }
-    $yyyy++;
-  }
-  error_log(getmypid() . ' [' . __METHOD__ . '] $list_24sekki : ' . print_r($list_24sekki, TRUE));
+    error_log(getmypid() . ' [' . __METHOD__ . '] $list_24sekki : ' . print_r($list_24sekki, true));
 
-  return $list_24sekki;
+    return $list_24sekki;
 }
 
 function get_sun_rise_set($mu_)
