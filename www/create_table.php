@@ -22,7 +22,7 @@ $count = $pdo->exec($sql);
 error_log('create table result : ' . $count);
 
 $sql = <<< __HEREDOC__
-CREATE TABLE public.t_webcache (
+CREATE TABLE t_webcache (
     url_base64 character varying(1024) PRIMARY KEY,
     content_compress_base64 text,
     update_time timestamp without time zone DEFAULT LOCALTIMESTAMP NOT NULL
@@ -32,7 +32,7 @@ $count = $pdo->exec($sql);
 error_log('create table result : ' . $count);
 
 $sql = <<< __HEREDOC__
-CREATE TABLE public.m_tenki (
+CREATE TABLE m_tenki (
     location_number character varying(5) NOT NULL,
     point_name character varying(100) NOT NULL,
     yyyymmdd character varying(8) NOT NULL,
@@ -51,12 +51,21 @@ $count = $pdo->exec($sql);
 error_log('create table result : ' . $count);
 
 $sql = <<< __HEREDOC__
-CREATE TABLE public.t_imageparsehash (
+CREATE TABLE t_imageparsehash (
     group_id integer NOT NULL,
     hash_text character varying(128) NOT NULL,
     parse_text text NOT NULL,
     update_time timestamp without time zone DEFAULT LOCALTIMESTAMP NOT NULL,
     PRIMARY KEY (group_id, hash_text)
+);
+__HEREDOC__;
+$count = $pdo->exec($sql);
+error_log('create table result : ' . $count);
+
+$sql = <<< __HEREDOC__
+CREATE TABLE m_url (
+    alias_name character varying(128) PRIMARY KEY,
+    url character varying(512) NOT NULL
 );
 __HEREDOC__;
 $count = $pdo->exec($sql);
