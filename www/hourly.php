@@ -318,7 +318,7 @@ function get_task_river($mu_)
         $title .= ' ' . trim($matches[1]) . " ${river_name} ${point_name} " . trim($matches[2]) . 'm';
     }
 
-    $list_add_task[] = '{"title":"' . $title
+    $list_add_task[] = '{"title":"' . trim($title)
       . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
