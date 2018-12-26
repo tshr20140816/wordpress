@@ -12,4 +12,10 @@ $url = 'http://i.river.go.jp/_-p02-_/p/ktm1201010/?mtm=0&swd=&rvr=87712001&prf=3
 
 $res = $mu->get_contents($url);
 
-error_log(mb_convert_encoding($res, 'UTF-8', 'SJIS'));
+$res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
+
+// error_log($res);
+
+$tmp = exlode('<hr/>', $res)[1];
+
+error_log($tmp);
