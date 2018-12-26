@@ -20,6 +20,6 @@ $tmp = explode('<hr/>', $res)[2];
 
 // error_log($tmp);
 
-$tmp = trim(strip_tags(str_replace('&nbsp;', '', $tmp)));
+$tmp = trim(str_replace('  ', ' ', strip_tags(str_replace('&nbsp;', '', $tmp))));
 
 error_log($tmp);
