@@ -8,7 +8,7 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
-$url = 'http://www.kasen-bousai.pref.hiroshima.lg.jp/rivercontents/p10202/10/31_1.html';
+$url = 'http://i.river.go.jp/_-p02-_/p/ktm1201010/?mtm=0&swd=&rvr=87712001&prf=3401';
 
 $res = $mu->get_contents($url);
 
