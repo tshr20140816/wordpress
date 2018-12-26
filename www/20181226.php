@@ -29,13 +29,15 @@ $res = $mu->get_contents($url);
 
 $rc = preg_match('/観測所：(.+?)\(/s', $res, $matches);
 error_log(print_r($matches, true));
+$point_name = $matches[1];
 
 $rc = preg_match('/雨量観測所<\/th>.+?<td.+?>.+?<td.+?>(.+?)</s', $res, $matches);
 error_log(print_r($matches, true));
+$river_name = trim($matches[1]);
 
 $tmp = explode('<div id="hyou" style="width:278px; height:390px; overflow-y:auto;">', $res)[1];
 $tmp = explode('</table>', $tmp)[0];
 // $tmp = explode('</tr>', $tmp);
 $rc = preg_match('/.+<tr.+?>.+?<td.+?>(.+?)<\/td>.+?<td.+?>(.+?)</s', $tmp, $matches);
 // error_log(print_r($matches, true));
-error_log(trim($matches[1]) . ' 武庫川 生瀬 ' . trim($matches[2]) . 'm');
+error_log(trim($matches[1]) . " ${$river_name} ${point_name} " . trim($matches[2]) . 'm');
