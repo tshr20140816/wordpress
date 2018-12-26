@@ -10,7 +10,7 @@ $mu = new MyUtils();
 
 $url = 'https://keisan.casio.jp/exec/system/1186108192';
 
-$post_data = ['lang' => '', 'charset' => 'utf-8', 'var_c1' => '0', 'var_y' => '2018', 'var_m' => '12', 'var_d' => '26',];
+$post_data = ['lang' => '', 'charset' => 'utf-8', 'var_c1' => '0', 'var_Y' => '2018', 'var_M' => '12', 'var_D' => '26',];
 
 $res = $mu->get_contents($url, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => http_build_query($post_data),]);
 
