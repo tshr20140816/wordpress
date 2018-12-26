@@ -51,8 +51,9 @@ $list_sunrise_sunset = get_sun($mu);
 // Weather Information 今日の10日後から70日分
 
 $list_base = [];
+$sub_address = $mu->get_env('SUB_ADDRESS');
 for ($i = 0; $i < 12; $i++) {
-    $url = 'https://feed43.com/' . getenv('SUB_ADDRESS') . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
+    $url = 'https://feed43.com/' . $sub_address . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
     $res = $mu->get_contents($url);
     foreach (explode("\n", $res) as $one_line) {
         if (strpos($one_line, '<title>_') !== false) {
