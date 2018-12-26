@@ -261,29 +261,29 @@ __HEREDOC__;
         return $list_weather_guest_area;
     }
 
-    function get_url($alias_name_)
+    function get_env($key_name_)
     {
         $sql = <<< __HEREDOC__
-SELECT T1.url
-  FROM m_url T1
- WHERE T1.alias_name = :b_alias_name
+SELECT T1.value
+  FROM m_env T1
+ WHERE T1.key = :b_key
 __HEREDOC__;
 
         $pdo = $this->get_pdo();
         
         $statement = $pdo->prepare($sql);
-        $statement->execute([':b_alias_name' => $alias_name_]);
+        $statement->execute([':b_key' => $key_name_]);
         $result = $statement->fetchAll();
 
         error_log(getmypid() . ' [' . __METHOD__ . '] $result : ' . print_r($result, true));
         $pdo = null;
 
-        $url = '';
+        $value = '';
         if (count($result) === 1) {
-            $url = $result[0]['url'];
+            $value = $result[0]['value'];
         }
-        return $url;
-    }    
+        return $value;
+    }
     
     function to_small_size($target_)
     {
