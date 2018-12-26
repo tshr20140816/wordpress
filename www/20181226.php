@@ -30,4 +30,4 @@ $url = 'http://www.river.go.jp/kawabou/ipSuiiKobetu.do?obsrvId=0716900400013&gam
 
 $res = $mu->get_contents($url);
 
-error_log($tmp);
+error_log($res);
