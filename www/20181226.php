@@ -27,7 +27,10 @@ $url = getenv('URL_RIVER_2');
 $res = $mu->get_contents($url);
 // error_log($res);
 
-$rc = preg_match('/観測所：.+?\(/s', $res, $matches);
+$rc = preg_match('/観測所：(.+?)\(/s', $res, $matches);
+error_log(print_r($matches, true));
+
+$rc = preg_match('/雨量観測所<\/th>.+?<td.+?>.+?<td.+?>(.+?)</s', $res, $matches);
 error_log(print_r($matches, true));
 
 $tmp = explode('<div id="hyou" style="width:278px; height:390px; overflow-y:auto;">', $res)[1];
