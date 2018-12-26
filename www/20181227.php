@@ -1,6 +1,19 @@
 <?php
 
+include(dirname(__FILE__) . '/../classes/MyUtils.php');
+
+$pid = getmypid();
+$requesturi = $_SERVER['REQUEST_URI'];
+error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
+
+$mu = new MyUtils();
+
 $url = 'https://api.dropboxapi.com/2/file_requests/list';
+
+$res = $mu->get_contents(
+    $url,
+    [CURLOPT_HTTPHEADER => ['Authorization: ' . base64_encode(getenv('DROPBOX_APP_KEY') . ':' . getenv('DROPBOX_APP_SECRET'))]]
+);
 
 /*
 https://www.dropbox.com/developers/documentation/http/documentation
