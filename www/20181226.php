@@ -21,5 +21,6 @@ $tmp = explode('<hr/>', $res)[2];
 // error_log($tmp);
 
 $tmp = trim(str_replace('  ', ' ', strip_tags(str_replace('&nbsp;', '', $tmp))));
-
+$tmp = str_replace('単位：m ■', '', $tmp);
+$tmp = str_replace('(自)', ' ', $tmp) . 'm';
 error_log($tmp);
