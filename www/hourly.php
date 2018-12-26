@@ -102,11 +102,11 @@ if ($hour_now % 2 === 1) {
         if (array_key_exists($ymd, $list_moon_age)) {
             $tmp3 .= ' ' . $list_moon_age[$ymd];
         }
-        if (array_key_exists($ymd, $list_shisu[getenv('URL_KASA_SHISU')])) {
-            $tmp3 .= ' 傘' . $list_shisu[getenv('URL_KASA_SHISU')][$ymd];
+        if (array_key_exists($ymd, $list_shisu[$mu_->get_env('URL_KASA_SHISU')])) {
+            $tmp3 .= ' 傘' . $list_shisu[$mu_->get_env('URL_KASA_SHISU')][$ymd];
         }
-        if (array_key_exists($ymd, $list_shisu[getenv('URL_TAIKAN_SHISU')])) {
-            $tmp3 .= ' 体' . $list_shisu[getenv('URL_TAIKAN_SHISU')][$ymd];
+        if (array_key_exists($ymd, $list_shisu[$mu_->get_env('URL_TAIKAN_SHISU')])) {
+            $tmp3 .= ' 体' . $list_shisu[$mu_->get_env('URL_TAIKAN_SHISU')][$ymd];
         }
 
         error_log("${pid} ${tmp3}");
