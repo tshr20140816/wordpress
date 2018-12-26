@@ -266,24 +266,31 @@ __HEREDOC__;
 
     function get_env($key_name_)
     {
-        $sql = <<< __HEREDOC__
-SELECT T1.value
+        if (apcu_exists(__METHOD__) === true) {
+            $list_env = apcu_fetch(__METHOD__);
+            error_log(getmypid() . ' [' . __METHOD__ . '] (CACHE HIT)$list_env : ' . print_r($list_env, true));
+        } else {
+            $sql = <<< __HEREDOC__
+SELECT T1.key
+      ,T1.value
   FROM m_env T1
- WHERE T1.key = :b_key
 __HEREDOC__;
 
-        $pdo = $this->get_pdo();
+            $pdo = $this->get_pdo();
         
-        $statement = $pdo->prepare($sql);
-        $statement->execute([':b_key' => $key_name_]);
-        $result = $statement->fetchAll();
+            $list_env = [];
+            foreach ($pdo->query($sql) as $row) {
+                $list_env[$row['key']] = $row['value'];
+            }
 
-        error_log(getmypid() . ' [' . __METHOD__ . '] $result : ' . print_r($result, true));
-        $pdo = null;
+            error_log(getmypid() . ' [' . __METHOD__ . '] $list_env : ' . print_r($list_env, true));
+            $pdo = null;
 
+            apcu_store(__METHOD__, $list_env);
+        }
         $value = '';
-        if (count($result) === 1) {
-            $value = $result[0]['value'];
+        if (array_key_exists($key_name_, $list_env)) {
+            $value = $list_env[$key_name_];
         }
         return $value;
     }
