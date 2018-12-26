@@ -31,4 +31,8 @@ $tmp = explode('<div id="hyou" style="width:278px; height:390px; overflow-y:auto
 $tmp = explode('</table>', $tmp)[0];
 // $tmp = explode('</tr>', $tmp);
 $rc = preg_match_all('/<tr.+?>.+?<td.+?>(.+?)<\/td>.+?<td.+?>(.+?)</s', $tmp, $matches, PREG_SET_ORDER);
-error_log(print_r($matches, true));
+// error_log(print_r($matches, true));
+
+foreach ($matches as $item) {
+    error_log(trim($item[1]) . ' ' . trim($item[2]));
+}
