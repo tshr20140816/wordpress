@@ -12,4 +12,5 @@ $mu = new MyUtils();
 
 for ($i = 0; $i < 10; $i++) {
   $url = $mu->get_env('URL_OUTLET');
+  error_log($url);
 }
