@@ -268,7 +268,8 @@ __HEREDOC__;
     {
         if (apcu_exists(__METHOD__) === true) {
             $list_env = apcu_fetch(__METHOD__);
-            error_log(getmypid() . ' [' . __METHOD__ . '] (CACHE HIT)$list_env : ' . print_r($list_env, true));
+            // error_log(getmypid() . ' [' . __METHOD__ . '] (CACHE HIT)$list_env : ' . print_r($list_env, true));
+            error_log(getmypid() . ' [' . __METHOD__ . '] (CACHE HIT)$list_env');
         } else {
             $sql = <<< __HEREDOC__
 SELECT T1.key
