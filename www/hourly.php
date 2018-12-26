@@ -373,7 +373,7 @@ function get_task_parking_information($mu_, $file_outlet_parking_information_)
 
     $parking_information_all = '';
     for ($i = 1; $i < 5; $i++) {
-        $url = 'http://www.motomachi-pa.jp/cgi/manku.pl?park_id=' . $i . '&mode=pc';
+        $url = $mu_->get_env('URL_PARKING_1') . '?park_id=' . $i . '&mode=pc';
         $res = $mu_->get_contents($url);
 
         $hash_text = hash('sha512', $res);
