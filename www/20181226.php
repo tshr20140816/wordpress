@@ -26,7 +26,7 @@ $res = $mu->get_contents($url);
 
 error_log(print_r(json_decode($res, true), true));
 
-$url = "https://dateinfoapi.appspot.com/v1?date=${y}/${m}/${d}";
+$url = "https://dateinfoapi.appspot.com/v1?date=${y}-${m}-${d}";
 
 $res = $mu->get_contents($url);
 
