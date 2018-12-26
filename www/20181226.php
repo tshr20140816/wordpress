@@ -30,9 +30,6 @@ $res = $mu->get_contents($url);
 $tmp = explode('<div id="hyou" style="width:278px; height:390px; overflow-y:auto;">', $res)[1];
 $tmp = explode('</table>', $tmp)[0];
 // $tmp = explode('</tr>', $tmp);
-$rc = preg_match_all('/.+<tr.+?>.+?<td.+?>(.+?)<\/td>.+?<td.+?>(.+?)</s', $tmp, $matches, PREG_SET_ORDER);
+$rc = preg_match('/.+<tr.+?>.+?<td.+?>(.+?)<\/td>.+?<td.+?>(.+?)</s', $tmp, $matches);
 // error_log(print_r($matches, true));
-
-foreach ($matches as $item) {
-    error_log(trim($item[1]) . ' ' . trim($item[2]));
-}
+error_log(trim($matches[1]) . ' ' . trim($matches[2]));
