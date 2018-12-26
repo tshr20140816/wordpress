@@ -536,14 +536,17 @@ function get_task_rainfall($mu_)
     $rc = preg_match('/<!--指数情報-->.+?<span>傘指数(.+?)<.+?<p class="index_text">(.+?)</s', $res, $matches);
     $suffix = ' 傘指数' . $matches[1] . ' ' . $matches[2];
 
+    $longitude = $mu_->get_env('LONGITUDE');
+    $latitude = $mu_->get_env('LONGITUDE');
+  
     $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
-        . '&lon=' . getenv('LONGITUDE') . '&lat=' . getenv('LATITUDE');
+        . '&lon=' . $longitude . '&lat=' . $latitude;
     $res = $mu_->get_contents($url, null, true);
     $data = json_decode($res, true);
     error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
 
     $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
-        . '&coordinates=' . getenv('LONGITUDE') . ',' . getenv('LATITUDE');
+        . '&coordinates=' . $longitude . ',' . $latitude;
     $res = $mu_->get_contents($url);
 
     $data = json_decode($res, true);
