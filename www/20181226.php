@@ -16,6 +16,6 @@ $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 
 // error_log($res);
 
-$tmp = exlode('<hr/>', $res)[1];
+$tmp = explode('<hr/>', $res)[1];
 
 error_log($tmp);
