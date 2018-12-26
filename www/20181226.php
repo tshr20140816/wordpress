@@ -18,4 +18,8 @@ $res = mb_convert_encoding($res, 'UTF-8', 'SJIS');
 
 $tmp = explode('<hr/>', $res)[2];
 
+// error_log($tmp);
+
+$tmp = strip_tags(str_replace('&nbsp;', '', $tmp));
+
 error_log($tmp);
