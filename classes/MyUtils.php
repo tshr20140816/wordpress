@@ -265,21 +265,22 @@ __HEREDOC__;
     {
         $sql = <<< __HEREDOC__
 SELECT T1.url
-      ,T1.alias_name
-  FROM m_url T1;
+  FROM m_url T1
+ WHERE T1.alias_name = :b_alias_name
 __HEREDOC__;
 
         $pdo = $this->get_pdo();
-        $list_url = [];
-        foreach ($pdo->query($sql) as $row) {
-            $list_url[$row['alias_name']] = $row['url'];
-        }
-        error_log(getmypid() . ' [' . __METHOD__ . '] $list_url : ' . print_r($list_url, true));
+        
+        $statement = $pdo->prepare($sql);
+        $statement->execute([':b_alias_name' => $alias_name_]);
+        $result = $statement->fetchAll();
+
+        error_log(getmypid() . ' [' . __METHOD__ . '] $result : ' . print_r($result, true));
         $pdo = null;
 
         $url = '';
-        if (array_key_exists($alias_name_, $list_url) {
-            $url = $list_url[$alias_name_];
+        if (count($result) === 1) {
+            $url = $result[0]['url'];
         }
         return $url;
     }    
