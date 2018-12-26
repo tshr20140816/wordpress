@@ -30,4 +30,5 @@ $res = $mu->get_contents($url);
 $tmp = explode('<div id="hyou" style="width:278px; height:390px; overflow-y:auto;">', $res)[1];
 $tmp = explode('</table>', $tmp)[0];
 $tmp = explode('</tr>', $tmp);
-error_log(print_r($tmp, true));
+$rc = preg_match_all('/<tr.+?>.+?<td.+?>(.+?)<\/td>.+?<td.+?>(.+?)</s', $tmp, $matches, PREG_SET_ORDER);
+error_log(print_r($matches, true));
