@@ -40,4 +40,11 @@ $res = $mu->get_contents($url, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => http
 
 error_log(print_r(json_decode($res, true), true));
 
-error_log('A' . date(' F ') . 'B');
+$url = 'http://koyomi.zing2.org/api/';
+
+$post_data = ['mode' => 'm', 'cnt' => '12', 'targetyyyy' => $y, 'targetmm' => $m];
+
+$res = $mu->get_contents($url, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => http_build_query($post_data),]);
+
+error_log(print_r(json_decode($res, true), true));
+
