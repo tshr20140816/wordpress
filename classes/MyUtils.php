@@ -2,6 +2,8 @@
 
 class MyUtils
 {
+    private $_access_token;
+    
     function get_pdo()
     {
         $connection_info = parse_url(getenv('DATABASE_URL'));
@@ -21,6 +23,7 @@ class MyUtils
             if ($timestamp > strtotime('-15 minutes')) {
                 $access_token = file_get_contents($file_name);
                 error_log(getmypid() . ' [' . __METHOD__ . '] (CACHE HIT) $access_token : ' . $access_token);
+                $this->$_access_token = $access_token;
                 return $access_token;
             }
         }
@@ -84,13 +87,13 @@ __HEREDOC__;
             $rc = $statement->execute([':b_access_token' => $params['access_token'],
                                  ':b_refresh_token' => $params['refresh_token']]);
             error_log(getmypid() . ' [' . __METHOD__ . "] UPDATE RESULT : ${rc}");
-
             $access_token = $params['access_token'];
         }
         $pdo = null;
 
         error_log(getmypid() . ' [' . __METHOD__ . '] $access_token : ' . $access_token);
 
+        $this->$_access_token = $access_token;
         file_put_contents($file_name, $access_token); // For Cache
 
         return $access_token;
