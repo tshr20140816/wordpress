@@ -56,7 +56,7 @@ if ($hour_now % 2 === 1) {
 
     // Weather Information
 
-    $res = $mu->get_contents('https://tenki.jp/week/' . getenv('LOCATION_NUMBER') . '/');
+    $res = $mu->get_contents('https://tenki.jp/week/' . $mu->get_env('LOCATION_NUMBER') . '/');
 
     $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
 
