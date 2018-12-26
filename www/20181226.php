@@ -32,4 +32,4 @@ $tmp = explode('</table>', $tmp)[0];
 // $tmp = explode('</tr>', $tmp);
 $rc = preg_match('/.+<tr.+?>.+?<td.+?>(.+?)<\/td>.+?<td.+?>(.+?)</s', $tmp, $matches);
 // error_log(print_r($matches, true));
-error_log(trim($matches[1]) . ' 武庫川 生瀬 ' . trim($matches[2]));
+error_log(trim($matches[1]) . ' 武庫川 生瀬 ' . trim($matches[2]) . 'm');
