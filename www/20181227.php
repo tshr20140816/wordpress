@@ -12,7 +12,7 @@ $url = 'https://api.dropboxapi.com/2/file_requests/list';
 
 $res = $mu->get_contents(
     $url,
-    [CURLOPT_HTTPHEADER => ['Authorization: ' . base64_encode(getenv('DROPBOX_APP_KEY') . ':' . getenv('DROPBOX_APP_SECRET'))]]
+    [CURLOPT_HTTPHEADER => ['Authorization: Basic ' . base64_encode(getenv('DROPBOX_APP_KEY') . ':' . getenv('DROPBOX_APP_SECRET'))]]
 );
 
 /*
