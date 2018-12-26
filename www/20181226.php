@@ -24,4 +24,4 @@ $url = "http://api.sekido.info/qreki?output=json&year=${y}&month=${m}&day=${d}";
 
 $res = $mu->get_contents($url);
 
-error_log(json_decode($res, true));
+error_log(print_r(json_decode($res, true), true));
