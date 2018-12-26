@@ -28,5 +28,5 @@ $res = $mu->get_contents($url);
 // error_log($res);
 
 $tmp = explode('<div id="hyou" style="width:278px; height:390px; overflow-y:auto;">', $res)[1];
-$tmp = explode('</table">', $tmp)[0];
+$tmp = explode('</table>', $tmp)[0];
 error_log($tmp);
