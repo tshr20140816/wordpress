@@ -537,7 +537,7 @@ function get_task_rainfall($mu_)
     $suffix = ' 傘指数' . $matches[1] . ' ' . $matches[2];
 
     $longitude = $mu_->get_env('LONGITUDE');
-    $latitude = $mu_->get_env('LONGITUDE');
+    $latitude = $mu_->get_env('LATITUDE');
   
     $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
         . '&lon=' . $longitude . '&lat=' . $latitude;
