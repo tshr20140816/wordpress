@@ -339,13 +339,14 @@ function get_sun($mu_)
 
     $list_sunrise_sunset = [];
 
+    $area_id = $mu_->get_env('AREA_ID');
     for ($j = 0; $j < 4; $j++) {
         $timestamp = strtotime(date('Y-m-01') . " +${j} month");
         $yyyy = date('Y', $timestamp);
         $mm = date('m', $timestamp);
         error_log($pid . ' $yyyy : ' . $yyyy);
         error_log($pid . ' $mm : ' . $mm);
-        $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', null, true);
+        $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . $area_id . $mm . '.html', null, true);
 
         $tmp = explode('<table ', $res);
         $tmp = explode('</table>', $tmp[1]);
@@ -536,7 +537,7 @@ function get_task_sun($mu_)
     $yyyy = date('Y', $timestamp);
     $mm = date('m', $timestamp);
 
-    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html', null, true);
+    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . $mu_->get_env('AREA_ID') . $mm . '.html', null, true);
     $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
     $tmp = explode('<table ', $res);
@@ -584,7 +585,7 @@ function get_task_moon($mu_)
     $yyyy = date('Y', $timestamp);
     $mm = date('m', $timestamp);
 
-    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html', null, true);
+    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . $mu_->get_env('AREA_ID') . $mm . '.html', null, true);
 
     $res = mb_convert_encoding($res, 'UTF-8', 'EUC-JP');
 
