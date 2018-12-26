@@ -761,6 +761,9 @@ function get_shisu($mu_)
 
 function make_ical($mu_, $tasks_)
 {
+    // Get Folders
+    $folder_id_label = $mu_->get_folder_id('LABEL');
+  
     $vevent_header = <<< __HEREDOC__
 BEGIN:VCALENDAR
 VERSION:2.0
