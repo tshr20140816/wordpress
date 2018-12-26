@@ -303,7 +303,7 @@ function get_task_river($mu_)
 
     $list_add_task = [];
     $title = '';
-    foreach ([getenv('URL_RIVER_1'), getenv('URL_RIVER_2')] as $url) {
+    foreach ([$mu_->get_env('URL_RIVER_1'), $mu_->get_env('URL_RIVER_2')] as $url) {
         $res = $mu_->get_contents($url);
 
         $rc = preg_match('/観測所：(.+?)\(/s', $res, $matches);
@@ -437,7 +437,7 @@ function get_task_amedas($mu_)
 
     $list_add_task = [];
 
-    $res = $mu_->get_contents(getenv('URL_AMEDAS'));
+    $res = $mu_->get_contents($mu_->get_env('URL_AMEDAS'));
 
     $tmp = explode('">時刻</td>', $res);
     $tmp = explode('</table>', $tmp[1]);
@@ -493,7 +493,7 @@ function get_task_amedas($mu_)
 
     // 警報 注意報
 
-    $res = $mu_->get_contents(getenv('URL_WEATHER_WARN'));
+    $res = $mu_->get_contents($mu_->get_env('URL_WEATHER_WARN'));
 
     $rc = preg_match_all('/<ul class="warnDetail_head_labels">(.+?)<\/ul>/s', $res, $matches, PREG_SET_ORDER);
     $tmp = preg_replace('/<.+?>/s', ' ', $matches[0][1]);
@@ -501,7 +501,7 @@ function get_task_amedas($mu_)
 
     // 体感指数
 
-    $res = $mu_->get_contents(getenv('URL_TAIKAN_SHISU'));
+    $res = $mu_->get_contents($mu_->get_env('URL_TAIKAN_SHISU'));
 
     $rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
     $taikan_shisu = ' 体感指数 : ' . $matches[1];
@@ -527,7 +527,7 @@ function get_task_rainfall($mu_)
 
     $list_add_task = [];
 
-    $res = $mu_->get_contents(getenv('URL_KASA_SHISU_YAHOO'));
+    $res = $mu_->get_contents($mu_->get_env('URL_KASA_SHISU_YAHOO'));
 
     $rc = preg_match('/<!--指数情報-->.+?<span>傘指数(.+?)<.+?<p class="index_text">(.+?)</s', $res, $matches);
     $suffix = ' 傘指数' . $matches[1] . ' ' . $matches[2];
@@ -775,7 +775,7 @@ function get_shisu($mu_)
     $ymd = date('Ymd', strtotime('+9 hours'));
 
     $list_shisu = [];
-    foreach ([getenv('URL_TAIKAN_SHISU'), getenv('URL_KASA_SHISU')] as $url) {
+    foreach ([$mu_->get_env('URL_TAIKAN_SHISU'), $mu_->get_env('URL_KASA_SHISU')] as $url) {
         $res = $mu_->get_contents($url);
 
         $rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
