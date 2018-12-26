@@ -8,7 +8,7 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
-$url = 'http://the-outlets-hiroshima.com/static/detail/car';
+$url = $mu->get_env('URL_OUTLET');
 $res = $mu->get_contents($url);
 
 $rc = preg_match('/<p id="parkingnow"><img src="(.+?)"/s', $res, $matches);
