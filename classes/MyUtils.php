@@ -3,7 +3,7 @@
 class MyUtils
 {
     private $_access_token;
-    
+
     function get_pdo()
     {
         $connection_info = parse_url(getenv('DATABASE_URL'));
@@ -277,7 +277,7 @@ SELECT T1.key
 __HEREDOC__;
 
             $pdo = $this->get_pdo();
-        
+
             $list_env = [];
             foreach ($pdo->query($sql) as $row) {
                 $list_env[$row['key']] = $row['value'];
@@ -294,7 +294,7 @@ __HEREDOC__;
         }
         return $value;
     }
-    
+
     function to_small_size($target_)
     {
         $subscript = '₀₁₂₃₄₅₆₇₈₉';
@@ -395,7 +395,7 @@ __HEREDOC__;
         CURLOPT_MAXREDIRS => 3,
         CURLOPT_SSL_FALSESTART => true,
         ];
-    
+
         for ($i = 0; $i < 3; $i++) {
             $ch = curl_init();
             curl_setopt_array($ch, $options);
