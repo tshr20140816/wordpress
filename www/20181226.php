@@ -40,4 +40,4 @@ $tmp = explode('</table>', $tmp)[0];
 // $tmp = explode('</tr>', $tmp);
 $rc = preg_match('/.+<tr.+?>.+?<td.+?>(.+?)<\/td>.+?<td.+?>(.+?)</s', $tmp, $matches);
 // error_log(print_r($matches, true));
-error_log(trim($matches[1]) . " ${$river_name} ${point_name} " . trim($matches[2]) . 'm');
+error_log(trim($matches[1]) . " ${river_name} ${point_name} " . trim($matches[2]) . 'm');
