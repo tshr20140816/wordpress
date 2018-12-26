@@ -8,6 +8,8 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
 
+$rc = apcu_clear_cache();
+
 $mu = new MyUtils();
 
 $hour_now = ((int)date('G') + 9) % 24; // JST
