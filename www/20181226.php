@@ -8,7 +8,7 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
-$url = 'http://i.river.go.jp/_-p02-_/p/ktm1201010/?mtm=0&swd=&rvr=87712001&prf=3401';
+$url = getenv('URL_RIVER_1');
 
 $res = $mu->get_contents($url);
 
@@ -22,7 +22,7 @@ $tmp = str_replace('単位：m ■', '', $tmp);
 $tmp = str_replace('(自)', ' ', $tmp) . 'm';
 error_log($tmp);
 
-$url = 'http://www.river.go.jp/kawabou/ipSuiiKobetu.do?obsrvId=0716900400013&gamenId=01-1003&stgGrpKind=survForeKjExpl&fldCtlParty=no&fvrt=yes&timeType=10';
+$url = getenv('URL_RIVER_2');
 
 $res = $mu->get_contents($url);
 // error_log($res);
