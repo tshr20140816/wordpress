@@ -63,9 +63,9 @@ $count = $pdo->exec($sql);
 error_log('create table result : ' . $count);
 
 $sql = <<< __HEREDOC__
-CREATE TABLE m_url (
-    alias_name character varying(128) PRIMARY KEY,
-    url character varying(512) NOT NULL
+CREATE TABLE m_env (
+    key character varying(128) PRIMARY KEY,
+    value character varying(512) NOT NULL
 );
 __HEREDOC__;
 $count = $pdo->exec($sql);
