@@ -31,3 +31,11 @@ $url = "https://dateinfoapi.appspot.com/v1?date=${y}-${m}-${d}";
 $res = $mu->get_contents($url);
 
 error_log(print_r(json_decode($res, true), true));
+
+$url = 'http://koyomi.zing2.org/api/';
+
+$post_data = ['mode' => 'd', 'cnt' => '1', 'targetyyyy' => $y, 'targetmm' => $m, 'targetdd' => $d,];
+
+$res = $mu->get_contents($url, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => http_build_query($post_data),]);
+
+error_log(print_r(json_decode($res, true), true));
