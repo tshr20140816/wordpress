@@ -10,4 +10,6 @@ $rc = apcu_clear_cache();
 
 $mu = new MyUtils();
 
-$url = $mu->get_env('URL_OUTLET');
+for ($i = 0; $i < 10; $i++) {
+  $url = $mu->get_env('URL_OUTLET');
+}
