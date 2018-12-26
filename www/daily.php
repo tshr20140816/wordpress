@@ -21,6 +21,7 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
 const LIST_WAFU_GETSUMEI = array('', '睦月', '如月', '弥生', '卯月', '皐月', '水無月', '文月', '葉月', '長月', '神無月', '霜月', '師走');
+const LIST_12SHI = array('子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥');
 
 $mu = new MyUtils();
 
