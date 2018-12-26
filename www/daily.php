@@ -201,7 +201,7 @@ for ($y = date('Y'); $y < date('Y') + 4; $y++) {
             continue;
         }
         if ($m === 1) {
-          $title = '## ' . LIST_WAFU_GETSUMEI[$m] . date(' F ', $timestamp) . LIST_12SHI[$y - 2008] . ' ## ' . $mu->to_small_size($y);
+          $title = '## ' . LIST_WAFU_GETSUMEI[$m] . date(' F ', $timestamp) . LIST_12SHI[($y - 2008) % 12] . ' ## ' . $mu->to_small_size($y);
         } else {
           $title = '## ' . LIST_WAFU_GETSUMEI[$m] . date(' F', $timestamp) . ' ## ' . $mu->to_small_size($y);
         }
