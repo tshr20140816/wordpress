@@ -290,6 +290,40 @@ error_log("${pid} FINISH");
 
 exit();
 
+function get_task_river($mu_)
+{
+    // Get Folders
+    $folder_id_label = $mu_->get_folder_id('LABEL');
+
+    // Get Contexts
+    $list_context_id = $mu_->get_contexts();
+
+    $list_add_task = [];
+    $title = '';
+    foreach ([getenv('URL_RIVER_1'), getenv('URL_RIVER_2')] as $url) {
+        $res = $mu_->get_contents($url);
+
+        $rc = preg_match('/観測所：(.+?)\(/s', $res, $matches);
+        $point_name = $matches[1];
+
+        $rc = preg_match('/雨量観測所<\/th>.+?<td.+?>.+?<td.+?>(.+?)</s', $res, $matches);
+        $river_name = trim($matches[1]);
+
+        $tmp = explode('<div id="hyou" style="width:278px; height:390px; overflow-y:auto;">', $res)[1];
+        $tmp = explode('</table>', $tmp)[0];
+        $rc = preg_match('/.+<tr.+?>.+?<td.+?>(.+?)<\/td>.+?<td.+?>(.+?)</s', $tmp, $matches);
+        $title .= ' ' . trim($matches[1]) . " ${river_name} ${point_name} " . trim($matches[2]) . 'm';
+    }
+
+    $list_add_task[] = '{"title":"' . $title
+      . '","duedate":"' . mktime(0, 0, 0, 1, 3, 2018)
+      . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
+      . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
+
+    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS RIVER : ' . print_r($list_add_task, true));
+    return $list_add_task;
+}
+
 function get_task_heroku_buildpack_php($mu_)
 {
     // Get Folders
