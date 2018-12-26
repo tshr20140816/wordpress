@@ -699,6 +699,7 @@ function get_sun_rise_set($mu_)
     // 10日後が翌月になるときは2か月分取得
     $loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
 
+    $area_id = $mu_->get_env('AREA_ID');
     $list_sunrise_sunset = [];
     for ($j = 0; $j < $loop_count; $j++) {
         if ($j === 1) {
@@ -708,7 +709,7 @@ function get_sun_rise_set($mu_)
         $mm = date('m', $timestamp);
 
         $res = $mu_->get_contents(
-            'https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . getenv('AREA_ID') . $mm . '.html',
+            'https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . $area_id . $mm . '.html',
             null,
             true
         );
@@ -743,6 +744,7 @@ function get_moon_age($mu_)
     // 10日後が翌月になるときは2か月分取得
     $loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
 
+    $area_id = $mu_->get_env('AREA_ID');
     $list_moon_age = [];
     for ($j = 0; $j < $loop_count; $j++) {
         if ($j === 1) {
@@ -752,7 +754,7 @@ function get_moon_age($mu_)
         $mm = date('m', $timestamp);
 
         $res = $mu_->get_contents(
-            'https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . getenv('AREA_ID') . $mm . '.html',
+            'https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . $area_id . $mm . '.html',
             null,
             true
         );
