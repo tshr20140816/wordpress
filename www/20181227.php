@@ -113,7 +113,7 @@ function func_sample($mu_, $list_) {
     error_log(print_r($results, true));
     error_log(strlen($res));
     
-    curl_multi_remove_handle($list_[$url]['multi_handle'], $ch[$url]);
+    curl_multi_remove_handle($list_[$url]['multi_handle'], $list_[$url]['channel']);
     curl_close($list_[$url]['channel']);
     curl_multi_close($list_[$url]['multi_handle']);
 }
