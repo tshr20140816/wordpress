@@ -8,6 +8,7 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
+/*
 $url = 'https://api.dropboxapi.com/2/file_requests/list';
 
 $res = $mu->get_contents(
@@ -18,7 +19,23 @@ $res = $mu->get_contents(
 );
 
 error_log($res);
+*/
 
+$url = 'https://api.dropboxapi.com/2/auth/token/from_oauth1';
+
+$post_data = ['oauth1_token' => 'qievr8hamyg6ndck', 'oauth1_token_secret' => 'qomoftv0472git7'];
+
+$res = $mu->get_contents(
+    $url,
+    [CURLOPT_HTTPHEADER => ['Authorization: Basic ' . base64_encode(getenv('DROPBOX_APP_KEY') . ':' . getenv('DROPBOX_APP_SECRET')),
+                           'Content-Type: application/json'
+                           ],
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => http_build_query($post_data),
+    ]
+);
+
+error_log($res);
 /*
 https://www.dropbox.com/developers/documentation/http/documentation
 
