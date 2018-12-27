@@ -12,17 +12,18 @@ $urls = [$mu->get_env('URL_KASA_SHISU_YAHOO'), $mu->get_env('URL_WEATHER_WARN')]
 
 $list = [];
 foreach($urls as $url) {
-  $list = array_merge($list, make_curl_multi($url));
+  $list = array_merge($list, $mu->make_curl_multi($url));
 }
 
-$res = get_curl_multi($list[$mu->get_env('URL_KASA_SHISU_YAHOO')]);
+$res = $mu->get_curl_multi($list[$mu->get_env('URL_KASA_SHISU_YAHOO')]);
 error_log(getmypid() . ' ' . strlen($res));
 
-$res = get_curl_multi($list[$mu->get_env('URL_WEATHER_WARN')]);
+$res = $mu->get_curl_multi($list[$mu->get_env('URL_WEATHER_WARN')]);
 error_log(getmypid() . ' ' . strlen($res));
 
 error_log(getmypid() . ' FINISH');
 
+/*
 function make_curl_multi($url_)
 {
     $mh = curl_multi_init();
@@ -83,3 +84,4 @@ function get_curl_multi($list_)
   
     return $res;
 }
+*/
