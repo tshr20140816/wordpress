@@ -107,7 +107,6 @@ function func_sample($mu_, $list_) {
     $rc = $list_[$url]['rc'];
     $active = $list_[$url]['rc'];
     
-    $active = null;
     while ($active && $rc == CURLM_OK) {
         if (curl_multi_select($mh) == -1) {
             usleep(1);
