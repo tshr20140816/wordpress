@@ -20,9 +20,9 @@ exit();
 
 $url = $mu->get_env('URL_KASA_SHISU_YAHOO');
 
-$list = func_sample3($mh, $url);
+$list = func_sample3($url);
 
-function func_sample3(&$mh, $url) {
+function func_sample3($url) {
     $timeout = 5;
 
     $mh = curl_multi_init();
@@ -42,6 +42,7 @@ function func_sample3(&$mh, $url) {
         $mrc = curl_multi_exec($mh, $active);
     } while ($mrc == CURLM_CALL_MULTI_PERFORM);
     
+    $list[$url]['multi_handle'] = $mh;
     $list[$url]['channel'] = $ch;
     $list[$url]['rc'] = $mrc;
     $list[$url]['active'] = $active;
@@ -49,14 +50,15 @@ function func_sample3(&$mh, $url) {
     return $list;
 }
 
-func_sample2($list[$url], $mh);
+func_sample2($list[$url]);
 
-function func_sample2($list, $mh) {
+function func_sample2($list) {
     error_log(__METHOD__);
     
     $active = $list['active'];
     $mrc = $list['rc'];
     $ch = $list['channel'];
+    $mh = $list['multi_handle'];
     
     while ($active && $mrc == CURLM_OK) {
         if (curl_multi_select($mh) == -1) {
