@@ -448,7 +448,7 @@ function get_task_amedas($mu_)
 
     $tmp1 = explode('</tr>', $tmp[0]);
     $headers = explode('</td>', $tmp1[0]);
-    error_log($pid . ' [' . __METHOD__ . '] $headers : ' . print_r($headers, true));
+    error_log(getmypid() . ' [' . __METHOD__ . '] $headers : ' . print_r($headers, true));
 
     for ($i = 0; $i < count($headers); $i++) {
         switch (trim(strip_tags($headers[$i]))) {
