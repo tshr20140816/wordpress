@@ -62,6 +62,7 @@ while ($active && $mrc == CURLM_OK) {
 $results = [];
 foreach ($urls as $url) {
     $results[$url] = curl_getinfo($ch[$url]);
+    $results[$url]["content"] = curl_multi_getcontent($ch[$url]);
     curl_multi_remove_handle($mh, $ch[$url]);
     curl_close($ch[$url]);
 }
