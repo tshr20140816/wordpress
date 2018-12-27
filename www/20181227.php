@@ -107,7 +107,9 @@ function func_sample($mu_, $list_) {
     $rc = $list_[$url]['rc'];
     $active = $list_[$url]['rc'];
     
+    error_log('POINT 010');
     while ($active && $rc == CURLM_OK) {
+        error_log('POINT 100');
         if (curl_multi_select($mh) == -1) {
             usleep(1);
         }
@@ -115,7 +117,9 @@ function func_sample($mu_, $list_) {
         do {
             $rc = curl_multi_exec($mh, $active);
         } while ($rc == CURLM_CALL_MULTI_PERFORM);
+        error_log('POINT 200');
     }
+    error_log('POINT 300');
     
     $results = curl_getinfo($ch);
     $res = curl_multi_getcontent($ch);
