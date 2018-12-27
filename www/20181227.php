@@ -20,7 +20,7 @@ exit();
 
 $url = $mu->get_env('URL_KASA_SHISU_YAHOO');
 
-$list = func_sample3($mu, $timeout, $mh, $url, $ch, $active, $mrc);
+$list = func_sample3($mu, $timeout, $mh, $url, $active, $mrc);
 
 function func_sample3(&$mu, &$timeout, &$mh, $url, &$active, &$mrc) {
     $timeout = 5;
