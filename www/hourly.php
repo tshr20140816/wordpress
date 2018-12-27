@@ -127,9 +127,9 @@ if ($hour_now % 2 === 1) {
     $list_weather_guest_area = $mu->get_weather_guest_area();
 
     $update_marker = $mu->to_small_size(' _' . date('Ymd', strtotime('+9 hours')) . '_');
-    for ($i = 0; $i < count($list_weather_guest_area); $i++) {
+    foreach ($list_weather_guest_area as $weather_guest_area) {
         $is_add_flag = false;
-        $tmp = explode(',', $list_weather_guest_area[$i]);
+        $tmp = explode(',', $weather_guest_area);
         $location_number = $tmp[0];
         $point_name = $tmp[1];
         $ymd = $tmp[2];
@@ -139,10 +139,10 @@ if ($hour_now % 2 === 1) {
             $dt = $matches[1]; // yyyy-mm-dd
             $tmp = explode($point_name, $res);
             $tmp = explode('<td class="forecast-wrap">', $tmp[1]);
-            for ($j = 0; $j < 10; $j++) {
-                $timestamp = strtotime("${dt} +${j} day") + 9 * 60 * 90;
+            for ($i = 0; $i < 10; $i++) {
+                $timestamp = strtotime("${dt} +${i} day") + 9 * 60 * 90;
                 if (date('Ymd', $timestamp) == $ymd) {
-                    $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$j + 1]))));
+                    $list = explode("\n", str_replace(' ', '', trim(strip_tags($tmp[$i + 1]))));
                     $title = date('m/d', $timestamp)
                       . " 【${point_name} ${list[0]} ${list[2]} ${list[1]}】${update_marker}";
                     $is_add_flag = true;
@@ -193,12 +193,12 @@ make_ical($mu, $tasks);
 
 $list_label_task = [];
 $list_schedule_task = [];
-for ($i = 0; $i < count($tasks); $i++) {
-    if (array_key_exists('duedate', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
-        if ($tasks[$i]['folder'] == $folder_id_label) {
-            $list_label_task[] = $tasks[$i]['duedate'];
+foreach ($tasks as $task) {
+    if (array_key_exists('duedate', $task) && array_key_exists('folder', $task)) {
+        if ($task['folder'] == $folder_id_label) {
+            $list_label_task[] = $task['duedate'];
         } else {
-            $list_schedule_task[] = $tasks[$i]['duedate'];
+            $list_schedule_task[] = $task['duedate'];
         }
     }
 }
@@ -208,15 +208,15 @@ sort($list_non_label);
 error_log($pid . ' $list_non_label : ' . print_r($list_non_label, true));
 
 $timestamp = strtotime('+20 day') + 9 * 60 * 60;
-for ($i = 0; $i < count($list_non_label); $i++) {
-    if ($list_non_label[$i] > $timestamp) {
-        $yyyy = $mu->to_small_size(date('Y', $list_non_label[$i]));
+foreach ($list_non_label as $non_label) {
+    if ($non_label > $timestamp) {
+        $yyyy = $mu->to_small_size(date('Y', $non_label));
 
-        $tmp = '### ' . LIST_YOBI[date('w', $list_non_label[$i])] . '曜日 '
-          . date('m/d', $list_non_label[$i]) . ' ### ' . $yyyy;
+        $tmp = '### ' . LIST_YOBI[date('w', $non_label)] . '曜日 '
+          . date('m/d', $non_label) . ' ### ' . $yyyy;
         $list_add_task[] = '{"title":"' . $tmp
-          . '","duedate":"' . $list_non_label[$i]
-          . '","context":"' . $list_context_id[date('w', $list_non_label[$i])]
+          . '","duedate":"' . $non_label
+          . '","context":"' . $list_context_id[date('w', $non_label)]
           . '","tag":"ADDITIONAL","folder":"' . $folder_id_label . '"}';
     }
 }
@@ -225,11 +225,11 @@ for ($i = 0; $i < count($list_non_label); $i++) {
 
 $is_exists_no_duedate_task = false;
 $list_delete_task = [];
-for ($i = 0; $i < count($tasks); $i++) {
-    if (array_key_exists('id', $tasks[$i]) && array_key_exists('tag', $tasks[$i])) {
-        if ($tasks[$i]['tag'] == 'HOURLY' || ($hour_now % 2 === 1 && $tasks[$i]['tag'] == 'WEATHER')) {
-            $list_delete_task[] = $tasks[$i]['id'];
-        } elseif ($tasks[$i]['duedate'] == 0) {
+foreach ($tasks as $task) {
+    if (array_key_exists('id', $task) && array_key_exists('tag', $task)) {
+        if ($task['tag'] == 'HOURLY' || ($hour_now % 2 === 1 && $task['tag'] == 'WEATHER')) {
+            $list_delete_task[] = $task['id'];
+        } elseif ($task['duedate'] == 0) {
             $is_exists_no_duedate_task = true;
         }
     }
@@ -250,15 +250,15 @@ error_log($pid . ' $list_add_task : ' . print_r($list_add_task, true));
 
 $list_edit_task = [];
 $template_edit_task = '{"id":"__ID__","title":"__TITLE__","context":"__CONTEXT__"}';
-for ($i = 0; $i < count($tasks); $i++) {
-    if (array_key_exists('id', $tasks[$i]) && array_key_exists('folder', $tasks[$i])) {
-        if ($tasks[$i]['folder'] == $folder_id_work && $tasks[$i]['star'] == '1') {
-            $duedate = $tasks[$i]['duedate'];
-            $title = $tasks[$i]['title'];
+foreach ($tasks as $task) {
+    if (array_key_exists('id', $task) && array_key_exists('folder', $task)) {
+        if ($task['folder'] == $folder_id_work && $task['star'] == '1') {
+            $duedate = $task['duedate'];
+            $title = $task['title'];
             if (substr($title, 0, 5) == date('m/d', $duedate)) {
                 continue;
             }
-            $tmp = str_replace('__ID__', $tasks[$i]['id'], $template_edit_task);
+            $tmp = str_replace('__ID__', $task['id'], $template_edit_task);
             $tmp = str_replace('__TITLE__', date('m/d', $duedate) . substr($title, 5), $tmp);
             $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $duedate)], $tmp);
             $list_edit_task[] = $tmp;
@@ -269,13 +269,13 @@ for ($i = 0; $i < count($tasks); $i++) {
 // duedate と context の不一致更新
 
 $template_edit_task = '{"id":"__ID__","context":"__CONTEXT__"}';
-for ($i = 0; $i < count($tasks); $i++) {
-    if (array_key_exists('id', $tasks[$i])) {
-        $real_context_id = $list_context_id[date('w', $tasks[$i]['duedate'])];
-        $task_context_id = $tasks[$i]['context'];
+foreach ($tasks as $task) {
+    if (array_key_exists('id', $task)) {
+        $real_context_id = $list_context_id[date('w', $task['duedate'])];
+        $task_context_id = $task['context'];
         if ($task_context_id == '0' || $task_context_id != $real_context_id) {
-            error_log($pid . ' $tasks[$i] : ' . print_r($tasks[$i], true));
-            $tmp = str_replace('__ID__', $tasks[$i]['id'], $template_edit_task);
+            error_log($pid . ' $task : ' . print_r($task, true));
+            $tmp = str_replace('__ID__', $task['id'], $template_edit_task);
             $tmp = str_replace('__CONTEXT__', $real_context_id, $tmp);
             $list_edit_task[] = $tmp;
         }
@@ -411,6 +411,7 @@ __HEREDOC__;
         $parking_information_all .= ' [' . $list_parking_name[$i] . "]${parse_text}";
     }
 
+    // 最大20秒 outlet_parking_information.php をここで待つ
     for ($i = 0; $i < 20; $i++) {
         if (file_exists($file_outlet_parking_information_) === true) {
             break;
@@ -482,13 +483,13 @@ function get_task_amedas($mu_)
     array_shift($matches);
 
     $title = '';
-    for ($i = 0; $i < count($matches); $i++) {
-        $hour = $matches[$i][1];
-        $temp = $matches[$i][$index_temp];
-        $rain = $matches[$i][$index_rain];
-        $wind = $matches[$i][$index_wind] . $matches[$i][$index_wind_speed];
-        $humi = $matches[$i][$index_humi];
-        $pres = $matches[$i][$index_pres];
+    foreach ($matches as $match) {
+        $hour = $match[1];
+        $temp = $match[$index_temp];
+        $rain = $match[$index_rain];
+        $wind = $match[$index_wind] . $match[$index_wind_speed];
+        $humi = $match[$index_humi];
+        $pres = $match[$index_pres];
         if ($temp == '&nbsp;') {
             continue;
         }
@@ -538,7 +539,7 @@ function get_task_rainfall($mu_)
 
     $longitude = $mu_->get_env('LONGITUDE');
     $latitude = $mu_->get_env('LATITUDE');
-  
+
     $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
         . '&lon=' . $longitude . '&lat=' . $latitude;
     $res = $mu_->get_contents($url, null, true);
@@ -553,14 +554,14 @@ function get_task_rainfall($mu_)
     error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
     $data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
 
-    $list = [];
-    for ($i = 0; $i < count($data); $i++) {
-        if ($data[$i]['Rainfall'] != '0') {
-            $list[] = $mu_->to_small_size(substr($data[$i]['Date'], 8)) . ' ' . $data[$i]['Rainfall'];
+    $list_rainfall = [];
+    foreach ($data as $rainfall) {
+        if ($rainfall['Rainfall'] != '0') {
+            $list_rainfall[] = $mu_->to_small_size(substr($rainfall['Date'], 8)) . ' ' . $rainfall['Rainfall'];
         }
     }
-    if (count($list) > 0) {
-        $tmp = '☂ ' . implode(' ', $list);
+    if (count($list_rainfall) > 0) {
+        $tmp = '☂ ' . implode(' ', $list_rainfall);
     } else {
         $tmp = '☀';
     }
@@ -809,7 +810,7 @@ function make_ical($mu_, $tasks_)
 {
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
-  
+
     $vevent_header = <<< __HEREDOC__
 BEGIN:VCALENDAR
 VERSION:2.0
@@ -831,22 +832,22 @@ __HEREDOC__;
 
     $list_vevent = [];
     $list_vevent[] = $vevent_header;
-    for ($i = 0; $i < count($tasks_); $i++) {
-        if (array_key_exists('id', $tasks_[$i])
-            && array_key_exists('folder', $tasks_[$i])
-            && array_key_exists('duedate', $tasks_[$i])
+    foreach ($tasks_ as $task) {
+        if (array_key_exists('id', $task)
+            && array_key_exists('folder', $task)
+            && array_key_exists('duedate', $task)
            ) {
-            if ($folder_id_label == $tasks_[$i]['folder'] || $tasks_[$i]['duedate'] < $timestamp_yesterday) {
+            if ($folder_id_label == $task['folder'] || $task['duedate'] < $timestamp_yesterday) {
                 continue;
             }
             $tmp = $template_vevent;
-            if (preg_match('/^\d\d\/\d\d .+/s', $tasks_[$i]['title']) == 1) {
-                $tmp = str_replace('__SUMMARY__', trim(substr($tasks_[$i]['title'], 6)), $tmp);
+            if (preg_match('/^\d\d\/\d\d .+/s', $task['title']) == 1) {
+                $tmp = str_replace('__SUMMARY__', trim(substr($task['title'], 6)), $tmp);
             } else {
-                $tmp = str_replace('__SUMMARY__', $tasks_[$i]['title'], $tmp);
+                $tmp = str_replace('__SUMMARY__', $task['title'], $tmp);
             }
-            $tmp = str_replace('__DTSTART__', date('Ymd', $tasks_[$i]['duedate']), $tmp);
-            $tmp = str_replace('__DTEND__', date('Ymd', $tasks_[$i]['duedate'] + 24 * 60 * 60), $tmp);
+            $tmp = str_replace('__DTSTART__', date('Ymd', $task['duedate']), $tmp);
+            $tmp = str_replace('__DTEND__', date('Ymd', $task['duedate'] + 24 * 60 * 60), $tmp);
             $list_vevent[] = $tmp;
         }
     }
