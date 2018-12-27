@@ -94,7 +94,7 @@ function make_curl_multi($url_) {
     return $list;
 }
 
-function func_sample($mu_, $list_) {
+function func_sample($mu_, &$list_) {
     
     $url = $mu_->get_env('URL_KASA_SHISU_YAHOO');
     
