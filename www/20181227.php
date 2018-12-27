@@ -56,6 +56,7 @@ while ($active && $mrc == CURLM_OK) {
     do {
         $mrc = curl_multi_exec($mh, $active);
     } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+    error_log('POINT 160');
 }
 
 curl_multi_close($mh);
