@@ -96,6 +96,9 @@ function func_sample($mu_, $list_) {
     
     $url = $mu_->get_env('URL_KASA_SHISU_YAHOO');
     
+    error_log($url);
+    error_log(print_r($list_, true));
+    
     $active = null;
     while ($active && $list_[$url]['rc'] == CURLM_OK) {
         if (curl_multi_select($list_[$url]['multi_handle']) == -1) {
