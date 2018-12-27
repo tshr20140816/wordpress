@@ -450,26 +450,27 @@ __HEREDOC__;
         do {
             $rc = curl_multi_exec($mh, $active);
         } while ($rc == CURLM_CALL_MULTI_PERFORM);
-        
+
+        curl_multi_select($mh);
         $rc = curl_multi_exec($mh, $active);
-        
+
         $list_curl_multi_info[$url_]['multi_handle'] = $mh;
         $list_curl_multi_info[$url_]['channel'] = $ch;
         $list_curl_multi_info[$url_]['rc'] = $rc;
         $list_curl_multi_info[$url_]['active'] = $active;
-        
+
         error_log(getmypid() . ' [' . __METHOD__ . '] $list_curl_multi_info : ' . print_r($list_curl_multi_info, true));
-         
+
         return $list_curl_multi_info;
     }
 
     function get_curl_multi($list_curl_multi_info_)
-    {        
+    {
         $active = $list_curl_multi_info_['active'];
         $rc = $list_curl_multi_info_['rc'];
         $ch = $list_curl_multi_info_['channel'];
         $mh = $list_curl_multi_info_['multi_handle'];
-        
+
         while ($active && $rc == CURLM_OK) {
             if (curl_multi_select($mh) == -1) {
                 usleep(1);
@@ -485,9 +486,9 @@ __HEREDOC__;
         curl_close($ch);
 
         curl_multi_close($mh);
-        
+
         error_log(getmypid() . ' [' . __METHOD__ . '] $results : ' . print_r($results, true));
-      
+
         return $res;
     }
 }
