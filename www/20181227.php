@@ -15,6 +15,8 @@ foreach($urls as $url) {
   $list = array_merge($list, $mu->make_curl_multi($url));
 }
 
+sleep(10);
+
 $res = $mu->get_curl_multi($list[$mu->get_env('URL_KASA_SHISU_YAHOO')]);
 error_log(getmypid() . ' ' . strlen($res));
 
