@@ -451,13 +451,15 @@ __HEREDOC__;
             $rc = curl_multi_exec($mh, $active);
         } while ($rc == CURLM_CALL_MULTI_PERFORM);
         
+        curl_multi_select($mh);
+        
         $list_curl_multi_info[$url_]['multi_handle'] = $mh;
         $list_curl_multi_info[$url_]['channel'] = $ch;
         $list_curl_multi_info[$url_]['rc'] = $rc;
         $list_curl_multi_info[$url_]['active'] = $active;
         
         error_log(getmypid() . ' [' . __METHOD__ . '] $list_curl_multi_info : ' . print_r($list_curl_multi_info, true));
-        
+         
         return $list_curl_multi_info;
     }
 
