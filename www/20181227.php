@@ -15,6 +15,7 @@ $res = $mu->get_contents(
     [CURLOPT_HTTPHEADER => ['Authorization: Basic ' . base64_encode(getenv('DROPBOX_APP_KEY') . ':' . getenv('DROPBOX_APP_SECRET'))]]
 );
 
+error_log(base64_encode('aaaaaaaaaaaaaaa:bbbbbbbbbbbbbbb'));
 /*
 https://www.dropbox.com/developers/documentation/http/documentation
 
