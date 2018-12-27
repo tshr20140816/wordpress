@@ -18,49 +18,53 @@ func_sample($mu, $list);
 exit();
 */
 
-$timeout = 5;
+func_sample3($timeout, $mh, $url, $ch, $active, $mrc);
 
-$mh = curl_multi_init();
+func_sample3(&$timeout, &$mh, &$url, &$ch, &$active, &$mrc) {
+    $timeout = 5;
 
-$url = $mu->get_env('URL_KASA_SHISU_YAHOO');
+    $mh = curl_multi_init();
 
-$ch = curl_init();
-curl_setopt_array($ch, array(
-    CURLOPT_URL            => $url,
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_TIMEOUT        => $timeout,
-    CURLOPT_CONNECTTIMEOUT => $timeout,
-    CURLOPT_USERAGENT => getenv('USER_AGENT'),
-));
-curl_multi_add_handle($mh, $ch);
+    $url = $mu->get_env('URL_KASA_SHISU_YAHOO');
 
-$active = null;
-do {
-    $mrc = curl_multi_exec($mh, $active);
-} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+    $ch = curl_init();
+    curl_setopt_array($ch, array(
+        CURLOPT_URL            => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => $timeout,
+        CURLOPT_CONNECTTIMEOUT => $timeout,
+        CURLOPT_USERAGENT => getenv('USER_AGENT'),
+    ));
+    curl_multi_add_handle($mh, $ch);
 
-func_sample2($active, $mrc, $mh, $ch) ;
-
-function func_sample2($active, $mrc, $mh, $ch) {
-    error_log(__METHOD__);
-while ($active && $mrc == CURLM_OK) {
-    if (curl_multi_select($mh) == -1) {
-        usleep(1);
-    }
-
+    $active = null;
     do {
         $mrc = curl_multi_exec($mh, $active);
     } while ($mrc == CURLM_CALL_MULTI_PERFORM);
 }
 
-$results = curl_getinfo($ch);
-$res = curl_multi_getcontent($ch);
-curl_multi_remove_handle($mh, $ch);
-curl_close($ch);
+func_sample2($active, $mrc, $mh, $ch);
 
-error_log(print_r($results, true));
+function func_sample2($active, $mrc, $mh, $ch) {
+    error_log(__METHOD__);
+    while ($active && $mrc == CURLM_OK) {
+        if (curl_multi_select($mh) == -1) {
+            usleep(1);
+        }
 
-curl_multi_close($mh);
+        do {
+            $mrc = curl_multi_exec($mh, $active);
+        } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+    }
+
+    $results = curl_getinfo($ch);
+    $res = curl_multi_getcontent($ch);
+    curl_multi_remove_handle($mh, $ch);
+    curl_close($ch);
+
+    error_log(print_r($results, true));
+
+    curl_multi_close($mh);
 }
 
 error_log(getmypid() . ' FINISH');
