@@ -24,6 +24,7 @@ foreach ($urls as $u) {
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT        => $timeout,
         CURLOPT_CONNECTTIMEOUT => $timeout,
+        CURLOPT_USERAGENT => getenv('USER_AGENT'),
     ));
     curl_multi_add_handle($mh, $ch);
     error_log('POINT 110');
