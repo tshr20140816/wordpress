@@ -12,7 +12,7 @@ $timeout = 10;
 
 $mh = curl_multi_init();
 
-$urls = [$mu_->get_env('URL_KASA_SHISU_YAHOO'), $mu_->get_env('URL_WEATHER_WARN')];
+$urls = [$mu->get_env('URL_KASA_SHISU_YAHOO'), $mu->get_env('URL_WEATHER_WARN')];
 
 foreach ($urls as $url) {
     $ch = curl_init();
