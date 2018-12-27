@@ -17,6 +17,7 @@ $urls = [$mu->get_env('URL_KASA_SHISU_YAHOO'), $mu->get_env('URL_WEATHER_WARN')]
 error_log(print_r($urls, true));
 
 foreach ($urls as $u) {
+    error_log('POINT 100');
     $ch = curl_init();
     curl_setopt_array($ch, array(
         CURLOPT_URL            => $u,
@@ -25,16 +26,21 @@ foreach ($urls as $u) {
         CURLOPT_CONNECTTIMEOUT => $timeout,
     ));
     curl_multi_add_handle($mh, $ch);
+    error_log('POINT 110');
 }
 
 do {
+    error_log('POINT 120');
     $stat = curl_multi_exec($mh, $running); //multiリクエストスタート
+    error_log('POINT 130');
 } while ($stat === CURLM_CALL_MULTI_PERFORM);
 if ( ! $running || $stat !== CURLM_OK) {
     // throw new RuntimeException('リクエストが開始出来なかった。マルチリクエスト内のどれか、URLの設定がおかしいのでは？');
-    error_log('POINT 200');
+    error_log('POINT 140');
     exit();
 }
+
+error_log('POINT 150');
 
 do switch (curl_multi_select($mh, $timeout)) { //イベントが発生するまでブロック
     // 最悪$TIMEOUT秒待ち続ける。
