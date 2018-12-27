@@ -852,7 +852,7 @@ __HEREDOC__;
     }
     $list_vevent[] = $vevent_footer;
 
-    error_log($pid . ' VEVENT COUNT : ' . count($list_vevent));
+    error_log(getmypid() . ' VEVENT COUNT : ' . count($list_vevent));
 
     $ical_data = implode("\r\n", $list_vevent);
 
@@ -861,12 +861,12 @@ __HEREDOC__;
     $sql = 'TRUNCATE TABLE t_ical';
     $statement = $pdo->prepare($sql);
     $rc = $statement->execute();
-    error_log($pid . ' TRUNCATE $rc : ' . $rc);
+    error_log(getmypid() . ' TRUNCATE $rc : ' . $rc);
 
     $sql = 'INSERT INTO t_ical (ical_data) VALUES (:b_ical_data)';
     $statement = $pdo->prepare($sql);
     $rc = $statement->execute([':b_ical_data' => base64_encode(gzencode($ical_data, 9))]);
-    error_log($pid . ' INSERT $rc : ' . $rc);
+    error_log(getmypid() . ' INSERT $rc : ' . $rc);
 
     $pdo = null;
 }
