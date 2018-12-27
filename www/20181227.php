@@ -57,9 +57,7 @@ function make_curl_multi($url_)
 }
 
 function get_curl_multi($list_)
-{
-    error_log(__METHOD__);
-        
+{        
     $active = $list_['active'];
     $rc = $list_['rc'];
     $ch = $list_['channel'];
@@ -79,9 +77,9 @@ function get_curl_multi($list_)
     curl_multi_remove_handle($mh, $ch);
     curl_close($ch);
 
-    error_log(print_r($results, true));
-
     curl_multi_close($mh);
     
+    error_log(getmypid() . ' [' . __METHOD__ . '] $results : ' . print_r($results, true));
+  
     return $res;
 }
