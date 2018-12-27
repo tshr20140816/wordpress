@@ -20,9 +20,9 @@ exit();
 
 $url = $mu->get_env('URL_KASA_SHISU_YAHOO');
 
-$list = func_sample3($mu, $timeout, $mh, $url, $active);
+$list = func_sample3($mh, $url);
 
-function func_sample3(&$mu, &$timeout, &$mh, $url, &$active) {
+function func_sample3(&$mh, $url) {
     $timeout = 5;
 
     $mh = curl_multi_init();
@@ -44,11 +44,12 @@ function func_sample3(&$mu, &$timeout, &$mh, $url, &$active) {
     
     $list[$url]['channel'] = $ch;
     $list[$url]['rc'] = $mrc;
+    $list[$url]['active'] = $active;
     
     return $list;
 }
 
-func_sample2($active, $list[$url]['rc'], $mh, $list[$url]['channel']);
+func_sample2($list[$url]['active'], $list[$url]['rc'], $mh, $list[$url]['channel']);
 
 function func_sample2($active, $mrc, $mh, $ch) {
     error_log(__METHOD__);
