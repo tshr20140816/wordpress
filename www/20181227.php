@@ -12,7 +12,7 @@ $url = $mu->get_env('URL_KASA_SHISU_YAHOO');
 
 $list = make_curl_multi($url);
 
-get_curl_multi($mu, $list);
+$res = get_curl_multi($list[$url]);
 
 error_log(getmypid() . ' FINISH');
 
@@ -39,32 +39,29 @@ function make_curl_multi($url_)
         $rc = curl_multi_exec($mh, $active);
     } while ($rc == CURLM_CALL_MULTI_PERFORM);
     
-    $list_curl_info[$url_]['multi_handle'] = $mh;
-    $list_curl_info[$url_]['channel'] = $ch;
-    $list_curl_info[$url_]['rc'] = $rc;
-    $list_curl_info[$url_]['active'] = $active;
+    $list_curl_multi_info[$url_]['multi_handle'] = $mh;
+    $list_curl_multi_info[$url_]['channel'] = $ch;
+    $list_curl_multi_info[$url_]['rc'] = $rc;
+    $list_curl_multi_info[$url_]['active'] = $active;
     
-    error_log(getmypid() . ' [' . __METHOD__ . '] $list_curl_info : ' . print_r($list_curl_info, true));
+    error_log(getmypid() . ' [' . __METHOD__ . '] $list_curl_multi_info : ' . print_r($list_curl_multi_info, true));
     
-    return $list_curl_info;
+    return $list_curl_multi_info;
 }
 
-function get_curl_multi($mu_, $list_)
+function get_curl_multi($list_)
 {
     error_log(__METHOD__);
-    
-    $url = $mu_->get_env('URL_KASA_SHISU_YAHOO');
-    
-    $active = $list_[$url]['active'];
-    $rc = $list_[$url]['rc'];
-    $ch = $list_[$url]['channel'];
-    $mh = $list_[$url]['multi_handle'];
+        
+    $active = $list_['active'];
+    $rc = $list_['rc'];
+    $ch = $list_['channel'];
+    $mh = $list_['multi_handle'];
     
     while ($active && $rc == CURLM_OK) {
         if (curl_multi_select($mh) == -1) {
             usleep(1);
         }
-
         do {
             $rc = curl_multi_exec($mh, $active);
         } while ($rc == CURLM_CALL_MULTI_PERFORM);
@@ -78,4 +75,6 @@ function get_curl_multi($mu_, $list_)
     error_log(print_r($results, true));
 
     curl_multi_close($mh);
+    
+    return $res;
 }
