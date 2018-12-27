@@ -36,6 +36,25 @@ $folder_id_label = $mu->get_folder_id('LABEL');
 // Get Contexts
 $list_context_id = $mu->get_contexts();
 
+$url = $mu->get_env('URL_KASA_SHISU_YAHOO');
+$list_mh[$url] = curl_multi_init();
+$list_ch[$url] = curl_init();
+
+$options = [CURLOPT_URL => $url,
+            CURLOPT_USERAGENT => getenv('USER_AGENT'),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_FOLLOWLOCATION => 1,
+            CURLOPT_MAXREDIRS => 3,
+            CURLOPT_SSL_FALSESTART => true,
+];
+curl_setopt_array($list_ch[$url], $options);
+curl_multi_add_handle($list_mh[$url], $list_ch[$url]);
+do {
+    $list_mrc[$url] = curl_multi_exec($list_mh[$url], $running);
+} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+error_log($pid . ' curl_multi_exec : ' . $rc);
+
 $list_add_task = [];
 
 if ($hour_now % 2 === 1) {
@@ -292,6 +311,10 @@ $rc = $mu->edit_tasks($list_edit_task);
 
 // Delete Tasks
 $mu->delete_tasks($list_delete_task);
+
+foreach ($list_mh as $mh) {
+  curl_multi_close($mh);
+}
 
 error_log("${pid} FINISH");
 
