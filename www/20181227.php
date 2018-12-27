@@ -26,19 +26,32 @@ func_sample2($list[$url]);
 
 error_log(getmypid() . ' FINISH');
 
-function func_sample3($url) {
+function func_sample3($url_) {
     $timeout = 5;
 
     $mh = curl_multi_init();
 
     $ch = curl_init();
+    /*
     curl_setopt_array($ch, array(
-        CURLOPT_URL            => $url,
+        CURLOPT_URL            => $url_,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT        => $timeout,
         CURLOPT_CONNECTTIMEOUT => $timeout,
         CURLOPT_USERAGENT => getenv('USER_AGENT'),
     ));
+    */
+    $options = [CURLOPT_URL => $url_,
+                CURLOPT_USERAGENT => getenv('USER_AGENT'),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_FOLLOWLOCATION => 1,
+                CURLOPT_MAXREDIRS => 3,
+                CURLOPT_SSL_FALSESTART => true,
+                CURLOPT_TIMEOUT => 10,
+                CURLOPT_CONNECTTIMEOUT => 10,
+    ];
+    curl_setopt_array($ch, $options);
     curl_multi_add_handle($mh, $ch);
 
     $active = null;
@@ -46,10 +59,10 @@ function func_sample3($url) {
         $mrc = curl_multi_exec($mh, $active);
     } while ($mrc == CURLM_CALL_MULTI_PERFORM);
     
-    $list[$url]['multi_handle'] = $mh;
-    $list[$url]['channel'] = $ch;
-    $list[$url]['rc'] = $mrc;
-    $list[$url]['active'] = $active;
+    $list[$url_]['multi_handle'] = $mh;
+    $list[$url_]['channel'] = $ch;
+    $list[$url_]['rc'] = $mrc;
+    $list[$url_]['active'] = $active;
     
     return $list;
 }
