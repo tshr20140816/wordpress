@@ -59,12 +59,13 @@ while ($active && $mrc == CURLM_OK) {
     // error_log('POINT 160');
 }
 
+$results = [];
 foreach ($urls as $url) {
     $results[$url] = curl_getinfo($ch[$url]);
     curl_multi_remove_handle($mh, $ch[$url]);
     curl_close($ch[$url]);
 }
-error_log(print_r($results, true)):
+error_log(print_r($results, true));
 
 curl_multi_close($mh);
 
