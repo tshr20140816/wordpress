@@ -42,6 +42,7 @@ do {
 func_sample2($active, $mrc, $mh, $ch) ;
 
 function func_sample2($active, $mrc, $mh, $ch) {
+    error_log(__METHOD__);
 while ($active && $mrc == CURLM_OK) {
     if (curl_multi_select($mh) == -1) {
         usleep(1);
