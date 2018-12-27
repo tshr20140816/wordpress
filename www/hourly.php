@@ -293,10 +293,6 @@ $rc = $mu->edit_tasks($list_edit_task);
 // Delete Tasks
 $mu->delete_tasks($list_delete_task);
 
-foreach ($list_mh as $mh) {
-  curl_multi_close($mh);
-}
-
 error_log("${pid} FINISH");
 
 exit();
