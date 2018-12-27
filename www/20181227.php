@@ -8,6 +8,12 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
+$list = make_curl_multi($mu->get_env('URL_KASA_SHISU_YAHOO'));
+
+error_log(print_r($list, true));
+
+exit();
+
 $timeout = 5;
 
 $mh = curl_multi_init();
@@ -61,3 +67,25 @@ error_log(print_r($results, true));
 curl_multi_close($mh);
 
 error_log(getmypid() . ' FINISH');
+
+function make_curl_multi($url_) {
+    $list[$url_]['multi_handle'] = curl_multi_init();
+    $list[$url_]['channel'] = curl_init();
+
+    $options = [CURLOPT_URL => $url_,
+                CURLOPT_USERAGENT => getenv('USER_AGENT'),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_FOLLOWLOCATION => 1,
+                CURLOPT_MAXREDIRS => 3,
+                CURLOPT_SSL_FALSESTART => true,
+    ];
+    curl_setopt_array($list[$url_]['channel'], $options);
+    curl_multi_add_handle($list[$url_]['multi_handle'], $list[$url_]['channel']);
+    do {
+        $list[$url_]['rc'] = curl_multi_exec($list[$url_]['multi_handle'], $running);
+    } while ($list[$url_]['rc'] == CURLM_CALL_MULTI_PERFORM);
+    error_log(getmypid() . ' curl_multi_exec : ' . $list[$url_]['rc']);
+    
+    return $list;
+}
