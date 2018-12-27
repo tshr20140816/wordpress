@@ -451,7 +451,7 @@ __HEREDOC__;
             $rc = curl_multi_exec($mh, $active);
         } while ($rc == CURLM_CALL_MULTI_PERFORM);
         
-        curl_multi_select($mh);
+        $rc = curl_multi_exec($mh, $active);
         
         $list_curl_multi_info[$url_]['multi_handle'] = $mh;
         $list_curl_multi_info[$url_]['channel'] = $ch;
