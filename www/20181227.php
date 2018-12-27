@@ -8,6 +8,7 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
+/*
 $list = make_curl_multi($mu->get_env('URL_KASA_SHISU_YAHOO'));
 
 error_log(print_r($list, true));
@@ -15,12 +16,13 @@ error_log(print_r($list, true));
 func_sample($mu, $list);
     
 exit();
+*/
 
 $timeout = 5;
 
 $mh = curl_multi_init();
 
-$urls = [$mu->get_env('URL_KASA_SHISU_YAHOO'), $mu->get_env('URL_WEATHER_WARN')];
+$urls = [$mu->get_env('URL_KASA_SHISU_YAHOO')];
 
 error_log(print_r($urls, true));
 
@@ -60,7 +62,7 @@ while ($active && $mrc == CURLM_OK) {
 $results = [];
 foreach ($urls as $url) {
     $results[$url] = curl_getinfo($ch[$url]);
-    $results[$url]["content"] = curl_multi_getcontent($ch[$url]);
+    // $results[$url]["content"] = curl_multi_getcontent($ch[$url]);
     curl_multi_remove_handle($mh, $ch[$url]);
     curl_close($ch[$url]);
 }
