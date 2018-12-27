@@ -20,27 +20,16 @@ exit();
 
 $url = $mu->get_env('URL_KASA_SHISU_YAHOO');
 
-$list = func_sample3($url);
+$list = make_curl_multi($url);
 
 func_sample2($list[$url]);
 
 error_log(getmypid() . ' FINISH');
 
-function func_sample3($url_) {
-    $timeout = 5;
-
+function make_curl_multi($url_) {
     $mh = curl_multi_init();
 
     $ch = curl_init();
-    /*
-    curl_setopt_array($ch, array(
-        CURLOPT_URL            => $url_,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT        => $timeout,
-        CURLOPT_CONNECTTIMEOUT => $timeout,
-        CURLOPT_USERAGENT => getenv('USER_AGENT'),
-    ));
-    */
     $options = [CURLOPT_URL => $url_,
                 CURLOPT_USERAGENT => getenv('USER_AGENT'),
                 CURLOPT_RETURNTRANSFER => true,
@@ -56,12 +45,12 @@ function func_sample3($url_) {
 
     $active = null;
     do {
-        $mrc = curl_multi_exec($mh, $active);
-    } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+        $rc = curl_multi_exec($mh, $active);
+    } while ($rc == CURLM_CALL_MULTI_PERFORM);
     
     $list[$url_]['multi_handle'] = $mh;
     $list[$url_]['channel'] = $ch;
-    $list[$url_]['rc'] = $mrc;
+    $list[$url_]['rc'] = $rc;
     $list[$url_]['active'] = $active;
     
     return $list;
@@ -71,18 +60,18 @@ function func_sample2($list) {
     error_log(__METHOD__);
     
     $active = $list['active'];
-    $mrc = $list['rc'];
+    $rc = $list['rc'];
     $ch = $list['channel'];
     $mh = $list['multi_handle'];
     
-    while ($active && $mrc == CURLM_OK) {
+    while ($active && $rc == CURLM_OK) {
         if (curl_multi_select($mh) == -1) {
             usleep(1);
         }
 
         do {
-            $mrc = curl_multi_exec($mh, $active);
-        } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+            $rc = curl_multi_exec($mh, $active);
+        } while ($rc == CURLM_CALL_MULTI_PERFORM);
     }
 
     $results = curl_getinfo($ch);
@@ -95,7 +84,7 @@ function func_sample2($list) {
     curl_multi_close($mh);
 }
 
-function make_curl_multi($url_) {
+function make_curl_multi_old($url_) {
     $list[$url_]['multi_handle'] = curl_multi_init();
     $list[$url_]['channel'] = curl_init();
 
