@@ -86,39 +86,45 @@ function make_curl_multi($url_) {
     ];
     curl_setopt_array($list[$url_]['channel'], $options);
     curl_multi_add_handle($list[$url_]['multi_handle'], $list[$url_]['channel']);
+    $list[$url_]['active'] = null;
     do {
-        $list[$url_]['rc'] = curl_multi_exec($list[$url_]['multi_handle'], $running);
+        $list[$url_]['rc'] = curl_multi_exec($list[$url_]['multi_handle'], $list[$url_]['active']);
     } while ($list[$url_]['rc'] == CURLM_CALL_MULTI_PERFORM);
     error_log(getmypid() . ' curl_multi_exec : ' . $list[$url_]['rc']);
     
     return $list;
 }
 
-function func_sample($mu_, &$list_) {
+function func_sample($mu_, $list_) {
     
     $url = $mu_->get_env('URL_KASA_SHISU_YAHOO');
     
     error_log($url);
     error_log(print_r($list_, true));
     
+    $mh = $list_[$url]['multi_handle'];
+    $ch = $list_[$url]['channel'];
+    $rc = $list_[$url]['rc'];
+    $active = $list_[$url]['rc'];
+    
     $active = null;
-    while ($active && $list_[$url]['rc'] == CURLM_OK) {
-        if (curl_multi_select($list_[$url]['multi_handle']) == -1) {
+    while ($active && $rc == CURLM_OK) {
+        if (curl_multi_select($mh) == -1) {
             usleep(1);
         }
 
         do {
-            $list_[$url]['rc'] = curl_multi_exec($list_[$url]['multi_handle'], $active);
-        } while ($list_[$url]['rc'] == CURLM_CALL_MULTI_PERFORM);
+            $rc = curl_multi_exec($mh, $active);
+        } while ($rc == CURLM_CALL_MULTI_PERFORM);
     }
     
-    $results = curl_getinfo($list_[$url]['channel']);
-    $res = curl_multi_getcontent($list_[$url]['channel']);
+    $results = curl_getinfo($ch);
+    $res = curl_multi_getcontent($ch);
     
     error_log(print_r($results, true));
     error_log(strlen($res));
     
-    curl_multi_remove_handle($list_[$url]['multi_handle'], $list_[$url]['channel']);
-    curl_close($list_[$url]['channel']);
-    curl_multi_close($list_[$url]['multi_handle']);
+    curl_multi_remove_handle($mh, $ch);
+    curl_close($ch);
+    curl_multi_close($mh);
 }
