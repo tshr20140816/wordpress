@@ -14,6 +14,8 @@ $mh = curl_multi_init();
 
 $urls = [$mu->get_env('URL_KASA_SHISU_YAHOO'), $mu->get_env('URL_WEATHER_WARN')];
 
+error_log(print_r($urls, true));
+
 foreach ($urls as $u) {
     $ch = curl_init();
     curl_setopt_array($ch, array(
@@ -29,7 +31,9 @@ do {
     $stat = curl_multi_exec($mh, $running); //multiリクエストスタート
 } while ($stat === CURLM_CALL_MULTI_PERFORM);
 if ( ! $running || $stat !== CURLM_OK) {
-    throw new RuntimeException('リクエストが開始出来なかった。マルチリクエスト内のどれか、URLの設定がおかしいのでは？');
+    // throw new RuntimeException('リクエストが開始出来なかった。マルチリクエスト内のどれか、URLの設定がおかしいのでは？');
+    error_log('POINT 200');
+    exit();
 }
 
 do switch (curl_multi_select($mh, $timeout)) { //イベントが発生するまでブロック
@@ -55,15 +59,17 @@ do switch (curl_multi_select($mh, $timeout)) { //イベントが発生するま�
         do if ($raised = curl_multi_info_read($mh, $remains)) {
             //変化のあったcurlハンドラを取得する
             $info = curl_getinfo($raised['handle']);
-            echo "$info[url]: $info[http_code]\n";
+            // echo "$info[url]: $info[http_code]\n";
             $response = curl_multi_getcontent($raised['handle']);
 
             if ($response === false) {
                 //エラー。404などが返ってきている
-                echo 'ERROR!!!', PHP_EOL;
+                // echo 'ERROR!!!', PHP_EOL;
+                error_log('POINT 500');
             } else {
                 //正常にレスポンス取得
-                echo $response, PHP_EOL;
+                //echo $response, PHP_EOL;
+                error_log('POINT 510');
             }
             curl_multi_remove_handle($mh, $raised['handle']);
             curl_close($raised['handle']);
