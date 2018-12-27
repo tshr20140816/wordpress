@@ -26,22 +26,15 @@ $urls = [$mu->get_env('URL_KASA_SHISU_YAHOO')];
 
 error_log(print_r($urls, true));
 
-$ch = [];
-foreach ($urls as $url) {
-    error_log('POINT 100');
-    $ch[$url] = curl_init();
-    curl_setopt_array($ch[$url], array(
-        CURLOPT_URL            => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT        => $timeout,
-        CURLOPT_CONNECTTIMEOUT => $timeout,
-        CURLOPT_USERAGENT => getenv('USER_AGENT'),
-    ));
-    curl_multi_add_handle($mh, $ch[$url]);
-    error_log('POINT 110');
-}
-
-error_log('POINT 150');
+$ch = curl_init();
+curl_setopt_array($ch, array(
+    CURLOPT_URL            => $url,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT        => $timeout,
+    CURLOPT_CONNECTTIMEOUT => $timeout,
+    CURLOPT_USERAGENT => getenv('USER_AGENT'),
+));
+curl_multi_add_handle($mh, $ch);
 
 $active = null;
 do {
@@ -56,16 +49,13 @@ while ($active && $mrc == CURLM_OK) {
     do {
         $mrc = curl_multi_exec($mh, $active);
     } while ($mrc == CURLM_CALL_MULTI_PERFORM);
-    // error_log('POINT 160');
 }
 
-$results = [];
-foreach ($urls as $url) {
-    $results[$url] = curl_getinfo($ch[$url]);
-    // $results[$url]["content"] = curl_multi_getcontent($ch[$url]);
-    curl_multi_remove_handle($mh, $ch[$url]);
-    curl_close($ch[$url]);
-}
+$results = curl_getinfo($ch);
+$res = curl_multi_getcontent($ch);
+curl_multi_remove_handle($mh, $ch);
+curl_close($ch);
+
 error_log(print_r($results, true));
 
 curl_multi_close($mh);
