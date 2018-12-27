@@ -58,7 +58,7 @@ do switch (curl_multi_select($mh, $timeout)) { //イベントが発生するま�
         continue 2;
 
     case 0:  //タイムアウト -> 必要に応じてエラー処理に入るべきかも。
-        error_log('POINT 180');
+        // error_log('POINT 180');
         break;
         // continue 2; //ここではcontinueでリトライします。
 
