@@ -425,7 +425,7 @@ __HEREDOC__;
         return $res;
     }
 
-    function make_curl_multi($url_)
+    function make_curl_multi($url_, $options_ = null)
     {
         $mh = curl_multi_init();
 
@@ -441,6 +441,9 @@ __HEREDOC__;
                     CURLOPT_CONNECTTIMEOUT => 10,
         ];
         curl_setopt_array($ch, $options);
+        if (is_null($options_) == false) {
+            curl_setopt_array($ch, $options_);
+        }
         curl_multi_add_handle($mh, $ch);
 
         $active = null;
