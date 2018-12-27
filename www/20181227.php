@@ -8,7 +8,6 @@ if ($pid == -1) {
 } else if ($pid) {
     // 親プロセスの場合
     error_log('parent process');
-    sleep(3);
     pcntl_wait($status); // ゾンビプロセスから守る
     error_log('$status : ' . $status);
 } else {
