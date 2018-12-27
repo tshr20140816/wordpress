@@ -19,19 +19,6 @@ $res = $mu->get_contents(
 
 error_log($res);
 
-$url = 'https://api.dropbox.com/1/metadata/link';
-
-$post_data = ['link' => 'https://www.dropbox.com/sh/748f94925f0gesq/AAAMSoRJyhJFfkupnAU0wXuva?dl=0'];
-
-$res = $mu->get_contents(
-    $url,
-    [CURLOPT_HTTPHEADER => ['Authorization: Basic ' . base64_encode(getenv('DROPBOX_APP_KEY') . ':' . getenv('DROPBOX_APP_SECRET'))],
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => http_build_query($post_data),
-    ]
-);
-
-error_log($res);
 /*
 https://www.dropbox.com/developers/documentation/http/documentation
 
