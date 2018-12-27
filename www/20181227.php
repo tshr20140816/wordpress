@@ -12,7 +12,7 @@ $url = $mu->get_env('URL_KASA_SHISU_YAHOO');
 
 $list = make_curl_multi($url);
 
-func_sample2($list[$url]);
+func_sample($mu, $list);
 
 error_log(getmypid() . ' FINISH');
 
@@ -46,13 +46,15 @@ function make_curl_multi($url_) {
     return $list;
 }
 
-function func_sample2($list_) {
+function func_sample($mu_, $list_) {
     error_log(__METHOD__);
     
-    $active = $list_['active'];
-    $rc = $list_['rc'];
-    $ch = $list_['channel'];
-    $mh = $list_['multi_handle'];
+    $url = $mu_->get_env('URL_KASA_SHISU_YAHOO');
+    
+    $active = $list_[$url]['active'];
+    $rc = $list_[$url]['rc'];
+    $ch = $list_[$url]['channel'];
+    $mh = $list_[$url]['multi_handle'];
     
     while ($active && $rc == CURLM_OK) {
         if (curl_multi_select($mh) == -1) {
