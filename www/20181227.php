@@ -12,9 +12,13 @@ $url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_i
 $options = [
   CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
   ];
-$mu->make_curl_multi($url, $options);
+$list = $mu->make_curl_multi($url, $options);
 
 sleep(10);
+
+$res = $mu->get_curl_multi($list[$url]);
+error_log(getmypid() . ' ' . strlen($res));
+
 /*
 $urls = [$mu->get_env('URL_KASA_SHISU_YAHOO'), $mu->get_env('URL_WEATHER_WARN')];
 
