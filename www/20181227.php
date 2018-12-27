@@ -43,55 +43,20 @@ if ( ! $running || $stat !== CURLM_OK) {
 
 error_log('POINT 150');
 
-do switch (curl_multi_select($mh, $timeout)) { //イベントが発生するまでブロック
-    // 最悪$TIMEOUT秒待ち続ける。
-    // あえて早めにtimeoutさせると、レスポンスを待った状態のまま別の処理を挟めるようになります。
-    // もう一度curl_multi_selectを繰り返すと、またイベントがあるまでブロックして待ちます。
+$active = null;
+do {
+    $mrc = curl_multi_exec($mh, $active);
+} while ($mrc == CURLM_CALL_MULTI_PERFORM);
 
-    case -1: //selectに失敗。ありうるらしい。 https://bugs.php.net/bug.php?id=61141
-        error_log('POINT 160');
-        usleep(10); //ちょっと待ってからretry。ここも別の処理を挟んでもよい。
-        do {
-            $stat = curl_multi_exec($mh, $running);
-        } while ($stat === CURLM_CALL_MULTI_PERFORM);
-        error_log('POINT 170');
-        continue 2;
+while ($active && $mrc == CURLM_OK) {
+    if (curl_multi_select($mh) == -1) {
+        usleep(1);
+    }
 
-    case 0:  //タイムアウト -> 必要に応じてエラー処理に入るべきかも。
-        // error_log('POINT 180');
-        break;
-        // continue 2; //ここではcontinueでリトライします。
-
-    default: //どれかが成功 or 失敗した
-        error_log('POINT 190');
-        do {
-            $stat = curl_multi_exec($mh, $running); //ステータスを更新
-        } while ($stat === CURLM_CALL_MULTI_PERFORM);
-        error_log('POINT 200');
-
-        do if ($raised = curl_multi_info_read($mh, $remains)) {
-            //変化のあったcurlハンドラを取得する
-            $info = curl_getinfo($raised['handle']);
-            // echo "$info[url]: $info[http_code]\n";
-            $response = curl_multi_getcontent($raised['handle']);
-
-            if ($response === false) {
-                //エラー。404などが返ってきている
-                // echo 'ERROR!!!', PHP_EOL;
-                error_log('POINT 300');
-            } else {
-                //正常にレスポンス取得
-                //echo $response, PHP_EOL;
-                error_log('POINT 310');
-            }
-            curl_multi_remove_handle($mh, $raised['handle']);
-            curl_close($raised['handle']);
-        } while ($remains);
-        error_log('POINT 400');
-        //select前に全ての処理が終わっていたりすると
-        //複数の結果が入っていることがあるのでループが必要
-
-} while ($running);
+    do {
+        $mrc = curl_multi_exec($mh, $active);
+    } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+}
 
 curl_multi_close($mh);
 
