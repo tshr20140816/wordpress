@@ -14,7 +14,7 @@ $options = [
   ];
 $list = $mu->make_curl_multi($url, $options);
 
-sleep(10);
+sleep(5);
 
 $res = $mu->get_curl_multi($list[$url]);
 error_log(getmypid() . ' ' . strlen($res));
