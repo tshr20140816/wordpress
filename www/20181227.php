@@ -81,6 +81,8 @@ function make_curl_multi($url_) {
                 CURLOPT_FOLLOWLOCATION => 1,
                 CURLOPT_MAXREDIRS => 3,
                 CURLOPT_SSL_FALSESTART => true,
+                CURLOPT_TIMEOUT => 10,
+                CURLOPT_CONNECTTIMEOUT => 10,
     ];
     curl_setopt_array($list[$url_]['channel'], $options);
     curl_multi_add_handle($list[$url_]['multi_handle'], $list[$url_]['channel']);
