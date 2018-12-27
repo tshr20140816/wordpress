@@ -62,6 +62,7 @@
         "ext-mbstring": "*",
         "ext-gd": "*",
         "ext-apcu": "*",
+        "ext-pcntl": "*",
         "ext-imagick": "*"
     },
     "platform-dev": []
