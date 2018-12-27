@@ -22,6 +22,10 @@ $url = $mu->get_env('URL_KASA_SHISU_YAHOO');
 
 $list = func_sample3($url);
 
+func_sample2($list[$url]);
+
+error_log(getmypid() . ' FINISH');
+
 function func_sample3($url) {
     $timeout = 5;
 
@@ -50,8 +54,6 @@ function func_sample3($url) {
     return $list;
 }
 
-func_sample2($list[$url]);
-
 function func_sample2($list) {
     error_log(__METHOD__);
     
@@ -79,8 +81,6 @@ function func_sample2($list) {
 
     curl_multi_close($mh);
 }
-
-error_log(getmypid() . ' FINISH');
 
 function make_curl_multi($url_) {
     $list[$url_]['multi_handle'] = curl_multi_init();
