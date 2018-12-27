@@ -8,6 +8,14 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
+$url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_information.php';
+$options = [
+  CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
+  ];
+$mu->make_curl_multi($url, $options);
+
+sleep(10);
+/*
 $urls = [$mu->get_env('URL_KASA_SHISU_YAHOO'), $mu->get_env('URL_WEATHER_WARN')];
 
 $list = [];
@@ -22,6 +30,7 @@ error_log(getmypid() . ' ' . strlen($res));
 
 $res = $mu->get_curl_multi($list[$mu->get_env('URL_WEATHER_WARN')]);
 error_log(getmypid() . ' ' . strlen($res));
+*/
 
 error_log(getmypid() . ' FINISH');
 
