@@ -31,16 +31,6 @@ foreach ($urls as $url) {
     error_log('POINT 110');
 }
 
-do {
-    error_log('POINT 120');
-    $stat = curl_multi_exec($mh, $running); //multiリクエストスタート
-    error_log('POINT 130');
-} while ($stat === CURLM_CALL_MULTI_PERFORM);
-if ( ! $running || $stat !== CURLM_OK) {
-    error_log('POINT 140');
-    exit();
-}
-
 error_log('POINT 150');
 
 $active = null;
