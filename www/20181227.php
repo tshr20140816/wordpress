@@ -18,14 +18,14 @@ func_sample($mu, $list);
 exit();
 */
 
-func_sample3($mu, $timeout, $mh, $url, $ch, $active, $mrc);
+$url = $mu->get_env('URL_KASA_SHISU_YAHOO');
 
-function func_sample3(&$mu, &$timeout, &$mh, &$url, &$ch, &$active, &$mrc) {
+$list = func_sample3($mu, $timeout, $mh, $url, $ch, $active, $mrc);
+
+function func_sample3(&$mu, &$timeout, &$mh, $url, &$active, &$mrc) {
     $timeout = 5;
 
     $mh = curl_multi_init();
-
-    $url = $mu->get_env('URL_KASA_SHISU_YAHOO');
 
     $ch = curl_init();
     curl_setopt_array($ch, array(
@@ -41,9 +41,13 @@ function func_sample3(&$mu, &$timeout, &$mh, &$url, &$ch, &$active, &$mrc) {
     do {
         $mrc = curl_multi_exec($mh, $active);
     } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+    
+    $list[$url]['channel'] = $ch;
+    
+    return $list;
 }
 
-func_sample2($active, $mrc, $mh, $ch);
+func_sample2($active, $mrc, $mh, $list[$url]['channel']);
 
 function func_sample2($active, $mrc, $mh, $ch) {
     error_log(__METHOD__);
