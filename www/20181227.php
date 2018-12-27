@@ -20,7 +20,7 @@ exit();
 
 func_sample3($timeout, $mh, $url, $ch, $active, $mrc);
 
-func_sample3(&$timeout, &$mh, &$url, &$ch, &$active, &$mrc) {
+function func_sample3(&$timeout, &$mh, &$url, &$ch, &$active, &$mrc) {
     $timeout = 5;
 
     $mh = curl_multi_init();
