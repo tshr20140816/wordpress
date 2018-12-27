@@ -39,6 +39,9 @@ do {
     $mrc = curl_multi_exec($mh, $active);
 } while ($mrc == CURLM_CALL_MULTI_PERFORM);
 
+func_sample2($active, $mrc, $mh, $ch) ;
+
+function func_sample2($active, $mrc, $mh, $ch) {
 while ($active && $mrc == CURLM_OK) {
     if (curl_multi_select($mh) == -1) {
         usleep(1);
@@ -57,6 +60,7 @@ curl_close($ch);
 error_log(print_r($results, true));
 
 curl_multi_close($mh);
+}
 
 error_log(getmypid() . ' FINISH');
 
