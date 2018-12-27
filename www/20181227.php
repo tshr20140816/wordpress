@@ -8,12 +8,17 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
-$url = $mu->get_env('URL_KASA_SHISU_YAHOO');
+$urls = [$mu->get_env('URL_KASA_SHISU_YAHOO'), $mu->get_env('URL_WEATHER_WARN')];
 
-$list = make_curl_multi($url);
+$list = [];
+foreach($urls as $url) {
+  $list = array_merge($list, make_curl_multi($url));
+}
 
-$res = get_curl_multi($list[$url]);
+$res = get_curl_multi($list[$mu->get_env('URL_KASA_SHISU_YAHOO')]);
+error_log(getmypid() . ' ' . strlen($res));
 
+$res = get_curl_multi($list[$mu->get_env('URL_WEATHER_WARN')]);
 error_log(getmypid() . ' ' . strlen($res));
 
 error_log(getmypid() . ' FINISH');
