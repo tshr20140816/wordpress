@@ -14,6 +14,8 @@ $list = make_curl_multi($url);
 
 $res = get_curl_multi($list[$url]);
 
+error_log(getmypid() . ' ' . strlen($res));
+
 error_log(getmypid() . ' FINISH');
 
 function make_curl_multi($url_)
