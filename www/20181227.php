@@ -16,7 +16,8 @@ func_sample($mu, $list);
 
 error_log(getmypid() . ' FINISH');
 
-function make_curl_multi($url_) {
+function make_curl_multi($url_)
+{
     $mh = curl_multi_init();
 
     $ch = curl_init();
@@ -46,7 +47,8 @@ function make_curl_multi($url_) {
     return $list;
 }
 
-function func_sample($mu_, $list_) {
+function func_sample($mu_, $list_)
+{
     error_log(__METHOD__);
     
     $url = $mu_->get_env('URL_KASA_SHISU_YAHOO');
@@ -75,4 +77,3 @@ function func_sample($mu_, $list_) {
 
     curl_multi_close($mh);
 }
-
