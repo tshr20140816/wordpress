@@ -344,8 +344,8 @@ function get_sun($mu_)
         $timestamp = strtotime(date('Y-m-01') . " +${j} month");
         $yyyy = date('Y', $timestamp);
         $mm = date('m', $timestamp);
-        error_log($pid . ' $yyyy : ' . $yyyy);
-        error_log($pid . ' $mm : ' . $mm);
+        error_log(getmypid() . ' $yyyy : ' . $yyyy);
+        error_log(getmypid() . ' $mm : ' . $mm);
         $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . $area_id . $mm . '.html', null, true);
 
         $tmp = explode('<table ', $res);
