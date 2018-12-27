@@ -14,38 +14,63 @@ $mh = curl_multi_init();
 
 $urls = [$mu->get_env('URL_KASA_SHISU_YAHOO'), $mu->get_env('URL_WEATHER_WARN')];
 
-foreach ($urls as $url) {
+foreach ($urls as $u) {
     $ch = curl_init();
-    curl_setopt_array($ch, [CURLOPT_URL => $url,
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_TIMEOUT => $timeout,
-                            CURLOPT_CONNECTTIMEOUT => $timeout]);
+    curl_setopt_array($ch, array(
+        CURLOPT_URL            => $u,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => $timeout,
+        CURLOPT_CONNECTTIMEOUT => $timeout,
+    ));
     curl_multi_add_handle($mh, $ch);
 }
 
-$stat = curl_multi_exec($mh, $running);
+do {
+    $stat = curl_multi_exec($mh, $running); //multiリクエストスタート
+} while ($stat === CURLM_CALL_MULTI_PERFORM);
+if ( ! $running || $stat !== CURLM_OK) {
+    throw new RuntimeException('リクエストが開始出来なかった。マルチリクエスト内のどれか、URLの設定がおかしいのでは？');
+}
 
-do switch (curl_multi_select($mh, $timeout)) {
-    case -1:
-        break;
-    case 0:
-        break;
-    default:
+do switch (curl_multi_select($mh, $timeout)) { //イベントが発生するまでブロック
+    // 最悪$TIMEOUT秒待ち続ける。
+    // あえて早めにtimeoutさせると、レスポンスを待った状態のまま別の処理を挟めるようになります。
+    // もう一度curl_multi_selectを繰り返すと、またイベントがあるまでブロックして待ちます。
+
+    case -1: //selectに失敗。ありうるらしい。 https://bugs.php.net/bug.php?id=61141
+        usleep(10); //ちょっと待ってからretry。ここも別の処理を挟んでもよい。
         do {
             $stat = curl_multi_exec($mh, $running);
         } while ($stat === CURLM_CALL_MULTI_PERFORM);
-        
+        continue 2;
+
+    case 0:  //タイムアウト -> 必要に応じてエラー処理に入るべきかも。
+        continue 2; //ここではcontinueでリトライします。
+
+    default: //どれかが成功 or 失敗した
+        do {
+            $stat = curl_multi_exec($mh, $running); //ステータスを更新
+        } while ($stat === CURLM_CALL_MULTI_PERFORM);
+
         do if ($raised = curl_multi_info_read($mh, $remains)) {
+            //変化のあったcurlハンドラを取得する
             $info = curl_getinfo($raised['handle']);
+            echo "$info[url]: $info[http_code]\n";
             $response = curl_multi_getcontent($raised['handle']);
+
             if ($response === false) {
-                error_log('ERROR');
+                //エラー。404などが返ってきている
+                echo 'ERROR!!!', PHP_EOL;
             } else {
-                error_log($response);
+                //正常にレスポンス取得
+                echo $response, PHP_EOL;
             }
             curl_multi_remove_handle($mh, $raised['handle']);
             curl_close($raised['handle']);
         } while ($remains);
+        //select前に全ての処理が終わっていたりすると
+        //複数の結果が入っていることがあるのでループが必要
+
 } while ($running);
 
 curl_multi_close($mh);
