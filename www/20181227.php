@@ -22,7 +22,7 @@ $timeout = 5;
 
 $mh = curl_multi_init();
 
-$url = [$mu->get_env('URL_KASA_SHISU_YAHOO')];
+$url = $mu->get_env('URL_KASA_SHISU_YAHOO');
 
 $ch = curl_init();
 curl_setopt_array($ch, array(
