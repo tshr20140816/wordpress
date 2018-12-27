@@ -49,10 +49,15 @@ function func_sample3(&$mh, $url) {
     return $list;
 }
 
-func_sample2($list[$url]['active'], $list[$url]['rc'], $mh, $list[$url]['channel']);
+func_sample2($list[$url], $mh);
 
-function func_sample2($active, $mrc, $mh, $ch) {
+function func_sample2($list, $mh) {
     error_log(__METHOD__);
+    
+    $active = $list['active'];
+    $mrc = $list['rc'];
+    $ch = $list['channel'];
+    
     while ($active && $mrc == CURLM_OK) {
         if (curl_multi_select($mh) == -1) {
             usleep(1);
