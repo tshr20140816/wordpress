@@ -447,13 +447,11 @@ __HEREDOC__;
         curl_multi_add_handle($mh, $ch);
 
         $active = null;
+        /*
         do {
             $rc = curl_multi_exec($mh, $active);
         } while ($rc == CURLM_CALL_MULTI_PERFORM);
-
-        curl_multi_select($mh);
-        $rc = curl_multi_exec($mh, $active);
-        curl_multi_select($mh);
+        */
         $rc = curl_multi_exec($mh, $active);
 
         $list_curl_multi_info[$url_]['multi_handle'] = $mh;
@@ -475,14 +473,15 @@ __HEREDOC__;
 
         while ($active && $rc == CURLM_OK) {
             if (curl_multi_select($mh) == -1) {
-                usleep(1);
+                error_log('WAITING');
+                usleep(10);
             }
-            $rc = curl_multi_exec($mh, $active);
             /*
             do {
                 $rc = curl_multi_exec($mh, $active);
             } while ($rc == CURLM_CALL_MULTI_PERFORM);
             */
+            $rc = curl_multi_exec($mh, $active);
         }
 
         $results = curl_getinfo($ch);
