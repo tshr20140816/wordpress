@@ -481,7 +481,7 @@ __HEREDOC__;
             } while ($rc == CURLM_CALL_MULTI_PERFORM);
             */
             $rc = curl_multi_exec($mh, $active);
-            error_log($rc);
+            error_log('CHECK POINT 300 : ' . $rc);
             sleep(1);
         }
 
