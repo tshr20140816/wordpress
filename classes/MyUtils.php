@@ -445,12 +445,12 @@ __HEREDOC__;
         curl_multi_add_handle($mh, $ch);
 
         $active = null;
-        /*
-        do {
+        for ($i = 0; $i < 10; $i++) {
             $rc = curl_multi_exec($mh, $active);
-        } while ($rc == CURLM_CALL_MULTI_PERFORM);
-        */
-        $rc = curl_multi_exec($mh, $active);
+            if (!($active && $rc == CURLM_OK)) {
+                break;
+            }
+        }
 
         $list_curl_multi_info[$url_]['multi_handle'] = $mh;
         $list_curl_multi_info[$url_]['channel'] = $ch;
@@ -471,17 +471,10 @@ __HEREDOC__;
 
         error_log('CHECK POINT 100');
         while ($active && $rc == CURLM_OK) {
-            /*
             if (curl_multi_select($mh, 0.5) == -1) {
                 error_log('CHECK POINT 200');
                 usleep(10);
             }
-            */
-            /*
-            do {
-                $rc = curl_multi_exec($mh, $active);
-            } while ($rc == CURLM_CALL_MULTI_PERFORM);
-            */
             $rc = curl_multi_exec($mh, $active);
             error_log('CHECK POINT 300 : ' . $rc . ' ' . $active);
             // sleep(1);
