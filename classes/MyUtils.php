@@ -451,6 +451,8 @@ __HEREDOC__;
                 error_log('CHECK POINT 010');
                 break;
             }
+            error_log('CHECK POINT 020');
+            usleep(250000);
         }
 
         $list_curl_multi_info[$url_]['multi_handle'] = $mh;
