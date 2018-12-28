@@ -471,9 +471,10 @@ __HEREDOC__;
         $ch = $list_curl_multi_info_['channel'];
         $mh = $list_curl_multi_info_['multi_handle'];
 
+        error_log('CHECK POINT 100');
         while ($active && $rc == CURLM_OK) {
             if (curl_multi_select($mh) == -1) {
-                error_log('WAITING');
+                error_log('CHECK POINT 200');
                 usleep(10);
             }
             /*
