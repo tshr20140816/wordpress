@@ -471,10 +471,12 @@ __HEREDOC__;
 
         error_log('CHECK POINT 100');
         while ($active && $rc == CURLM_OK) {
+            /*
             if (curl_multi_select($mh, 0.5) == -1) {
                 error_log('CHECK POINT 200');
                 usleep(10);
             }
+            */
             /*
             do {
                 $rc = curl_multi_exec($mh, $active);
@@ -482,7 +484,7 @@ __HEREDOC__;
             */
             $rc = curl_multi_exec($mh, $active);
             error_log('CHECK POINT 300 : ' . $rc . ' ' . $active);
-            sleep(10);
+            sleep(1);
         }
 
         $results = curl_getinfo($ch);
