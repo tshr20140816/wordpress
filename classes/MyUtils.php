@@ -484,7 +484,8 @@ __HEREDOC__;
             */
             $rc = curl_multi_exec($mh, $active);
             error_log('CHECK POINT 300 : ' . $rc . ' ' . $active);
-            sleep(1);
+            // sleep(1);
+            usleep(500000);
         }
 
         $results = curl_getinfo($ch);
