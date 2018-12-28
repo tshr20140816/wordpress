@@ -437,8 +437,6 @@ __HEREDOC__;
                     CURLOPT_FOLLOWLOCATION => 1,
                     CURLOPT_MAXREDIRS => 3,
                     CURLOPT_SSL_FALSESTART => true,
-                    CURLOPT_TIMEOUT => 10,
-                    CURLOPT_CONNECTTIMEOUT => 10,
         ];
         curl_setopt_array($ch, $options);
         if (is_null($options_) == false) {
@@ -473,7 +471,7 @@ __HEREDOC__;
 
         error_log('CHECK POINT 100');
         while ($active && $rc == CURLM_OK) {
-            if (curl_multi_select($mh) == -1) {
+            if (curl_multi_select($mh, 0.5) == -1) {
                 error_log('CHECK POINT 200');
                 usleep(10);
             }
