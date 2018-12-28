@@ -482,6 +482,7 @@ __HEREDOC__;
             */
             $rc = curl_multi_exec($mh, $active);
             error_log($rc);
+            usleep(10);
         }
 
         $results = curl_getinfo($ch);
