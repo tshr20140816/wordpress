@@ -8,7 +8,7 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
-$url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_information.php';
+$url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/20181228.php';
 $options = [
   CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
   ];
