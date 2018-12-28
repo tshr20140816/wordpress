@@ -448,6 +448,7 @@ __HEREDOC__;
         for ($i = 0; $i < 10; $i++) {
             $rc = curl_multi_exec($mh, $active);
             if (!($active && $rc == CURLM_OK)) {
+                error_log('CHECK POINT 010');
                 break;
             }
         }
