@@ -9,6 +9,10 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 $mu = new MyUtils();
 
 $urls = [
+    $mu->get_env('URL_AMEDAS'),
+    $mu->get_env('URL_KASA_SHISU_YAHOO'),
+    $mu->get_env('URL_KASA_SHISU'),
+    $mu->get_env('URL_TAIKAN_SHISU'),
     $mu->get_env('URL_RIVER_1'),
     $mu->get_env('URL_RIVER_2'),
     ];
