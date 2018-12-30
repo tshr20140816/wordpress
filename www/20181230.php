@@ -15,6 +15,7 @@ $urls = [
 
 $list_ch = [];
 $mh = curl_multi_init();
+
 foreach ($urls as $url) {
     $ch = curl_init();
     $options = [CURLOPT_URL => $url,
@@ -26,14 +27,13 @@ foreach ($urls as $url) {
                 CURLOPT_SSL_FALSESTART => true,
     ];
     curl_setopt_array($ch, $options);
-    if (is_null($options_) == false) {
-        curl_setopt_array($ch, $options_);
-    }
     curl_multi_add_handle($mh, $ch);
     $list_ch[$url] = $ch;
 }
 
 $active = null;
+$rc = curl_multi_exec($mh, $active);
+
 while ($active && $rc == CURLM_OK) {
     if (curl_multi_select($mh) == -1) {
         usleep(1);
