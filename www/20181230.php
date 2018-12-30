@@ -58,10 +58,21 @@ foreach ($urls as $url) {
     $res = curl_getinfo($ch);
     if ($res['http_code'] == 200) {
         // $results[] = curl_multi_getcontent($ch);
-        apcu_store($url, bzcompress(curl_multi_getcontent($ch), 9));
+        $results = curl_multi_getcontent($ch);
+        error_log(strlen($results) . ' ' . $url);
+        apcu_store($url, bzcompress($results, 9));
     }
     curl_multi_remove_handle($mh, $ch);
     curl_close($ch);
     error_log(print_r($res, true));
 }
 curl_multi_close($mh);
+
+error_log('--- NOTE ---');
+
+foreach ($urls as $url) {
+    if (apcu_exists($url) === true) {
+        $res = bzdecompress(apcu_fetch($url));
+        error_log(strlen($res) . ' ' . $url);
+    }
+}
