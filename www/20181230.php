@@ -57,7 +57,8 @@ foreach ($urls as $url) {
     $ch = $list_ch[$url];
     $res = curl_getinfo($ch);
     if ($res['http_code'] == 200) {
-        $results[] = curl_multi_getcontent($ch);
+        // $results[] = curl_multi_getcontent($ch);
+        apcu_store($url, bzcompress(curl_multi_getcontent($ch), 9));
     }
     curl_multi_remove_handle($mh, $ch);
     curl_close($ch);
