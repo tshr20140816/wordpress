@@ -8,8 +8,12 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
+$urls = [
+    $mu->get_env('URL_RIVER_1'),
+    $mu->get_env('URL_RIVER_2'),
+    ];
 
-
+$list_ch = [];
 $mh = curl_multi_init();
 for ($urls as $url) {
     $ch = curl_init();
@@ -26,4 +30,23 @@ for ($urls as $url) {
         curl_setopt_array($ch, $options_);
     }
     curl_multi_add_handle($mh, $ch);
+    $list_ch[$url] = $ch;
 }
+
+$active = null;
+while ($active && $rc == CURLM_OK) {
+    if (curl_multi_select($mh) == -1) {
+        usleep(1);
+    }
+    $rc = curl_multi_exec($mh, $active);
+}
+
+for ($urls as $url) {
+    $ch = $list_ch[$url];
+    $results = curl_getinfo($ch);
+    $res = curl_multi_getcontent($ch);
+    curl_multi_remove_handle($mh, $ch);
+    curl_close($ch);
+    error_log(print_r($results, true));
+}
+curl_multi_close($mh);
