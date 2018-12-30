@@ -15,7 +15,7 @@ $urls = [
 
 $list_ch = [];
 $mh = curl_multi_init();
-for ($urls as $url) {
+foreach ($urls as $url) {
     $ch = curl_init();
     $options = [CURLOPT_URL => $url,
                 CURLOPT_USERAGENT => getenv('USER_AGENT'),
@@ -41,7 +41,7 @@ while ($active && $rc == CURLM_OK) {
     $rc = curl_multi_exec($mh, $active);
 }
 
-for ($urls as $url) {
+foreach ($urls as $url) {
     $ch = $list_ch[$url];
     $results = curl_getinfo($ch);
     $res = curl_multi_getcontent($ch);
