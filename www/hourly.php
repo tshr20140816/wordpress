@@ -26,21 +26,6 @@ $options = [
   ];
 $res = $mu->get_contents($url, $options);
 
-/*
-$url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_information.php';
-$options = [
-  CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
-  ];
-$mu->make_curl_multi($url, $options);
-*/
-/*
-$urls = [$mu->get_env('URL_KASA_SHISU_YAHOO'), $mu->get_env('URL_WEATHER_WARN')];
-$list_curl_multi_info = [];
-foreach($urls as $url) {
-  $list_curl_multi_info = array_merge($list_curl_multi_info, $mu->make_curl_multi($url));
-}
-*/
-
 // Access Token
 $access_token = $mu->get_access_token();
 
