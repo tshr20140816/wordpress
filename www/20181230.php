@@ -22,6 +22,8 @@ for ($i = 1; $i < 5; $i++) {
     $urls[] = $mu->get_env('URL_PARKING_1') . '?park_id=' . $i . '&mode=pc';
 }
 
+$urls[] = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
+    . '&coordinates=' . $mu->get_env('LONGITUDE') . ',' . $mu->get_env('LATITUDE');
 
 $list_ch = [];
 $mh = curl_multi_init();
