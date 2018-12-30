@@ -27,11 +27,14 @@ $urls[] = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appi
     . '&coordinates=' . $mu->get_env('LONGITUDE') . ',' . $mu->get_env('LATITUDE');
 */
 
-$urls[$mu->get_env('URL_AMEDAS')] = null;
-$urls['https://api.heroku.com/account'] =
-    [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
-                            'Authorization: Bearer ' . getenv('HEROKU_API_KEY'),
-                           ]];
+$urls[$mu->get_env('URL_AMEDAS')] = ['options' => null, 'cache' => false];
+$urls['https://api.heroku.com/account'] = ['options' =>
+                                           [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
+                                                                   'Authorization: Bearer ' . getenv('HEROKU_API_KEY'),
+                                                                  ]],
+                                           'cache' => true];
+
+exit();
 
 $list_ch = [];
 $mh = curl_multi_init();
