@@ -55,10 +55,12 @@ while ($active && $rc == CURLM_OK) {
 
 foreach ($urls as $url) {
     $ch = $list_ch[$url];
-    $results = curl_getinfo($ch);
-    $res = curl_multi_getcontent($ch);
+    $res = curl_getinfo($ch);
+    if ($res['http_code'] == 200) {
+        $results[] = curl_multi_getcontent($ch);
+    }
     curl_multi_remove_handle($mh, $ch);
     curl_close($ch);
-    error_log(print_r($results, true));
+    error_log(print_r($res, true));
 }
 curl_multi_close($mh);
