@@ -30,17 +30,13 @@ $urls[] = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appi
 $urls[$mu->get_env('URL_AMEDAS')] = null;
 $urls['https://api.heroku.com/account'] =
     [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
-                            "Authorization: Bearer ${api_key}",
+                            'Authorization: Bearer ' . getenv('HEROKU_API_KEY'),
                            ]];
-
-error_log(print_r($urls, true));
-
-exit();
 
 $list_ch = [];
 $mh = curl_multi_init();
 
-foreach ($urls as $url) {
+foreach (array_keys($urls) as $url) {
     $ch = curl_init();
     $options = [CURLOPT_URL => $url,
                 CURLOPT_USERAGENT => getenv('USER_AGENT'),
@@ -51,6 +47,9 @@ foreach ($urls as $url) {
                 CURLOPT_SSL_FALSESTART => true,
     ];
     curl_setopt_array($ch, $options);
+    if (is_null($urls[$url]) == false) {
+        curl_setopt_array($ch, $urls[$url]);
+    }
     curl_multi_add_handle($mh, $ch);
     $list_ch[$url] = $ch;
 }
@@ -65,7 +64,7 @@ while ($active && $rc == CURLM_OK) {
     $rc = curl_multi_exec($mh, $active);
 }
 
-foreach ($urls as $url) {
+foreach (array_keys($urls) as $url) {
     $ch = $list_ch[$url];
     $res = curl_getinfo($ch);
     if ($res['http_code'] == 200) {
