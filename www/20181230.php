@@ -15,7 +15,13 @@ $urls = [
     $mu->get_env('URL_TAIKAN_SHISU'),
     $mu->get_env('URL_RIVER_1'),
     $mu->get_env('URL_RIVER_2'),
+    'https://tenki.jp/week/' . $mu->get_env('LOCATION_NUMBER') . '/',
     ];
+
+for ($i = 1; $i < 5; $i++) {
+    $urls[] = $mu->get_env('URL_PARKING_1') . '?park_id=' . $i . '&mode=pc';
+}
+
 
 $list_ch = [];
 $mh = curl_multi_init();
