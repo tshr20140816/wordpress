@@ -58,13 +58,15 @@ foreach ($urls as $url) {
     $res = curl_getinfo($ch);
     if ($res['http_code'] == 200) {
         // $results[] = curl_multi_getcontent($ch);
-        $results = curl_multi_getcontent($ch);
-        error_log(strlen($results) . ' ' . $url);
-        apcu_store($url, bzcompress($results, 9));
+        $result = curl_multi_getcontent($ch);
+        error_log(strlen($result) . ' ' . $url);
+        $result = bzcompress($result, 9);
+        error_log(strlen($result) . ' ' . $url);
+        apcu_store($url, $results);
     }
     curl_multi_remove_handle($mh, $ch);
     curl_close($ch);
-    error_log(print_r($res, true));
+    // error_log(print_r($res, true));
 }
 curl_multi_close($mh);
 
