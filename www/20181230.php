@@ -68,15 +68,8 @@ foreach (array_keys($urls) as $url) {
     $ch = $list_ch[$url];
     $res = curl_getinfo($ch);
     if ($res['http_code'] == 200) {
-        // $results[] = curl_multi_getcontent($ch);
         $result = curl_multi_getcontent($ch);
-        // error_log(strlen($result) . ' ' . $url);
         $results[$url] = $result;
-        /*
-        $result = bzcompress($result, 9);
-        error_log(strlen($result) . ' ' . $url);
-        apcu_store($url, $results);
-        */
     }
     curl_multi_remove_handle($mh, $ch);
     curl_close($ch);
