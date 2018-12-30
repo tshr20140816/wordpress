@@ -8,6 +8,7 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 $mu = new MyUtils();
 
+/*
 $urls = [
     $mu->get_env('URL_AMEDAS'),
     $mu->get_env('URL_KASA_SHISU_YAHOO'),
@@ -24,6 +25,17 @@ for ($i = 1; $i < 5; $i++) {
 
 $urls[] = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
     . '&coordinates=' . $mu->get_env('LONGITUDE') . ',' . $mu->get_env('LATITUDE');
+*/
+
+$urls[$mu->get_env('URL_AMEDAS')] = null;
+$urls['https://api.heroku.com/account'] =
+    [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
+                            "Authorization: Bearer ${api_key}",
+                           ]];
+
+error_log(print_r($urls, true));
+
+exit();
 
 $list_ch = [];
 $mh = curl_multi_init();
@@ -59,22 +71,16 @@ foreach ($urls as $url) {
     if ($res['http_code'] == 200) {
         // $results[] = curl_multi_getcontent($ch);
         $result = curl_multi_getcontent($ch);
-        error_log(strlen($result) . ' ' . $url);
+        // error_log(strlen($result) . ' ' . $url);
+        $results[$url] = $result;
+        /*
         $result = bzcompress($result, 9);
         error_log(strlen($result) . ' ' . $url);
         apcu_store($url, $results);
+        */
     }
     curl_multi_remove_handle($mh, $ch);
     curl_close($ch);
-    // error_log(print_r($res, true));
+    error_log(print_r($res, true));
 }
 curl_multi_close($mh);
-
-error_log('--- NOTE ---');
-
-foreach ($urls as $url) {
-    if (apcu_exists($url) === true) {
-        $res = bzdecompress(apcu_fetch($url));
-        error_log(strlen($res) . ' ' . $url);
-    }
-}
