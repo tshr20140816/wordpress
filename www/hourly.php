@@ -39,6 +39,11 @@ $urls['https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_in
 $urls[$mu->get_env('URL_AMEDAS')] = null;
 $urls[$mu->get_env('URL_WEATHER_WARN')] = null;
 $urls[$mu->get_env('URL_TAIKAN_SHISU')] = null;
+$urls[$mu->get_env('URL_RIVER_1')] = null;
+$urls[$mu->get_env('URL_RIVER_2')] = null;
+for ($i = 1; $i < 5; $i++) {
+    $urls[$url = $mu->get_env('URL_PARKING_1') . '?park_id=' . $i . '&mode=pc'] = null;
+}
 
 // cache search on url list
 
@@ -188,19 +193,19 @@ if ($hour_now % 2 === 1) {
 $list_add_task = array_merge($list_add_task, get_task_amedas($mu, $list_contents));
 
 // Rainfall
-$list_add_task = array_merge($list_add_task, get_task_rainfall($mu));
+$list_add_task = array_merge($list_add_task, get_task_rainfall($mu, $list_contents));
 
 // Quota
 $list_add_task = array_merge($list_add_task, get_task_quota($mu, $list_contents));
 
 // parking information
-$list_add_task = array_merge($list_add_task, get_task_parking_information($mu, $file_outlet_parking_information));
+$list_add_task = array_merge($list_add_task, get_task_parking_information($mu, $list_contents, $file_outlet_parking_information));
 
 // heroku buildpack php
 $list_add_task = array_merge($list_add_task, get_task_heroku_buildpack_php($mu));
 
 // river
-// $list_add_task = array_merge($list_add_task, get_task_river($mu));
+$list_add_task = array_merge($list_add_task, get_task_river($mu, $list_contents));
 
 // Get Tasks
 $url = 'https://api.toodledo.com/3/tasks/get.php'
@@ -322,7 +327,7 @@ error_log("${pid} FINISH " . date('s', $time_finish - $time_start) . 's');
 
 exit();
 
-function get_task_river($mu_)
+function get_task_river($mu_, $list_contents_)
 {
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
@@ -333,7 +338,12 @@ function get_task_river($mu_)
     $list_add_task = [];
     $title = '';
     foreach ([$mu_->get_env('URL_RIVER_1'), $mu_->get_env('URL_RIVER_2')] as $url) {
-        $res = $mu_->get_contents($url);
+        // $res = $mu_->get_contents($url);
+        if (array_key_exists($url, $list_contents_)) {
+            $res = $list_contents_[$url];
+        } else {
+            $res = $mu_->get_contents($url);
+        }
 
         $rc = preg_match('/観測所：(.+?)\(/s', $res, $matches);
         $point_name = $matches[1];
@@ -386,7 +396,7 @@ function get_task_heroku_buildpack_php($mu_)
     return $list_add_task;
 }
 
-function get_task_parking_information($mu_, $file_outlet_parking_information_)
+function get_task_parking_information($mu_, $list_contents_, $file_outlet_parking_information_)
 {
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
@@ -403,7 +413,12 @@ function get_task_parking_information($mu_, $file_outlet_parking_information_)
     $parking_information_all = '';
     for ($i = 1; $i < 5; $i++) {
         $url = $mu_->get_env('URL_PARKING_1') . '?park_id=' . $i . '&mode=pc';
-        $res = $mu_->get_contents($url);
+        // $res = $mu_->get_contents($url);
+        if (array_key_exists($url, $list_contents_)) {
+            $res = $list_contents_[$url];
+        } else {
+            $res = $mu_->get_contents($url);
+        }
 
         $hash_text = hash('sha512', $res);
 
@@ -529,7 +544,7 @@ function get_task_amedas($mu_, $list_contents_)
     // 警報 注意報
 
     // $res = $mu_->get_contents($mu_->get_env('URL_WEATHER_WARN'));
-    $url = $mu_->get_env('URL_WEATHER_WARN');    
+    $url = $mu_->get_env('URL_WEATHER_WARN');
     if (array_key_exists($url, $list_contents_)) {
         $res = $list_contents_[$url];
     } else {
@@ -564,7 +579,7 @@ function get_task_amedas($mu_, $list_contents_)
     return $list_add_task;
 }
 
-function get_task_rainfall($mu_)
+function get_task_rainfall($mu_, $list_contents_)
 {
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
