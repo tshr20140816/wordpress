@@ -493,7 +493,7 @@ function get_task_amedas($mu_, $list_contents_)
 
     $list_add_task = [];
 
-    $url = $mu_->get_env('URL_AMEDAS');    
+    $url = $mu_->get_env('URL_AMEDAS');
     if (array_key_exists($url, $list_contents_)) {
         $res = $list_contents_[$url];
     } else {
@@ -569,7 +569,7 @@ function get_task_amedas($mu_, $list_contents_)
     // 体感指数
 
     // $res = $mu_->get_contents($mu_->get_env('URL_TAIKAN_SHISU'));
-    $url = $mu_->get_env('URL_TAIKAN_SHISU');    
+    $url = $mu_->get_env('URL_TAIKAN_SHISU');
     if (array_key_exists($url, $list_contents_)) {
         $res = $list_contents_[$url];
     } else {
@@ -601,7 +601,7 @@ function get_task_rainfall($mu_, $list_contents_)
     $list_add_task = [];
 
     // $res = $mu_->get_contents($mu_->get_env('URL_KASA_SHISU_YAHOO'));
-    $url = $mu_->get_env('URL_KASA_SHISU_YAHOO');    
+    $url = $mu_->get_env('URL_KASA_SHISU_YAHOO');
     if (array_key_exists($url, $list_contents_)) {
         $res = $list_contents_[$url];
     } else {
@@ -627,7 +627,7 @@ function get_task_rainfall($mu_, $list_contents_)
 
     $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
         . '&coordinates=' . $longitude . ',' . $latitude;
-    // $res = $mu_->get_contents($url); 
+    // $res = $mu_->get_contents($url);
     if (array_key_exists($url, $list_contents_)) {
         $res = $list_contents_[$url];
     } else {
