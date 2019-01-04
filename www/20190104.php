@@ -137,4 +137,8 @@ __HEREDOC__;
     }
     
     $pdo = null;
+    
+    $all = array_merge($results, $results_cache);
+    
+    error_log(print_r(array_keys($all, true)));
 }
