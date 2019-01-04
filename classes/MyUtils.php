@@ -424,7 +424,7 @@ __HEREDOC__;
         error_log(getmypid() . ' [' . __METHOD__ . '] LENGTH : ' . strlen($res));
         return $res;
     }
-    
+
     function get_contents_multi($urls_, $urls_is_cache_)
     {
         $sql_select = <<< __HEREDOC__
@@ -545,5 +545,4 @@ __HEREDOC__;
 
         return $results;
     }
-
 }
