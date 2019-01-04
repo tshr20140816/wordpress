@@ -22,7 +22,7 @@ $rc = func001($mu, $urls, $urls_is_cache);
 
 function func001($mu_, $urls_, $urls_is_cache_) {
     
-    $sql = <<< __HEREDOC__
+    $sql_select = <<< __HEREDOC__
 SELECT T1.url_base64
       ,T1.content_compress_base64
   FROM t_webcache T1
@@ -30,7 +30,7 @@ SELECT T1.url_base64
 __HEREDOC__;
 
     $pdo = $mu_->get_pdo();
-    $statement = $pdo->prepare($sql);
+    $statement = $pdo->prepare($sql_select);
     $statement->execute();
     $results = $statement->fetchAll();
     
@@ -46,7 +46,7 @@ __HEREDOC__;
     
     foreach ($urls_is_cache_ as $url => $options) {
         if (array_key_exists(base64_encode($url), $cache_data)) {
-            $results_cache[$url] = $cache_data[$url];
+            $results_cache[$url] = gzdecode(base64_decode($cache_data[base64_encode($url)]));
         } else {
             $urls_[$url] = $options;
         }
@@ -98,7 +98,43 @@ __HEREDOC__;
     
     curl_multi_close($mh);
  
+    $sql_delete = <<< __HEREDOC__
+DELETE
+  FROM t_webcache
+ WHERE url_base64 = :b_url_base64
+    OR LOCALTIMESTAMP > update_time + interval '5 days';
+__HEREDOC__;
+    
+    $sql_insert = <<< __HEREDOC__
+INSERT INTO t_webcache
+( url_base64
+ ,content_compress_base64
+) VALUES (
+  :b_url_base64
+ ,:b_content_compress_base64
+);
+__HEREDOC__;
+    
+    $pdo = $mu_->get_pdo();
+    
     foreach ($results as $url => $result) {
         error_log('CURL RESULT URL : ' . $url);
+        if (array_key_exists($url, $urls_is_cache_) === false) {
+            continue;
+        }
+        
+        // delete & insert
+        
+        $url_base64 = base64_encode($url);
+        $statement = $pdo->prepare($sql_delete);
+        $rc = $statement->execute([':b_url_base64' => $url_base64]);
+        error_log(getmypid() . ' [' . __METHOD__ . '] DELETE $rc : ' . $rc);
+        
+        $statement = $pdo->prepare($sql_insert);
+        $rc = $statement->execute([':b_url_base64' => $url_base64,
+                                   ':b_content_compress_base64' => base64_encode(gzencode($result, 9))]);
+        error_log(getmypid() . ' [' . __METHOD__ . '] INSERT $rc : ' . $rc);
     }
+    
+    $pdo = null;
 }
