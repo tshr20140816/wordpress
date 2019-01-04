@@ -43,6 +43,10 @@ $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid='
     . '&coordinates=' . $longitude . ',' . $latitude;
 $urls[$url] = null;
 
+if ($hour_now % 2 === 1) {
+    $urls[$mu->get_contents('https://tenki.jp/week/' . $mu->get_env('LOCATION_NUMBER') . '/')] = null;
+}
+
 // cache search on url list
 
 $urls_is_cache['https://api.heroku.com/account'] =
@@ -87,7 +91,13 @@ if ($hour_now % 2 === 1) {
 
     // Weather Information
 
-    $res = $mu->get_contents('https://tenki.jp/week/' . $mu->get_env('LOCATION_NUMBER') . '/');
+    // $res = $mu->get_contents('https://tenki.jp/week/' . $mu->get_env('LOCATION_NUMBER') . '/');
+    $url = 'https://tenki.jp/week/' . $mu->get_env('LOCATION_NUMBER') . '/';
+    if (array_key_exists($url, $list_contents)) {
+        $res = $list_contents[$url];
+    } else {
+        $res = $mu->get_contents($url);
+    }
 
     $rc = preg_match('/announce_datetime:(\d+-\d+-\d+) (\d+)/', $res, $matches);
 
