@@ -44,7 +44,7 @@ __HEREDOC__;
     
     // error_log(print_r($cache_data, true));
     
-    foreach ($urls_is_cache in $url => $options) {
+    foreach ($urls_is_cache as $url => $options) {
         if (array_key_exists(base64_encode($url), $cache_data)) {
             $results[$url] = $cache_data[$url];
         } else {
