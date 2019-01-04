@@ -54,7 +54,7 @@ __HEREDOC__;
     
     $mh = curl_multi_init();
     
-    foreach ($urls in $url => $options_add) {
+    foreach ($urls as $url => $options_add) {
         error_log('CURL ADD URL : ' . $url);
         $ch = curl_init();
         $options = [CURLOPT_URL => $url,
