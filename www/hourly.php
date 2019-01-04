@@ -15,25 +15,15 @@ $mu = new MyUtils();
 
 $hour_now = ((int)date('G') + 9) % 24; // JST
 
-// outlet parking information ここでは呼び捨て 後で回収
-
 $file_outlet_parking_information = '/tmp/outlet_parking_information.txt';
 @unlink($file_outlet_parking_information);
-
-/*
-$url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_information.php';
-$options = [
-  CURLOPT_TIMEOUT => 3,
-  CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
-  ];
-$res = $mu->get_contents($url, $options);
-*/
 
 $longitude = $mu->get_env('LONGITUDE');
 $latitude = $mu->get_env('LATITUDE');
 
 // cache search off url list
 
+// outlet parking information ここでは呼び捨て 後で回収
 $urls['https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_information.php'] = [
   CURLOPT_TIMEOUT => 3,
   CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
@@ -42,6 +32,7 @@ $urls['https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_in
 $urls[$mu->get_env('URL_AMEDAS')] = null;
 $urls[$mu->get_env('URL_WEATHER_WARN')] = null;
 $urls[$mu->get_env('URL_TAIKAN_SHISU')] = null;
+$urls[$mu->get_env('URL_KASA_SHISU')] = null;
 $urls[$mu->get_env('URL_KASA_SHISU_YAHOO')] = null;
 $urls[$mu->get_env('URL_RIVER_1')] = null;
 $urls[$mu->get_env('URL_RIVER_2')] = null;
@@ -92,7 +83,7 @@ if ($hour_now % 2 === 1) {
     $list_moon_age = get_moon_age($mu);
 
     // 指数 傘 体感
-    $list_shisu = get_shisu($mu);
+    $list_shisu = get_shisu($mu, $list_contents);
 
     // Weather Information
 
@@ -349,7 +340,6 @@ function get_task_river($mu_, $list_contents_)
     $list_add_task = [];
     $title = '';
     foreach ([$mu_->get_env('URL_RIVER_1'), $mu_->get_env('URL_RIVER_2')] as $url) {
-        // $res = $mu_->get_contents($url);
         if (array_key_exists($url, $list_contents_)) {
             $res = $list_contents_[$url];
         } else {
@@ -424,7 +414,6 @@ function get_task_parking_information($mu_, $list_contents_, $file_outlet_parkin
     $parking_information_all = '';
     for ($i = 1; $i < 5; $i++) {
         $url = $mu_->get_env('URL_PARKING_1') . '?park_id=' . $i . '&mode=pc';
-        // $res = $mu_->get_contents($url);
         if (array_key_exists($url, $list_contents_)) {
             $res = $list_contents_[$url];
         } else {
@@ -554,7 +543,6 @@ function get_task_amedas($mu_, $list_contents_)
 
     // 警報 注意報
 
-    // $res = $mu_->get_contents($mu_->get_env('URL_WEATHER_WARN'));
     $url = $mu_->get_env('URL_WEATHER_WARN');
     if (array_key_exists($url, $list_contents_)) {
         $res = $list_contents_[$url];
@@ -568,7 +556,6 @@ function get_task_amedas($mu_, $list_contents_)
 
     // 体感指数
 
-    // $res = $mu_->get_contents($mu_->get_env('URL_TAIKAN_SHISU'));
     $url = $mu_->get_env('URL_TAIKAN_SHISU');
     if (array_key_exists($url, $list_contents_)) {
         $res = $list_contents_[$url];
@@ -600,7 +587,6 @@ function get_task_rainfall($mu_, $list_contents_)
 
     $list_add_task = [];
 
-    // $res = $mu_->get_contents($mu_->get_env('URL_KASA_SHISU_YAHOO'));
     $url = $mu_->get_env('URL_KASA_SHISU_YAHOO');
     if (array_key_exists($url, $list_contents_)) {
         $res = $list_contents_[$url];
@@ -616,7 +602,6 @@ function get_task_rainfall($mu_, $list_contents_)
 
     $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
         . '&lon=' . $longitude . '&lat=' . $latitude;
-    // $res = $mu_->get_contents($url, null, true);
     if (array_key_exists($url, $list_contents_)) {
         $res = $list_contents_[$url];
     } else {
@@ -627,7 +612,6 @@ function get_task_rainfall($mu_, $list_contents_)
 
     $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
         . '&coordinates=' . $longitude . ',' . $latitude;
-    // $res = $mu_->get_contents($url);
     if (array_key_exists($url, $list_contents_)) {
         $res = $list_contents_[$url];
     } else {
@@ -867,13 +851,17 @@ function get_moon_age($mu_)
     return $list_moon_age;
 }
 
-function get_shisu($mu_)
+function get_shisu($mu_, $list_contents_)
 {
     $ymd = date('Ymd', strtotime('+9 hours'));
 
     $list_shisu = [];
     foreach ([$mu_->get_env('URL_TAIKAN_SHISU'), $mu_->get_env('URL_KASA_SHISU')] as $url) {
-        $res = $mu_->get_contents($url);
+        if (array_key_exists($url, $list_contents_)) {
+            $res = $list_contents_[$url];
+        } else {
+            $res = $mu_->get_contents($url);
+        }
 
         $rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
         $list_shisu[$url][$ymd] = $matches[1];
