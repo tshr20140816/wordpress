@@ -37,6 +37,8 @@ $urls['https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_in
 ];
 
 $urls[$mu->get_env('URL_AMEDAS')] = null;
+$urls[$mu->get_env('URL_WEATHER_WARN')] = null;
+$urls[$mu->get_env('URL_TAIKAN_SHISU')] = null;
 
 // cache search on url list
 
@@ -526,7 +528,13 @@ function get_task_amedas($mu_, $list_contents_)
 
     // 警報 注意報
 
-    $res = $mu_->get_contents($mu_->get_env('URL_WEATHER_WARN'));
+    // $res = $mu_->get_contents($mu_->get_env('URL_WEATHER_WARN'));
+    $url = $mu_->get_env('URL_WEATHER_WARN');    
+    if (array_key_exists($url, $list_contents_)) {
+        $res = $list_contents_[$url];
+    } else {
+        $res = $mu_->get_contents($url);
+    }
 
     $rc = preg_match_all('/<ul class="warnDetail_head_labels">(.+?)<\/ul>/s', $res, $matches, PREG_SET_ORDER);
     $tmp = preg_replace('/<.+?>/s', ' ', $matches[0][1]);
@@ -534,7 +542,13 @@ function get_task_amedas($mu_, $list_contents_)
 
     // 体感指数
 
-    $res = $mu_->get_contents($mu_->get_env('URL_TAIKAN_SHISU'));
+    // $res = $mu_->get_contents($mu_->get_env('URL_TAIKAN_SHISU'));
+    $url = $mu_->get_env('URL_TAIKAN_SHISU');    
+    if (array_key_exists($url, $list_contents_)) {
+        $res = $list_contents_[$url];
+    } else {
+        $res = $mu_->get_contents($url);
+    }
 
     $rc = preg_match('/<!-- today index -->.+?<span class="indexes-telop-0">(.+?)<\/span>/s', $res, $matches);
     $taikan_shisu = ' 体感指数 : ' . $matches[1];
