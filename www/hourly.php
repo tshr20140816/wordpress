@@ -29,8 +29,8 @@ $options = [
 $res = $mu->get_contents($url, $options);
 */
 
-$longitude = $mu_->get_env('LONGITUDE');
-$latitude = $mu_->get_env('LATITUDE');
+$longitude = $mu->get_env('LONGITUDE');
+$latitude = $mu->get_env('LATITUDE');
 
 // cache search off url list
 
