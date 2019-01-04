@@ -29,7 +29,7 @@ $options = [
 $res = $mu->get_contents($url, $options);
 */
 
-// cache search off list
+// cache search off url list
 
 $urls['https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_information.php'] = [
   CURLOPT_TIMEOUT => 3,
@@ -38,7 +38,7 @@ $urls['https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_in
 
 $urls[$mu->get_env('URL_AMEDAS')] = null;
 
-// cache search on list
+// cache search on url list
 
 $urls_is_cache['https://api.heroku.com/account'] =
     [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
