@@ -20,12 +20,33 @@ $hour_now = ((int)date('G') + 9) % 24; // JST
 $file_outlet_parking_information = '/tmp/outlet_parking_information.txt';
 @unlink($file_outlet_parking_information);
 
+/*
 $url = 'https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_information.php';
 $options = [
   CURLOPT_TIMEOUT => 3,
   CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
   ];
 $res = $mu->get_contents($url, $options);
+*/
+
+// cache search off list
+
+$urls['https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_information.php'] = [
+  CURLOPT_TIMEOUT => 3,
+  CURLOPT_USERPWD => getenv('BASIC_USER') . ':' . getenv('BASIC_PASSWORD'),
+];
+
+$urls[$mu->get_env('URL_AMEDAS')] = null;
+
+// cache search on list
+
+$urls_is_cache['https://api.heroku.com/account'] =
+    [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
+                            'Authorization: Bearer ' . getenv('HEROKU_API_KEY'),
+                           ]];
+
+// get contents multi
+$list_contents = $mu->get_contents_multi($urls, $urls_is_cache);
 
 // Access Token
 $access_token = $mu->get_access_token();
