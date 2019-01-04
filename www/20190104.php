@@ -136,7 +136,7 @@ __HEREDOC__;
 
     $results = array_merge($results, $results_cache);
 
-    error_log(getmypid() . ' [' . __METHOD__ . '] urls : ' . print_r(array_keys($results)));
+    error_log(getmypid() . ' [' . __METHOD__ . '] urls : ' . print_r(array_keys($results), true));
 
     return $results;
 }
