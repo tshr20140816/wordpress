@@ -12,7 +12,8 @@ $rc = apcu_clear_cache();
 $mu = new MyUtils();
 
 $sub_address = $mu->get_env('SUB_ADDRESS');
-for ($i = 0; $i < 12; $i++) {
+//for ($i = 0; $i < 12; $i++) {
+for ($i = 11; $i > -1; $i--) {
     $url = 'https://feed43.com/' . $sub_address . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
     $res = $mu->get_contents($url);
 }
