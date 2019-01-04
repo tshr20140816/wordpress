@@ -16,7 +16,7 @@ $urls_is_cache['https://api.heroku.com/account'] =
                            ]];
 
 // cache search off list    
-$urls[$mu_->get_env('URL_AMEDAS')] = null;
+$urls[$mu->get_env('URL_AMEDAS')] = null;
 
 $rc = func001($mu, $urls, $urls_is_cache);
 
