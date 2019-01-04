@@ -29,6 +29,10 @@ $options = [
 $res = $mu->get_contents($url, $options);
 */
 
+
+$longitude = $mu_->get_env('LONGITUDE');
+$latitude = $mu_->get_env('LATITUDE');
+
 // cache search off url list
 
 $urls['https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_information.php'] = [
@@ -44,6 +48,9 @@ $urls[$mu->get_env('URL_RIVER_2')] = null;
 for ($i = 1; $i < 5; $i++) {
     $urls[$url = $mu->get_env('URL_PARKING_1') . '?park_id=' . $i . '&mode=pc'] = null;
 }
+$url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
+    . '&coordinates=' . $longitude . ',' . $latitude;
+$urls[$url] = null;
 
 // cache search on url list
 
@@ -51,6 +58,10 @@ $urls_is_cache['https://api.heroku.com/account'] =
     [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
                             'Authorization: Bearer ' . getenv('HEROKU_API_KEY'),
                            ]];
+
+$url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
+    . '&lon=' . $longitude . '&lat=' . $latitude;
+$urls_is_cache[$url] = null;
 
 // get contents multi
 $list_contents = $mu->get_contents_multi($urls, $urls_is_cache);
