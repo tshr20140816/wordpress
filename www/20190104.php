@@ -9,18 +9,18 @@ error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s', $time_start));
 
 $mu = new MyUtils();
 
-$rc = func001($mu);
+// cache search on list    
+$urls_is_cache['https://api.heroku.com/account'] =
+    [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
+                            'Authorization: Bearer ' . getenv('HEROKU_API_KEY'),
+                           ]];
 
-function func001($mu_) {
-    
-    // cache search on list    
-    $urls_is_cache['https://api.heroku.com/account'] =
-        [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
-                                'Authorization: Bearer ' . getenv('HEROKU_API_KEY'),
-                               ]];
+// cache search off list    
+$urls[$mu_->get_env('URL_AMEDAS')] = null;
 
-    // cache search off list    
-    $urls[$mu_->get_env('URL_AMEDAS')] = null;
+$rc = func001($mu, $urls, $urls_is_cache);
+
+function func001($mu_, $urls_, $urls_is_cache_) {
     
     $sql = <<< __HEREDOC__
 SELECT T1.url_base64
@@ -40,21 +40,21 @@ __HEREDOC__;
         $cache_data[$result['url_base64']] = $result['content_compress_base64'];
     }
     
-    $results = [];
+    $results_cache = [];
     
     // error_log(print_r($cache_data, true));
     
-    foreach ($urls_is_cache as $url => $options) {
+    foreach ($urls_is_cache_ as $url => $options) {
         if (array_key_exists(base64_encode($url), $cache_data)) {
-            $results[$url] = $cache_data[$url];
+            $results_cache[$url] = $cache_data[$url];
         } else {
-            $urls[$url] = $options;
+            $urls_[$url] = $options;
         }
     }
     
     $mh = curl_multi_init();
     
-    foreach ($urls as $url => $options_add) {
+    foreach ($urls_ as $url => $options_add) {
         error_log('CURL ADD URL : ' . $url);
         $ch = curl_init();
         $options = [CURLOPT_URL => $url,
@@ -83,7 +83,8 @@ __HEREDOC__;
         $rc = curl_multi_exec($mh, $active);
     }
     
-    foreach (array_keys($urls) as $url) {
+    $results = [];
+    foreach (array_keys($urls_) as $url) {
         $ch = $list_ch[$url];
         $res = curl_getinfo($ch);
         if ($res['http_code'] == 200) {
