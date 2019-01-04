@@ -29,7 +29,6 @@ $options = [
 $res = $mu->get_contents($url, $options);
 */
 
-
 $longitude = $mu_->get_env('LONGITUDE');
 $latitude = $mu_->get_env('LATITUDE');
 
@@ -43,6 +42,7 @@ $urls['https://' . getenv('HEROKU_APP_NAME') . '.herokuapp.com/outlet_parking_in
 $urls[$mu->get_env('URL_AMEDAS')] = null;
 $urls[$mu->get_env('URL_WEATHER_WARN')] = null;
 $urls[$mu->get_env('URL_TAIKAN_SHISU')] = null;
+$urls[$mu->get_env('URL_KASA_SHISU_YAHOO')] = null;
 $urls[$mu->get_env('URL_RIVER_1')] = null;
 $urls[$mu->get_env('URL_RIVER_2')] = null;
 for ($i = 1; $i < 5; $i++) {
@@ -600,7 +600,13 @@ function get_task_rainfall($mu_, $list_contents_)
 
     $list_add_task = [];
 
-    $res = $mu_->get_contents($mu_->get_env('URL_KASA_SHISU_YAHOO'));
+    // $res = $mu_->get_contents($mu_->get_env('URL_KASA_SHISU_YAHOO'));
+    $url = $mu_->get_env('URL_KASA_SHISU_YAHOO');    
+    if (array_key_exists($url, $list_contents_)) {
+        $res = $list_contents_[$url];
+    } else {
+        $res = $mu_->get_contents($url);
+    }
 
     $rc = preg_match('/<!--指数情報-->.+?<span>傘指数(.+?)<.+?<p class="index_text">(.+?)</s', $res, $matches);
     $suffix = ' 傘指数' . $matches[1] . ' ' . $matches[2];
@@ -610,13 +616,23 @@ function get_task_rainfall($mu_, $list_contents_)
 
     $url = 'https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid=' . getenv('YAHOO_API_KEY')
         . '&lon=' . $longitude . '&lat=' . $latitude;
-    $res = $mu_->get_contents($url, null, true);
+    // $res = $mu_->get_contents($url, null, true);
+    if (array_key_exists($url, $list_contents_)) {
+        $res = $list_contents_[$url];
+    } else {
+        $res = $mu_->get_contents($url, null, true);
+    }
     $data = json_decode($res, true);
     error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
 
     $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
         . '&coordinates=' . $longitude . ',' . $latitude;
-    $res = $mu_->get_contents($url);
+    // $res = $mu_->get_contents($url); 
+    if (array_key_exists($url, $list_contents_)) {
+        $res = $list_contents_[$url];
+    } else {
+        $res = $mu_->get_contents($url);
+    }
 
     $data = json_decode($res, true);
     error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
