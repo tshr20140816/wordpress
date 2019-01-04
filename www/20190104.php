@@ -18,7 +18,8 @@ $urls_is_cache['https://api.heroku.com/account'] =
 // cache search off list
 $urls[$mu->get_env('URL_AMEDAS')] = null;
 
-$rc = get_contents_multi($mu, $urls, $urls_is_cache);
+// $rc = get_contents_multi($mu, $urls, $urls_is_cache);
+$rc = $mu->get_contents_multi($urls, $urls_is_cache);
 
 function get_contents_multi($mu_, $urls_, $urls_is_cache_) {
 
