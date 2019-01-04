@@ -183,13 +183,13 @@ if ($hour_now % 2 === 1) {
 }
 
 // amedas
-$list_add_task = array_merge($list_add_task, get_task_amedas($mu));
+$list_add_task = array_merge($list_add_task, get_task_amedas($mu, $list_contents));
 
 // Rainfall
 $list_add_task = array_merge($list_add_task, get_task_rainfall($mu));
 
 // Quota
-$list_add_task = array_merge($list_add_task, get_task_quota($mu));
+$list_add_task = array_merge($list_add_task, get_task_quota($mu, $list_contents));
 
 // parking information
 $list_add_task = array_merge($list_add_task, get_task_parking_information($mu, $file_outlet_parking_information));
@@ -455,7 +455,7 @@ __HEREDOC__;
     return $list_add_task;
 }
 
-function get_task_amedas($mu_)
+function get_task_amedas($mu_, $list_contents_)
 {
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
@@ -465,7 +465,12 @@ function get_task_amedas($mu_)
 
     $list_add_task = [];
 
-    $res = $mu_->get_contents($mu_->get_env('URL_AMEDAS'));
+    $url = $mu_->get_env('URL_AMEDAS');    
+    if (array_key_exists($url, $list_contents_)) {
+        $res = $list_contents_[$url];
+    } else {
+        $res = $mu_->get_contents($url);
+    }
 
     $tmp = explode('">時刻</td>', $res);
     $tmp = explode('</table>', $tmp[1]);
@@ -598,7 +603,7 @@ function get_task_rainfall($mu_)
     return $list_add_task;
 }
 
-function get_task_quota($mu_)
+function get_task_quota($mu_, $list_contents_)
 {
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
@@ -607,14 +612,17 @@ function get_task_quota($mu_)
 
     $api_key = getenv('HEROKU_API_KEY');
     $url = 'https://api.heroku.com/account';
-
-    $res = $mu_->get_contents(
-        $url,
-        [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
-                                "Authorization: Bearer ${api_key}",
-                               ]],
-        true
-    );
+    if (array_key_exists($url, $list_contents_)) {
+        $res = $list_contents_[$url];
+    } else {
+        $res = $mu_->get_contents(
+            $url,
+            [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
+                                    "Authorization: Bearer ${api_key}",
+                                   ]],
+            true
+        );
+    }
 
     $data = json_decode($res, true);
     error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
