@@ -37,14 +37,14 @@ $urls[$mu->get_env('URL_KASA_SHISU_YAHOO')] = null;
 $urls[$mu->get_env('URL_RIVER_1')] = null;
 $urls[$mu->get_env('URL_RIVER_2')] = null;
 for ($i = 1; $i < 5; $i++) {
-    $urls[$url = $mu->get_env('URL_PARKING_1') . '?park_id=' . $i . '&mode=pc'] = null;
+    $urls[$mu->get_env('URL_PARKING_1') . '?park_id=' . $i . '&mode=pc'] = null;
 }
 $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
     . '&coordinates=' . $longitude . ',' . $latitude;
 $urls[$url] = null;
 
 if ($hour_now % 2 === 1) {
-    $urls[$mu->get_contents('https://tenki.jp/week/' . $mu->get_env('LOCATION_NUMBER') . '/')] = null;
+    $urls['https://tenki.jp/week/' . $mu->get_env('LOCATION_NUMBER') . '/'] = null;
 }
 
 // cache search on url list
