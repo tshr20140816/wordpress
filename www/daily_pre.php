@@ -29,7 +29,7 @@ for ($j = 0; $j < 4; $j++) {
         . '&start_mon=1&end_year=' . $yyyy . '&end_mon=12'
         . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-    $res = $mu_->get_contents($url, null, true);
+    $res = $mu->get_contents($url, null, true);
 }
 
 //
@@ -43,7 +43,7 @@ $url = 'http://calendar-service.net/cal?start_year=' . $start_yyyy
     . '&start_mon=' . $start_m . '&end_year=' . $finish_yyyy . '&end_mon=' . $finish_m
     . '&year_style=normal&month_style=numeric&wday_style=ja_full&format=csv&holiday_only=1&zero_padding=1';
 
-$res = $mu_->get_contents($url, null, true);
+$res = $mu->get_contents($url, null, true);
 
 //
 
@@ -51,7 +51,7 @@ $yyyy = (int)date('Y');
 for ($j = 0; $j < 2; $j++) {
     $post_data = ['from_year' => $yyyy];
 
-    $res = $mu_->get_contents(
+    $res = $mu->get_contents(
         'http://www.calc-site.com/calendars/solar_year',
         [CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => http_build_query($post_data),
@@ -64,12 +64,12 @@ for ($j = 0; $j < 2; $j++) {
 
 //
 
-$area_id = $mu_->get_env('AREA_ID');
+$area_id = $mu->get_env('AREA_ID');
 for ($j = 0; $j < 4; $j++) {
     $timestamp = strtotime(date('Y-m-01') . " +${j} month");
     $yyyy = date('Y', $timestamp);
     $mm = date('m', $timestamp);
-    $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . $area_id . $mm . '.html', null, true);
+    $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . $area_id . $mm . '.html', null, true);
 }
 
 //
@@ -78,7 +78,7 @@ $timestamp = strtotime('+1 day');
 $yyyy = date('Y', $timestamp);
 $mm = date('m', $timestamp);
 
-$res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . $mu_->get_env('AREA_ID') . $mm . '.html', null, true);
+$res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . $mu->get_env('AREA_ID') . $mm . '.html', null, true);
 
 //
 
@@ -86,7 +86,7 @@ $timestamp = strtotime('+1 day');
 $yyyy = date('Y', $timestamp);
 $mm = date('m', $timestamp);
 
-$res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . $mu_->get_env('AREA_ID') . $mm . '.html', null, true);
+$res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . $mu->get_env('AREA_ID') . $mm . '.html', null, true);
 
 $time_finish = time();
 error_log("${pid} FINISH " . date('s', $time_finish - $time_start) . 's');
