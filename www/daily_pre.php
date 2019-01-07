@@ -97,7 +97,8 @@ $res = $mu->get_contents('https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?out
 $sub_address = $mu->get_env('SUB_ADDRESS');
 for ($i = 11; $i > -1; $i--) {
     $url = 'https://feed43.com/' . $sub_address . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
-    $res = $mu->get_contents($url);
+    error_log("${pid} base64 : " . base64_encode($url));
+    $res = $mu->get_contents($url, null, true);
 }
 
 $time_finish = microtime(true);
