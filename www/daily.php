@@ -55,7 +55,7 @@ $list_base = [];
 $sub_address = $mu->get_env('SUB_ADDRESS');
 for ($i = 0; $i < 12; $i++) {
     $url = 'https://feed43.com/' . $sub_address . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
-    $res = $mu->get_contents($url);
+    $res = $mu->get_contents($url, null, true);
     foreach (explode("\n", $res) as $one_line) {
         if (strpos($one_line, '<title>_') !== false) {
             $tmp = explode('_', $one_line);
