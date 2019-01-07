@@ -321,7 +321,7 @@ __HEREDOC__;
 SELECT T1.url_base64
       ,T1.content_compress_base64
       ,T1.update_time
-      ,CASE WHEN LOCALTIMESTAMP < T1.update_time + interval '1 days' THEN 0 ELSE 1 END refresh_flag
+      ,CASE WHEN LOCALTIMESTAMP < T1.update_time + interval '22 hours' THEN 0 ELSE 1 END refresh_flag
   FROM t_webcache T1
  WHERE T1.url_base64 = :b_url_base64;
 __HEREDOC__;
