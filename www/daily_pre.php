@@ -94,10 +94,27 @@ $res = $mu->get_contents('https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?out
 
 //
 
+$sql_delete = <<< __HEREDOC__
+DELETE
+  FROM t_webcache
+ WHERE url_base64 = :b_url_base64
+__HEREDOC__;
+
+$pdo = $mu->get_pdo();
+
 $sub_address = $mu->get_env('SUB_ADDRESS');
 for ($i = 11; $i > -1; $i--) {
     $url = 'https://feed43.com/' . $sub_address . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
-    error_log("${pid} base64 : " . base64_encode($url));
+    $url_base64 = base64_encode($url);
+    $statement = $pdo->prepare($sql_delete);
+    $rc = $statement->execute([':b_url_base64' => $url_base64]);
+    error_log($pid . ' DELETE $rc : ' . $rc);
+}
+
+$pdo = null;
+
+for ($i = 11; $i > -1; $i--) {
+    $url = 'https://feed43.com/' . $sub_address . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
     $res = $mu->get_contents($url, null, true);
 }
 
