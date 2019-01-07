@@ -102,5 +102,5 @@ $res = $mu->get_contents('https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?out
                          . '&lon=' . $mu->get_env('LONGITUDE') . '&lat=' . $mu->get_env('LATITUDE'), null, true);
 
 $time_finish = microtime(true);
-error_log("${pid} FINISH " . substr($time_finish - $time_start), 0, 6) . 's');
+error_log("${pid} FINISH " . substr(($time_finish - $time_start), 0, 6) . 's');
 exit();
