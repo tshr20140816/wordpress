@@ -88,6 +88,19 @@ $mm = date('m', $timestamp);
 
 $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/m' . $mu->get_env('AREA_ID') . $mm . '.html', null, true);
 
+//
+
+$options = [CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
+                                   'Authorization: Bearer ' . getenv('HEROKU_API_KEY'),
+                                   ]];
+$res = $mu->get_contents('https://api.heroku.com/account', $options, true);
+
+//
+
+$res = $mu->get_contents('https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid='
+                         . getenv('YAHOO_API_KEY')
+                         . '&lon=' . $mu->get_env('LONGITUDE') . '&lat=' . $mu->get_env('LATITUDE'), null, true);
+
 $time_finish = time();
 error_log("${pid} FINISH " . date('s', $time_finish - $time_start) . 's');
 exit();
