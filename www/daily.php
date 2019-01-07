@@ -78,10 +78,8 @@ error_log($pid . ' $list_base : ' . print_r($list_base, true));
 
 $url = 'https://api.toodledo.com/3/tasks/get.php?comp=0&fields=tag,folder,duedate&access_token=' . $access_token;
 $res = $mu->get_contents($url);
-// error_log($res);
 
 $tasks = json_decode($res, true);
-// error_log($pid . ' $tasks : ' . print_r($tasks, true));
 
 // 30日後から70日後までの間の予定のある日を取得
 
@@ -106,7 +104,6 @@ $update_marker = $mu->to_small_size(' _' . date('ymd') . '_');
 for ($i = 0; $i < 70; $i++) {
     $timestamp = strtotime(date('Y-m-d') . ' +' . ($i + 10) . ' days');
     $dt = date('n/j', $timestamp);
-    // error_log($pid . ' $dt : ' . $dt);
     if (array_key_exists($dt, $list_base)) {
         $tmp = $list_base[$dt];
     } else {
