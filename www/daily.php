@@ -331,7 +331,7 @@ function get_24sekki($mu_)
         }
         $yyyy++;
     }
-    error_log($log_prefix . '] $list_24sekki : ' . print_r($list_24sekki, true));
+    error_log($log_prefix . '$list_24sekki : ' . print_r($list_24sekki, true));
 
     return $list_24sekki;
 }
