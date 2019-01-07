@@ -440,10 +440,17 @@ __HEREDOC__;
         return $res;
     }
 
-    function get_contents_multi($urls_, $urls_is_cache_)
+    function get_contents_multi($urls_, $urls_is_cache_ = null)
     {
         $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
 
+        if (is_null($urls_)) {
+            $urls_ = [];
+        }
+        if (is_null($urls_is_cache_)) {
+            $urls_is_cache_ = [];
+        }
+        
         $sql_select = <<< __HEREDOC__
 SELECT T1.url_base64
       ,T1.content_compress_base64
