@@ -30,6 +30,7 @@ composer update > /dev/null 2>&1 &
 echo $current_version > /tmp/current_version
 
 export USER_AGENT=$(curl https://raw.githubusercontent.com/tshr20140816/heroku-mode-07/master/useragent.txt)
+echo $USER_AGENT
 
 htpasswd -c -b .htpasswd ${BASIC_USER} ${BASIC_PASSWORD}
 
