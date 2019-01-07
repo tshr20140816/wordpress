@@ -341,6 +341,8 @@ exit();
 
 function get_task_river($mu_, $list_contents_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
 
@@ -373,12 +375,14 @@ function get_task_river($mu_, $list_contents_)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 
-    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS RIVER : ' . print_r($list_add_task, true));
+    error_log($log_prefix . 'TASKS RIVER : ' . print_r($list_add_task, true));
     return $list_add_task;
 }
 
 function get_task_heroku_buildpack_php($mu_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
 
@@ -393,8 +397,8 @@ function get_task_heroku_buildpack_php($mu_)
     if (file_exists($file_name_current) && file_exists($file_name_latest)) {
         $current_version = trim(trim(file_get_contents($file_name_current)), '"');
         $latest_version = trim(trim(file_get_contents($file_name_latest)), '"');
-        error_log(getmypid() . ' heroku-buildpack-php current : ' . $current_version);
-        error_log(getmypid() . ' heroku-buildpack-php latest : ' . $latest_version);
+        error_log($log_prefix . 'heroku-buildpack-php current : ' . $current_version);
+        error_log($log_prefix . 'heroku-buildpack-php latest : ' . $latest_version);
         if ($current_version != $latest_version) {
             $list_add_task[] = '{"title":"heroku-buildpack-php : update ' . $latest_version
               . '","duedate":"' . mktime(0, 0, 0, 1, 1, 2018)
@@ -403,12 +407,14 @@ function get_task_heroku_buildpack_php($mu_)
         }
     }
 
-    error_log(getmypid() . ' [' . __METHOD__ . '] HEROKU BUILDPACK PHP : ' . print_r($list_add_task, true));
+    error_log($log_prefix . 'HEROKU BUILDPACK PHP : ' . print_r($list_add_task, true));
     return $list_add_task;
 }
 
 function get_task_parking_information($mu_, $list_contents_, $file_outlet_parking_information_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
 
@@ -443,9 +449,8 @@ __HEREDOC__;
 
         $statement = $pdo->prepare($sql);
         $rc = $statement->execute([':b_hash_text' => $hash_text]);
-        error_log(getmypid() . ' [' . __METHOD__ . '] SELECT RESULT : ' . $rc);
+        error_log($log_prefix . 'SELECT RESULT : ' . $rc);
         $results = $statement->fetchAll();
-        // error_log(getmypid() . ' [' . __METHOD__ . '] $results : ' . print_r($results, true));
 
         $parse_text = '';
         foreach ($results as $row) {
@@ -456,7 +461,7 @@ __HEREDOC__;
 
         if (strlen($parse_text) == 0) {
             $parse_text = '不明';
-            error_log(getmypid() . ' [' . __METHOD__ . '] $hash_text : ' . $hash_text);
+            error_log($log_prefix . '$hash_text : ' . $hash_text);
         }
         $parking_information_all .= ' [' . $list_parking_name[$i] . "]${parse_text}";
     }
@@ -466,7 +471,7 @@ __HEREDOC__;
         if (file_exists($file_outlet_parking_information_) === true) {
             break;
         }
-        error_log(getmypid() . ' [' . __METHOD__ . '] waiting ' . $i);
+        error_log($log_prefix . 'waiting ' . $i);
         sleep(1);
     }
 
@@ -478,12 +483,14 @@ __HEREDOC__;
             . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
     }
 
-    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS PARKING INFORMATION : ' . print_r($list_add_task, true));
+    error_log($log_prefix . 'TASKS PARKING INFORMATION : ' . print_r($list_add_task, true));
     return $list_add_task;
 }
 
 function get_task_amedas($mu_, $list_contents_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
 
@@ -504,7 +511,7 @@ function get_task_amedas($mu_, $list_contents_)
 
     $tmp1 = explode('</tr>', $tmp[0]);
     $headers = explode('</td>', $tmp1[0]);
-    error_log(getmypid() . ' [' . __METHOD__ . '] $headers : ' . print_r($headers, true));
+    error_log($log_prefix . '$headers : ' . print_r($headers, true));
 
     for ($i = 0; $i < count($headers); $i++) {
         switch (trim(strip_tags($headers[$i]))) {
@@ -583,12 +590,14 @@ function get_task_amedas($mu_, $list_contents_)
           . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
     }
 
-    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS AMEDAS : ' . print_r($list_add_task, true));
+    error_log($log_prefix . 'TASKS AMEDAS : ' . print_r($list_add_task, true));
     return $list_add_task;
 }
 
 function get_task_rainfall($mu_, $list_contents_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
 
@@ -618,7 +627,7 @@ function get_task_rainfall($mu_, $list_contents_)
         $res = $mu_->get_contents($url, null, true);
     }
     $data = json_decode($res, true);
-    error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
+    error_log($log_prefix . '$data : ' . print_r($data, true));
 
     $url = 'https://map.yahooapis.jp/weather/V1/place?interval=5&output=json&appid=' . getenv('YAHOO_API_KEY')
         . '&coordinates=' . $longitude . ',' . $latitude;
@@ -629,7 +638,7 @@ function get_task_rainfall($mu_, $list_contents_)
     }
 
     $data = json_decode($res, true);
-    error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
+    error_log($log_prefix . '$data : ' . print_r($data, true));
     $data = $data['Feature'][0]['Property']['WeatherList']['Weather'];
 
     $list_rainfall = [];
@@ -649,12 +658,14 @@ function get_task_rainfall($mu_, $list_contents_)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 1, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 
-    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS RAINFALL : ' . print_r($list_add_task, true));
+    error_log($log_prefix . 'TASKS RAINFALL : ' . print_r($list_add_task, true));
     return $list_add_task;
 }
 
 function get_task_quota($mu_, $list_contents_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
     // Get Contexts
@@ -675,7 +686,7 @@ function get_task_quota($mu_, $list_contents_)
     }
 
     $data = json_decode($res, true);
-    error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
+    error_log($log_prefix . '$data : ' . print_r($data, true));
     $account = explode('@', $data['email'])[0];
     $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
 
@@ -687,13 +698,13 @@ function get_task_quota($mu_, $list_contents_)
     );
 
     $data = json_decode($res, true);
-    error_log(getmypid() . ' [' . __METHOD__ . '] $data : ' . print_r($data, true));
+    error_log($log_prefix . '$data : ' . print_r($data, true));
 
     $dyno_used = (int)$data['quota_used'];
     $dyno_quota = (int)$data['account_quota'];
 
-    error_log(getmypid() . ' [' . __METHOD__ . '] $dyno_used : ' . $dyno_used);
-    error_log(getmypid() . ' [' . __METHOD__ . '] $dyno_quota : ' . $dyno_quota);
+    error_log($log_prefix . '$dyno_used : ' . $dyno_used);
+    error_log($log_prefix . '$dyno_quota : ' . $dyno_quota);
 
     $tmp = $dyno_quota - $dyno_used;
     $tmp = floor($tmp / 86400) . 'd ' . ($tmp / 3600 % 24) . 'h ' . ($tmp / 60 % 60) . 'm';
@@ -705,12 +716,14 @@ function get_task_quota($mu_, $list_contents_)
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 3, 2018))]
       . '","tag":"HOURLY","folder":"' . $folder_id_label . '"}';
 
-    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS QUOTA : ' . print_r($list_add_task, true));
+    error_log($log_prefix . 'TASKS QUOTA : ' . print_r($list_add_task, true));
     return $list_add_task;
 }
 
 function get_holiday($mu_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     $start_yyyy = date('Y');
     $start_m = date('n');
     $finish_yyyy = date('Y', strtotime('+1 month'));
@@ -732,13 +745,15 @@ function get_holiday($mu_)
         $tmp1 = explode(',', $tmp[$i]);
         $list_holiday[date('Ymd', mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]))] = $tmp1[7];
     }
-    error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_holiday, true));
+    error_log($log_prefix . '$list_holiday : ' . print_r($list_holiday, true));
 
     return $list_holiday;
 }
 
 function get_24sekki($mu_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     $list_24sekki = [];
 
     $yyyy = (int)date('Y');
@@ -765,18 +780,20 @@ function get_24sekki($mu_)
             $tmp1 = str_replace('月', '-', $tmp1);
             $tmp1 = str_replace('日', '', $tmp1);
             $tmp1 = $yyyy . '-' . $tmp1;
-            error_log(getmypid() . ' [' . __METHOD__ . "] ${tmp1} " . $matches[1]);
+            error_log($log_prefix . "${tmp1} " . $matches[1]);
             $list_24sekki[date('Ymd', strtotime($tmp1))] = '【' . $matches[1] . '】';
         }
         $yyyy++;
     }
-    error_log(getmypid() . ' [' . __METHOD__ . '] $list_24sekki : ' . print_r($list_24sekki, true));
+    error_log($log_prefix . '$list_24sekki : ' . print_r($list_24sekki, true));
 
     return $list_24sekki;
 }
 
 function get_sun_rise_set($mu_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     $timestamp = time() + 9 * 60 * 60; // JST
     // 10日後が翌月になるときは2か月分取得
     $loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
@@ -815,13 +832,15 @@ function get_sun_rise_set($mu_)
         }
     }
     $list_sunrise_sunset = $mu_->to_small_size($list_sunrise_sunset);
-    error_log(getmypid() . ' [' . __METHOD__ . '] $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, true));
+    error_log($log_prefix . '$list_sunrise_sunset : ' . print_r($list_sunrise_sunset, true));
 
     return $list_sunrise_sunset;
 }
 
 function get_moon_age($mu_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     $timestamp = time() + 9 * 60 * 60; // JST
     // 10日後が翌月になるときは2か月分取得
     $loop_count = date('m', $timestamp) === date('m', $timestamp + 10 * 24 * 60 * 60) ? 1 : 2;
@@ -856,13 +875,15 @@ function get_moon_age($mu_)
         }
     }
     $list_moon_age = $mu_->to_small_size($list_moon_age);
-    error_log(getmypid() . ' [' . __METHOD__ . '] $list_moon_age : ' . print_r($list_moon_age, true));
+    error_log($log_prefix . '$list_moon_age : ' . print_r($list_moon_age, true));
 
     return $list_moon_age;
 }
 
 function get_shisu($mu_, $list_contents_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     $ymd = date('Ymd', strtotime('+9 hours'));
 
     $list_shisu = [];
@@ -886,13 +907,15 @@ function get_shisu($mu_, $list_contents_)
             $list_shisu[$url][date('Ymd', strtotime($ymd) + 24 * 60 * 60 * ($i + 2))] = $matches2[$i][1];
         }
     }
-    error_log(getmypid() . ' [' . __METHOD__ . '] $list_shisu : ' . print_r($list_shisu, true));
+    error_log($log_prefix . '$list_shisu : ' . print_r($list_shisu, true));
 
     return $list_shisu;
 }
 
 function make_ical($mu_, $tasks_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
 
@@ -938,7 +961,7 @@ __HEREDOC__;
     }
     $list_vevent[] = $vevent_footer;
 
-    error_log(getmypid() . ' [' . __METHOD__ . '] VEVENT COUNT : ' . count($list_vevent));
+    error_log($log_prefix . 'VEVENT COUNT : ' . count($list_vevent));
 
     $ical_data = implode("\r\n", $list_vevent);
 
@@ -947,12 +970,12 @@ __HEREDOC__;
     $sql = 'TRUNCATE TABLE t_ical';
     $statement = $pdo->prepare($sql);
     $rc = $statement->execute();
-    error_log(getmypid() . ' [' . __METHOD__ . '] TRUNCATE $rc : ' . $rc);
+    error_log($log_prefix . 'TRUNCATE $rc : ' . $rc);
 
     $sql = 'INSERT INTO t_ical (ical_data) VALUES (:b_ical_data)';
     $statement = $pdo->prepare($sql);
     $rc = $statement->execute([':b_ical_data' => base64_encode(gzencode($ical_data, 9))]);
-    error_log(getmypid() . ' [' . __METHOD__ . '] INSERT $rc : ' . $rc);
+    error_log($log_prefix . 'INSERT $rc : ' . $rc);
 
     $pdo = null;
 }
