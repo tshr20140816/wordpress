@@ -397,15 +397,19 @@ __HEREDOC__;
         CURLOPT_SSL_FALSESTART => true,
         ];
 
+        $time_start = 0;
+        $time_finish = 0;
         for ($i = 0; $i < 3; $i++) {
+            $time_start = microtime(true);
             $ch = curl_init();
             curl_setopt_array($ch, $options);
             if (is_null($options_) == false) {
                 curl_setopt_array($ch, $options_);
             }
             $res = curl_exec($ch);
+            $time_finish = microtime(true);
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            error_log(getmypid() . ' [' . __METHOD__ . '] HTTP STATUS CODE : ' . $http_code);
+            error_log(getmypid() . ' [' . __METHOD__ . "] HTTP STATUS CODE : ${http_code} " . ($time_finish - $time_start) . 'sec');
             curl_close($ch);
             if ($http_code == '200') {
                 break;
