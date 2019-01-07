@@ -4,8 +4,8 @@ include(dirname(__FILE__) . '/../classes/MyUtils.php');
 
 $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
-$time_start = time();
-error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s', $time_start));
+$time_start = microtime(true);
+error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
 
 const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
 
@@ -334,8 +334,8 @@ $rc = $mu->edit_tasks($list_edit_task);
 // Delete Tasks
 $mu->delete_tasks($list_delete_task);
 
-$time_finish = time();
-error_log("${pid} FINISH " . date('s', $time_finish - $time_start) . 's');
+$time_finish = microtime(true);
+error_log("${pid} FINISH " . substr(($time_finish - $time_start), 0, 6) . 's');
 
 exit();
 
