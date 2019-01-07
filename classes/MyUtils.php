@@ -384,8 +384,9 @@ __HEREDOC__;
 
     function get_contents_nocache($url_, $options_ = null)
     {
-        error_log(getmypid() . ' [' . __METHOD__ . '] URL : ' . $url_);
-        error_log(getmypid() . ' [' . __METHOD__ . '] options : ' . print_r($options_, true));
+        $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+        error_log($log_prefix . 'URL : ' . $url_);
+        error_log($log_prefix . 'options : ' . print_r($options_, true));
 
         $options = [
         CURLOPT_URL => $url_,
@@ -409,23 +410,23 @@ __HEREDOC__;
             $res = curl_exec($ch);
             $time_finish = microtime(true);
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            error_log(getmypid() . ' [' . __METHOD__ . "] HTTP STATUS CODE : ${http_code} " . ($time_finish - $time_start) . 'sec');
+            error_log($log_prefix . "HTTP STATUS CODE : ${http_code} [" . substr(($time_finish - $time_start), 0, 5) . 'sec]');
             curl_close($ch);
             if ($http_code == '200') {
                 break;
             }
 
-            error_log(getmypid() . ' [' . __METHOD__ . '] $res : ' . $res);
+            error_log($log_prefix . '$res : ' . $res);
 
             if ($http_code != '503') {
                 break;
             } else {
                 sleep(3);
-                error_log(getmypid() . ' [' . __METHOD__ . '] RETRY URL : ' . $url_);
+                error_log($log_prefix . 'RETRY URL : ' . $url_);
             }
         }
 
-        error_log(getmypid() . ' [' . __METHOD__ . '] LENGTH : ' . strlen($res));
+        error_log($log_prefix . 'LENGTH : ' . strlen($res));
         return $res;
     }
 
