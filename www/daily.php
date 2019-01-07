@@ -229,6 +229,8 @@ exit();
 
 function get_holiday2($mu_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     $list_holiday2 = [];
     for ($j = 0; $j < 4; $j++) {
         $yyyy = date('Y', strtotime('+' . $j . ' years'));
@@ -255,7 +257,7 @@ function get_holiday2($mu_)
             $list_holiday2['### ' . $tmp1[5] . ' ' . $tmp1[1] . '/' . $tmp1[2] . ' ★' . $tmp1[7] . '★ ### ' . $yyyy] = $timestamp;
         }
     }
-    error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday2 : ' . print_r($list_holiday2, true));
+    error_log($log_prefix . '$list_holiday2 : ' . print_r($list_holiday2, true));
 
     return $list_holiday2;
 }
@@ -263,6 +265,8 @@ function get_holiday2($mu_)
 function get_holiday($mu_)
 {
     // holiday 今月含み4ヶ月分
+
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
 
     $start_yyyy = date('Y');
     $start_m = date('n');
@@ -286,7 +290,7 @@ function get_holiday($mu_)
         $timestamp = mktime(0, 0, 0, $tmp1[1], $tmp1[2], $tmp1[0]);
         $list_holiday[$timestamp] = $tmp1[7];
     }
-    error_log(getmypid() . ' [' . __METHOD__ . '] $list_holiday : ' . print_r($list_holiday, true));
+    error_log($log_prefix . '$list_holiday : ' . print_r($list_holiday, true));
 
     return $list_holiday;
 }
@@ -294,6 +298,8 @@ function get_holiday($mu_)
 function get_24sekki($mu_)
 {
     // 24sekki 今年と来年分
+
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
 
     $list_24sekki = [];
 
@@ -317,17 +323,15 @@ function get_24sekki($mu_)
 
         for ($i = 0; $i < count($tmp); $i++) {
             $rc = preg_match('/<td>(.+?)<.+?<.+?>(.+?)</', $tmp[$i], $matches);
-            // error_log(print_r($matches, TRUE));
             $tmp1 = $matches[2];
             $tmp1 = str_replace('月', '-', $tmp1);
             $tmp1 = str_replace('日', '', $tmp1);
             $tmp1 = $yyyy . '-' . $tmp1;
-            error_log($tmp1 . ' ' . $matches[1]);
             $list_24sekki[strtotime($tmp1)] = '【' . $matches[1] . '】';
         }
         $yyyy++;
     }
-    error_log(getmypid() . ' [' . __METHOD__ . '] $list_24sekki : ' . print_r($list_24sekki, true));
+    error_log($log_prefix . '] $list_24sekki : ' . print_r($list_24sekki, true));
 
     return $list_24sekki;
 }
@@ -336,6 +340,8 @@ function get_sun($mu_)
 {
     // Sun 今月含み4ヶ月分
 
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     $list_sunrise_sunset = [];
 
     $area_id = $mu_->get_env('AREA_ID');
@@ -343,8 +349,6 @@ function get_sun($mu_)
         $timestamp = strtotime(date('Y-m-01') . " +${j} month");
         $yyyy = date('Y', $timestamp);
         $mm = date('m', $timestamp);
-        error_log(getmypid() . ' $yyyy : ' . $yyyy);
-        error_log(getmypid() . ' $mm : ' . $mm);
         $res = $mu_->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . $area_id . $mm . '.html', null, true);
 
         $tmp = explode('<table ', $res);
@@ -358,19 +362,20 @@ function get_sun($mu_)
         for ($i = 0; $i < count($tmp); $i++) {
             $timestamp = strtotime("${dt} +${i} day"); // UTC
             $rc = preg_match('/.+?<\/td>.*?<td>(.+?)<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>.+?<\/td>.*?<td>(.+?)</', $tmp[$i], $matches);
-            // error_log(trim($matches[1]));
             $list_sunrise_sunset[$timestamp] = '↗' . trim($matches[1]) . ' ↘' . trim($matches[2]);
         }
     }
     // To Small Size
     $list_sunrise_sunset = $mu_->to_small_size($list_sunrise_sunset);
 
-    error_log(getmypid() . ' [' . __METHOD__ . '] $list_sunrise_sunset : ' . print_r($list_sunrise_sunset, true));
+    error_log($log_prefix . '$list_sunrise_sunset : ' . print_r($list_sunrise_sunset, true));
     return $list_sunrise_sunset;
 }
 
 function get_task_soccer($mu_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     // Get Folders
     $folder_id_private = $mu_->get_folder_id('PRIVATE');
 
@@ -408,13 +413,15 @@ function get_task_soccer($mu_)
     $list_add_task[] = '{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . '  Soccer Task Add : ' . $count_task
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 4, 2018))]
       . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018) . '","folder":"' . $folder_id_private . '"}';
-    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS SOCCER : ' . print_r($list_add_task, true));
+    error_log($log_prefix . 'TASKS SOCCER : ' . print_r($list_add_task, true));
 
     return $list_add_task;
 }
 
 function get_task_culturecenter($mu_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     // Get Folders
     $folder_id_private = $mu_->get_folder_id('PRIVATE');
 
@@ -466,13 +473,15 @@ function get_task_culturecenter($mu_)
     $list_add_task[] = '{"title":"' . date('Y/m/d H:i:s', strtotime('+ 9 hours')) . '  Culture Center Task Add : ' . $count_task
       . '","context":"' . $list_context_id[date('w', mktime(0, 0, 0, 1, 4, 2018))]
       . '","duedate":"' . mktime(0, 0, 0, 1, 4, 2018) . '","folder":"' . $folder_id_private . '"}';
-    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS CULTURECENTER : ' . print_r($list_add_task, true));
+    error_log($log_prefix . 'TASKS CULTURECENTER : ' . print_r($list_add_task, true));
 
     return $list_add_task;
 }
 
 function get_task_highway($mu_)
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+
     // Get Folders
     $folder_id_private = $mu_->get_folder_id('PRIVATE');
 
@@ -517,15 +526,15 @@ function get_task_highway($mu_)
         $tmp = str_replace('__CONTEXT__', $list_context_id[date('w', $timestamp)], $tmp);
         $list_add_task[] = $tmp;
     }
-
-    error_log(getmypid() . ' [' . __METHOD__ . '] TASKS HIGHWAY : ' . print_r($list_add_task, true));
-
+    error_log($log_prefix . 'TASKS HIGHWAY : ' . print_r($list_add_task, true));
     return $list_add_task;
 }
 
 function get_task_sun($mu_)
 {
     // 翌日の日の出、日の入りタスク
+
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
 
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
@@ -567,13 +576,15 @@ function get_task_sun($mu_)
             break;
         }
     }
-    error_log(getmypid() . ' [' . __METHOD__ . '] SUN : ' . print_r($list_add_task, true));
+    error_log($log_prefix . 'SUN : ' . print_r($list_add_task, true));
     return $list_add_task;
 }
 
 function get_task_moon($mu_)
 {
     // 翌日の月の出、月の入りタスク
+
+    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
 
     // Get Folders
     $folder_id_label = $mu_->get_folder_id('LABEL');
@@ -620,6 +631,6 @@ function get_task_moon($mu_)
             break;
         }
     }
-    error_log(getmypid() . ' [' . __METHOD__ . '] MOON : ' . print_r($list_add_task, true));
+    error_log($log_prefix . 'MOON : ' . print_r($list_add_task, true));
     return $list_add_task;
 }
