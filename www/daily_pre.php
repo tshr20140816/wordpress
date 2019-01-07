@@ -13,16 +13,6 @@ $mu = new MyUtils();
 
 //
 
-$sub_address = $mu->get_env('SUB_ADDRESS');
-for ($i = 11; $i > -1; $i--) {
-    $url = 'https://feed43.com/' . $sub_address . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
-    // $res = $mu->get_contents($url);
-    $urls[$url] = null;
-}
-$res = $mu->get_contents_multi($urls);
-
-//
-
 for ($j = 0; $j < 4; $j++) {
     $yyyy = date('Y', strtotime('+' . $j . ' years'));
 
@@ -101,6 +91,14 @@ $res = $mu->get_contents('https://api.heroku.com/account', $options, true);
 $res = $mu->get_contents('https://map.yahooapis.jp/geoapi/V1/reverseGeoCoder?output=json&appid='
                          . getenv('YAHOO_API_KEY')
                          . '&lon=' . $mu->get_env('LONGITUDE') . '&lat=' . $mu->get_env('LATITUDE'), null, true);
+
+//
+
+$sub_address = $mu->get_env('SUB_ADDRESS');
+for ($i = 11; $i > -1; $i--) {
+    $url = 'https://feed43.com/' . $sub_address . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
+    $res = $mu->get_contents($url);
+}
 
 $time_finish = microtime(true);
 error_log("${pid} FINISH " . substr(($time_finish - $time_start), 0, 6) . 's');
