@@ -101,12 +101,12 @@ DELETE
 __HEREDOC__;
 
 $pdo = $mu->get_pdo();
+$statement = $pdo->prepare($sql_delete);
 
 $sub_address = $mu->get_env('SUB_ADDRESS');
 for ($i = 11; $i > -1; $i--) {
     $url = 'https://feed43.com/' . $sub_address . ($i * 5 + 11) . '-' . ($i * 5 + 15) . '.xml';
     $url_base64 = base64_encode($url);
-    $statement = $pdo->prepare($sql_delete);
     $rc = $statement->execute([':b_url_base64' => $url_base64]);
     error_log($pid . ' DELETE $rc : ' . $rc);
 }
