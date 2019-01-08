@@ -75,4 +75,8 @@ error_log("${pid} INSERT RESULT : ${rc}");
 
 $pdo = null;
 
+$rc = unlink('/tmp/access_token');
+
+error_log("${pid} CACHE FILE DELETE : ${rc}");
+
 error_log("${pid} FINISH");
