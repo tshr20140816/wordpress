@@ -133,7 +133,8 @@ __HEREDOC__;
         $file_name = '/tmp/contexts';
         if (file_exists($file_name)) {
             $list_context_id = unserialize(file_get_contents($file_name));
-            error_log($log_prefix . '(CACHE HIT) $list_context_id : ' . print_r($list_context_id, true));
+            // error_log($log_prefix . '(CACHE HIT) $list_context_id : ' . print_r($list_context_id, true));
+            error_log($log_prefix . '(CACHE HIT) $list_context_id';
             return $list_context_id;
         }
 
