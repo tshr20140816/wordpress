@@ -17,15 +17,4 @@ wget https://github.com/squizlabs/PHP_CodeSniffer/releases/download/3.4.0/phpcbf
 
 chmod 755 ./start_web.sh
 
-cd /tmp
-
-wget https://download.savannah.nongnu.org/releases/davfs2/davfs2-1.4.6.tar.gz
-
-tar xf davfs2-1.4.6.tar.gz
-
-cd davfs2-1.4.6
-
-./configure --help
-./configure
-
 date
