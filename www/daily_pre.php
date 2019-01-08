@@ -71,7 +71,11 @@ for ($j = 0; $j < 4; $j++) {
     $timestamp = strtotime(date('Y-m-01') . " +${j} month");
     $yyyy = date('Y', $timestamp);
     $mm = date('m', $timestamp);
-    $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/' . $yyyy . '/s' . $area_id . $mm . '.html', null, true);
+    /*
+    $res = $mu->get_contents('https://eco.mtk.nao.ac.jp/koyomi/dni/'
+                             . $yyyy . '/s' . $area_id . $mm . '.html', null, true);
+    */
+    $res = $mu->get_contents("https://eco.mtk.nao.ac.jp/koyomi/dni/${yyyy}/s${area_id}${mm}.html", null, true);
 }
 
 //
