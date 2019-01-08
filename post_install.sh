@@ -23,8 +23,9 @@ pushd wordpress
 
 ls -lang
 
-popd
+cat wp-config-sample.php
 
+popd
 popd
 
 chmod 755 ./start_web.sh
