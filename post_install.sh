@@ -15,9 +15,11 @@ popd
 # wget https://ja.wordpress.org/wordpress-5.0.2-ja.tar.gz
 # tar xf wordpress-5.0.2-ja.tar.gz
 
+mv www www2
+
 pushd tmp
 
-git clone --depth 1 https://github.com/mhoofman/wordpress-heroku.git wordpress
+git clone --depth 1 https://github.com/mhoofman/wordpress-heroku.git www
 
 pushd wordpress
 ls -lang
