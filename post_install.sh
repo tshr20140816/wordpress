@@ -17,14 +17,7 @@ popd
 
 mv www www2
 
-pushd tmp
-
 git clone --depth 1 https://github.com/mhoofman/wordpress-heroku.git www
-
-pushd wordpress
-ls -lang
-popd
-popd
 
 chmod 755 ./start_web.sh
 
