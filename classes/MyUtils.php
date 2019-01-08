@@ -505,13 +505,13 @@ __HEREDOC__;
 
         $count = 0;
         while ($active && $rc == CURLM_OK) {
+            $count++;
             if (curl_multi_select($mh) == -1) {
                 usleep(1);
-                $count++;
             }
             $rc = curl_multi_exec($mh, $active);
         }
-        error_log($log_prefix . 'usleep count : ' . $count);
+        error_log($log_prefix . 'loop count : ' . $count);
 
         $results = [];
         foreach (array_keys($urls_) as $url) {
