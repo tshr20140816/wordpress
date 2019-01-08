@@ -1,3 +1,0 @@
-tenki → add_label → weekday
-daily tenki2
-monthly holiday
